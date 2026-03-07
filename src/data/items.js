@@ -1,5 +1,5 @@
 /**
- * ITEMS - Objets ramassables
+ * ITEMS - Objets ramassables (add = ajoute, replace = remplace)
  */
 import Item from '../classes/Item.js'
 
@@ -45,6 +45,28 @@ const items = [
     usedVar: 'maxHealth',
     amount: 3,
     rarity: 'rare',
+    png: null,
+  }),
+
+  // [4] Double Canon - remplace l arme
+  new Item({
+    name: 'Double Canon',
+    description: 'Remplace votre arme par un double canon.',
+    type: 'replace',
+    usedVar: 'weapons',
+    amount: 1,
+    rarity: 'rare',
+    png: null,
+  }),
+
+  // [5] Cone de feu - remplace l arme
+  new Item({
+    name: 'Cone de feu',
+    description: 'Remplace votre arme par un cone de feu.',
+    type: 'replace',
+    usedVar: 'weapons',
+    amount: 2,
+    rarity: 'epic',
     png: null,
   }),
 ]

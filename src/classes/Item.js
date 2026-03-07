@@ -40,6 +40,12 @@ export default class Item {
    * @param {import('./Player').default} target
    */
   applyTo(target) {
+    // Special handling for weapon replacement
+    if (this.type === 'replace' && this.usedVar === 'weapons') {
+      target.weapons = Array.isArray(this.amount) ? [...this.amount] : [this.amount]
+      return
+    }
+
     if (!(this.usedVar in target)) {
       console.warn(`Item "${this.name}": propriété "${this.usedVar}" introuvable sur la cible.`)
       return

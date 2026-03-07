@@ -27,7 +27,7 @@ const enemyTypes = [
     shieldForce: 0,
     life: 4,
     baseLife: 4,
-    weapon: null,
+    weapon: 3,
     movementPattern: 'zigzag',
     isIgnoringPlayer: false,
     contactDamage: 2,
@@ -41,10 +41,10 @@ const enemyTypes = [
   // [2] Tank - lent, blinde
   new EnemyType({
     movementSpeed: 40,
-    shieldForce: 1,
+    shieldForce: 0 ,
     life: 10,
     baseLife: 10,
-    weapon: null,
+    weapon: 4,
     movementPattern: 'straight',
     isIgnoringPlayer: false,
     contactDamage: 3,
@@ -58,10 +58,10 @@ const enemyTypes = [
   // [3] Boss - gros, barre de vie
   new EnemyType({
     movementSpeed: 25,
-    shieldForce: 2,
+    shieldForce: 0,
     life: 40,
     baseLife: 40,
-    weapon: null,
+    weapon: 5,
     movementPattern: 'sine',
     isIgnoringPlayer: false,
     contactDamage: 5,

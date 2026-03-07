@@ -95,6 +95,10 @@ function ShooterGame({ width = 900, height = 600 }) {
       itemsSpawnedThisLevel: 0,
       obstaclesSpawnedThisLevel: 0,
       weaponCooldownTimer: 0,
+      playerSalveRemaining: 0,
+      playerSalveTimer: 0,
+      playerSalveFiredCount: 0,
+      enemyBullets: [],
 
       stars: createStars(80, width, height),
       itemPickedUp: null,
@@ -160,6 +164,7 @@ function ShooterGame({ width = 900, height = 600 }) {
       g.levelTime = 0
       g.enemies = []
       g.bullets = []
+      g.enemyBullets = []
       g.activeItems = []
       g.activeObstacles = []
       g.spawnedEnemyIds = new Set()
@@ -192,6 +197,9 @@ function ShooterGame({ width = 900, height = 600 }) {
           enemy.y = -etype.height
           enemy.spawnTime = g.levelTime
           enemy.zigzagPhase = 0
+          enemy.weaponCooldown = 0
+          enemy.salveCount = 0
+          enemy.salveTimer = 0
 
           if (etype.isBoss) g.bossRef = enemy
           g.enemies.push(enemy)
@@ -239,45 +247,171 @@ function ShooterGame({ width = 900, height = 600 }) {
     }
 
     // -- Fire player weapon -----------------------------------
+    // Supports salves: bulletsPerSalve shots spaced over salveDuration,
+    // each shot rotated by salveRotationStep (recoil). If bulletsPerSalve=1
+    // it behaves like a normal semi-auto.
+    function emitPlayerBullets(g, w, salveIdx) {
+      const extraRot = salveIdx * w.salveRotationStep
+      for (const rot of w.bulletShootRotation) {
+        const rad = (rot + extraRot) * DEG2RAD
+        g.bullets.push({
+          x: g.player.x,
+          y: g.player.y - g.player.height / 2,
+          vx: Math.sin(rad) * 500,
+          vy: -Math.cos(rad) * 500,
+          radius: w.bulletsSize,
+          damage: w.damage,
+        })
+      }
+    }
+
     function fireWeapon(g, dt) {
-      g.weaponCooldownTimer -= dt * 1000
+      const dtMs = dt * 1000
+
+      // --- Salve in progress: emit remaining bursts ---------------
+      if (g.playerSalveRemaining > 0) {
+        g.playerSalveTimer -= dtMs
+        if (g.playerSalveTimer <= 0) {
+          for (const wIdx of g.player.weapons) {
+            const w = weapons[wIdx] || weapons[0]
+            emitPlayerBullets(g, w, g.playerSalveFiredCount)
+          }
+          g.playerSalveFiredCount++
+          g.playerSalveRemaining--
+          if (g.playerSalveRemaining > 0) {
+            // Time between each burst in the salve
+            const w0 = weapons[g.player.weapons[0]] || weapons[0]
+            g.playerSalveTimer = w0.salveDuration / w0.bulletsPerSalve
+          }
+        }
+        return
+      }
+
+      // --- Cooldown between salves --------------------------------
+      g.weaponCooldownTimer -= dtMs
       if (g.weaponCooldownTimer > 0) return
       if (!g.mouseDown) return
 
+      // --- Start a new salve --------------------------------------
       for (const wIdx of g.player.weapons) {
         const w = weapons[wIdx] || weapons[0]
-        g.weaponCooldownTimer = w.cooldownTime
+        // Set cooldown = cooldownTime (starts after salve finishes)
+        g.weaponCooldownTimer = w.cooldownTime + w.salveDuration
+
+        // Fire the first burst immediately
+        emitPlayerBullets(g, w, 0)
+
+        // Schedule remaining bursts if salve > 1
+        if (w.bulletsPerSalve > 1) {
+          g.playerSalveRemaining = w.bulletsPerSalve - 1
+          g.playerSalveFiredCount = 1
+          g.playerSalveTimer = w.salveDuration / w.bulletsPerSalve
+        }
+      }
+    }
+
+    // -- Fire enemy weapons -----------------------------------
+    function fireEnemyWeapons(g, dt) {
+      for (const e of g.enemies) {
+        if (e.weapon == null) continue
+        const w = weapons[e.weapon]
+        if (!w) continue
+        // Only fire when on screen
+        if (e.y < 0 || e.y > height) continue
+
+        // Salve in progress
+        if (e.salveCount > 0) {
+          e.salveTimer -= dt * 1000
+          if (e.salveTimer <= 0) {
+            const salveIdx = w.bulletsPerSalve - e.salveCount
+            const extraRot = salveIdx * w.salveRotationStep
+            for (const rot of w.bulletShootRotation) {
+              const rad = (rot + extraRot) * DEG2RAD
+              g.enemyBullets.push({
+                x: e.x,
+                y: e.y + e.height / 2,
+                vx: Math.sin(rad) * 300,
+                vy: Math.cos(rad) * 300,
+                radius: w.bulletsSize,
+                damage: w.damage,
+              })
+            }
+            e.salveCount--
+            if (e.salveCount > 0) {
+              e.salveTimer = w.salveDuration / w.bulletsPerSalve
+            }
+          }
+          continue
+        }
+
+        // Cooldown
+        e.weaponCooldown -= dt * 1000
+        if (e.weaponCooldown > 0) continue
+
+        // Start firing (first bullet of salve)
+        e.weaponCooldown = w.cooldownTime + w.salveDuration
+        const firstSalveIdx = 0
+        const firstExtraRot = firstSalveIdx * w.salveRotationStep
         for (const rot of w.bulletShootRotation) {
-          const rad = rot * DEG2RAD
-          g.bullets.push({
-            x: g.player.x,
-            y: g.player.y - g.player.height / 2,
-            vx: Math.sin(rad) * 500,
-            vy: -Math.cos(rad) * 500,
+          const rad = (rot + firstExtraRot) * DEG2RAD
+          g.enemyBullets.push({
+            x: e.x,
+            y: e.y + e.height / 2,
+            vx: Math.sin(rad) * 300,
+            vy: Math.cos(rad) * 300,
             radius: w.bulletsSize,
             damage: w.damage,
           })
+        }
+        if (w.bulletsPerSalve > 1) {
+          e.salveCount = w.bulletsPerSalve - 1
+          e.salveTimer = w.salveDuration / w.bulletsPerSalve
         }
       }
     }
 
     // -- Move enemies -----------------------------------------
+    //  Enemies stay in the play zone: top of screen → 60% height.
+    //  They enter from the top then move according to their pattern.
+    const ENEMY_ZONE_MAX = () => height * 0.6
+
     function moveEnemies(g, dt) {
       for (const e of g.enemies) {
         const elapsed = g.levelTime - (e.spawnTime || 0)
+        const zoneMax = ENEMY_ZONE_MAX()
+
+        // --- Entry phase: slide down until reaching target Y ----
+        if (e.targetY == null) {
+          // Assign a random resting Y inside the zone
+          e.targetY = randBetween(e.height, zoneMax - e.height)
+        }
+
+        if (e.y < e.targetY) {
+          // Entering: move straight down
+          e.y += e.movementSpeed * 1.5 * dt
+          if (e.y > e.targetY) e.y = e.targetY
+          e.x = clamp(e.x, e.width / 2, width - e.width / 2)
+          continue
+        }
+
+        // --- In-zone movement according to pattern --------------
         switch (e.movementPattern) {
           case 'zigzag':
-            e.y += e.movementSpeed * dt
-            e.x += Math.sin(elapsed * 3) * 120 * dt
+            e.x += Math.sin(elapsed * 3) * 150 * dt
+            e.y += Math.cos(elapsed * 2) * 30 * dt
             break
           case 'sine':
-            e.y += e.movementSpeed * dt
-            e.x += Math.cos(elapsed * 1.5) * 80 * dt
+            e.x += Math.cos(elapsed * 1.5) * 100 * dt
+            e.y += Math.sin(elapsed * 0.8) * 40 * dt
             break
-          default: // straight
-            e.y += e.movementSpeed * dt
+          default: // straight — gentle horizontal drift
+            e.x += Math.sin(elapsed * 0.5 + e.targetY) * 60 * dt
+            break
         }
+
+        // Clamp inside play zone
         e.x = clamp(e.x, e.width / 2, width - e.width / 2)
+        e.y = clamp(e.y, e.height / 2, zoneMax)
       }
     }
 
@@ -362,6 +496,20 @@ function ShooterGame({ width = 900, height = 600 }) {
         })
         return obs.hp > 0
       })
+
+      // Enemy bullets vs player
+      for (const eb of g.enemyBullets) {
+        const dist = Math.hypot(eb.x - p.x, eb.y - p.y)
+        if (dist < eb.radius + pR) {
+          if (!p.isImmune) {
+            p.takeDamage(eb.damage)
+            p.isImmune = true
+            setTimeout(() => { p.isImmune = false }, p.immunityTime)
+          }
+          eb.hit = true
+        }
+      }
+      g.enemyBullets = g.enemyBullets.filter((eb) => !eb.hit)
     }
 
     // -- Check level completion -------------------------------
@@ -384,7 +532,7 @@ function ShooterGame({ width = 900, height = 600 }) {
 
         const nextLevel = g.world.getLevel(g.currentLevelIndex + 1)
         if (nextLevel) {
-          g.transitionText = `Niveau ${nextLevel.levelNo}${nextLevel.isBoss ? ' � BOSS' : nextLevel.isBonus ? ' � BONUS' : ''}`
+          g.transitionText = `Niveau ${nextLevel.levelNo}${nextLevel.isBoss ? ' � BOSS' : nextLevel.isBonus ? ' � BONUS' : ''}`
         } else {
           g.transitionText = 'Niveau final termine !'
         }
@@ -423,11 +571,18 @@ function ShooterGame({ width = 900, height = 600 }) {
       if (!level) return
       g.levelTime += dt
 
-      // Player movement (follow mouse)
+      // Player movement (follow mouse on 2 axes)
       const p = g.player
+      // X axis — lateral (maxSideSpeed)
       const dx = g.mouseX - p.x
       const targetX = p.x + clamp(dx, -p.maxSideSpeed * dt * 3, p.maxSideSpeed * dt * 3)
       p.x = clamp(targetX, p.width / 2, width - p.width / 2)
+      // Y axis — forward = up (maxSpeed), backward = down (maxBrakeSpeed)
+      const dy = g.mouseY - p.y
+      const maxUp = p.maxSpeed * dt * 3     // going up = forward
+      const maxDown = p.maxBrakeSpeed * dt * 3  // going down = brake
+      const targetY = p.y + clamp(dy, -maxUp, maxDown)
+      p.y = clamp(targetY, height * 0.4, height - p.height / 2)
 
       // Fire
       fireWeapon(g, dt)
@@ -441,26 +596,21 @@ function ShooterGame({ width = 900, height = 600 }) {
       spawnEnemies(g, level)
       moveEnemies(g, dt)
 
-      // Remove enemies that fell off screen
-      g.enemies = g.enemies.filter((e) => {
-        if (e.y > height + e.height) {
-          // Enemy passed = player takes contact damage
-          if (!p.isImmune) {
-            p.takeDamage(1)
-            p.isImmune = true
-            setTimeout(() => { p.isImmune = false }, p.immunityTime)
-          }
-          if (e.isBoss && g.bossRef === e) g.bossRef = null
-          return false
-        }
-        return true
-      })
+      // Fire enemy weapons
+      fireEnemyWeapons(g, dt)
+
+      // Enemies stay in zone — no off-screen removal needed
 
       // Spawn & move items
       spawnItems(g, level, dt)
       g.activeItems = g.activeItems
         .map((it) => ({ ...it, y: it.y + it.speed * dt }))
         .filter((it) => it.y < height + 30)
+
+      // Move enemy bullets
+      g.enemyBullets = g.enemyBullets
+        .map((b) => ({ ...b, x: b.x + b.vx * dt, y: b.y + b.vy * dt }))
+        .filter((b) => b.y > -20 && b.y < height + 40 && b.x > -20 && b.x < width + 20)
 
       // Spawn & move obstacles
       spawnObstacles(g, level, dt)
@@ -555,10 +705,21 @@ function ShooterGame({ width = 900, height = 600 }) {
         drawEnemy(ctx, e)
       }
 
-      // -- BULLETS ------------------------------------------
+      // -- PLAYER BULLETS ------------------------------------
       for (const b of g.bullets) {
         ctx.fillStyle = '#ffe995'
         ctx.shadowColor = '#ffe995'
+        ctx.shadowBlur = 8
+        ctx.beginPath()
+        ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.shadowBlur = 0
+      }
+
+      // -- ENEMY BULLETS ----------------------------------------
+      for (const b of g.enemyBullets) {
+        ctx.fillStyle = '#ff6060'
+        ctx.shadowColor = '#ff3030'
         ctx.shadowBlur = 8
         ctx.beginPath()
         ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2)

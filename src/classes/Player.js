@@ -62,7 +62,7 @@ export default class Player {
 
   takeDamage(amount) {
     if (this.isImmune) return false
-    const effective = Math.max(0, amount - this.shieldForce)
+    const effective = Math.max(1, amount - this.shieldForce)
     this.healthPoints = Math.max(0, this.healthPoints - effective)
     return this.healthPoints <= 0
   }
