@@ -1,0 +1,8 @@
+export { default as Weapon } from './Weapon.js'
+export { default as Obstacle } from './Obstacle.js'
+export { default as EnemyType } from './EnemyType.js'
+export { default as Enemy } from './Enemy.js'
+export { default as Player } from './Player.js'
+export { default as Item } from './Item.js'
+export { default as Level } from './Level.js'
+export { default as World } from './World.js'

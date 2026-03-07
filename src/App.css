@@ -1,0 +1,31 @@
+.app {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.app-header {
+  text-align: center;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.app-header p {
+  margin: 0.3rem 0 0;
+  opacity: 0.8;
+}
+
+.game-wrapper {
+  width: min(100%, 960px);
+}
+
+.integration-note {
+  text-align: center;
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
