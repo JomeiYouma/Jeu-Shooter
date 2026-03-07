@@ -552,6 +552,19 @@ function ShooterGame({ width = 900, height = 600 }) {
 
       if (g.phase === STATE.START || g.phase === STATE.GAME_OVER || g.phase === STATE.VICTORY) return
 
+      // Player movement (always active during play & transition)
+      const p = g.player
+      // X axis — lateral (maxSideSpeed)
+      const dx = g.mouseX - p.x
+      const targetX = p.x + clamp(dx, -p.maxSideSpeed * dt * 3, p.maxSideSpeed * dt * 3)
+      p.x = clamp(targetX, p.width / 2, width - p.width / 2)
+      // Y axis — forward = up (maxSpeed), backward = down (maxBrakeSpeed)
+      const dy = g.mouseY - p.y
+      const maxUp = p.maxSpeed * dt * 3     // going up = forward
+      const maxDown = p.maxBrakeSpeed * dt * 3  // going down = brake
+      const targetY = p.y + clamp(dy, -maxUp, maxDown)
+      p.y = clamp(targetY, height * 0.4, height - p.height / 2)
+
       // LEVEL TRANSITION
       if (g.phase === STATE.LEVEL_TRANSITION) {
         g.transitionTimer -= dt
@@ -570,19 +583,6 @@ function ShooterGame({ width = 900, height = 600 }) {
       const level = g.world.getLevel(g.currentLevelIndex)
       if (!level) return
       g.levelTime += dt
-
-      // Player movement (follow mouse on 2 axes)
-      const p = g.player
-      // X axis — lateral (maxSideSpeed)
-      const dx = g.mouseX - p.x
-      const targetX = p.x + clamp(dx, -p.maxSideSpeed * dt * 3, p.maxSideSpeed * dt * 3)
-      p.x = clamp(targetX, p.width / 2, width - p.width / 2)
-      // Y axis — forward = up (maxSpeed), backward = down (maxBrakeSpeed)
-      const dy = g.mouseY - p.y
-      const maxUp = p.maxSpeed * dt * 3     // going up = forward
-      const maxDown = p.maxBrakeSpeed * dt * 3  // going down = brake
-      const targetY = p.y + clamp(dy, -maxUp, maxDown)
-      p.y = clamp(targetY, height * 0.4, height - p.height / 2)
 
       // Fire
       fireWeapon(g, dt)
