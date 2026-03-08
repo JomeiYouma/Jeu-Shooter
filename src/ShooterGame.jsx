@@ -62,6 +62,20 @@ for (const w of weapons) {
   if (w.bulletGif) getGifPlayer(w.bulletGif)
 }
 
+// -- Save initial weapon stats so we can reset after victory --
+const _weaponDefaults = weapons.map(w => ({
+  damage: w.damage,
+  bulletsSize: w.bulletsSize,
+  bulletsPerSalve: w.bulletsPerSalve,
+  salveDuration: w.salveDuration,
+  cooldownTime: w.cooldownTime,
+  salveRotationStep: w.salveRotationStep,
+  bulletShootRotation: [...w.bulletShootRotation],
+}))
+function resetWeapons() {
+  weapons.forEach((w, i) => Object.assign(w, _weaponDefaults[i]))
+}
+
 // -- Game states ------------------------------------------------
 const STATE = {
   START: 'start',
@@ -207,7 +221,8 @@ function ShooterGame({ width = 900, height = 600 }) {
       if (G.phase === STATE.START) {
         startLevel(G)
       } else if (G.phase === STATE.GAME_OVER || G.phase === STATE.VICTORY) {
-        // Reset
+        // Reset weapons on victory (world complete) or game over (lost)
+        resetWeapons()
         Object.assign(G, buildGameState())
         G.phase = STATE.START
       }
@@ -519,7 +534,7 @@ function ShooterGame({ width = 900, height = 600 }) {
       g.activeItems = g.activeItems.filter((it) => {
         const dist = Math.hypot(it.x - p.x, it.y - p.y)
         if (dist < it.w + pR) {
-          it.def.applyTo(p)
+          it.def.applyTo(p, weapons)
           // Cap healthPoints to maxHealth
           if (p.healthPoints > p.maxHealth) p.healthPoints = p.maxHealth
           // Cap shield to maxShield

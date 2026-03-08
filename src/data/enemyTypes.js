@@ -71,6 +71,74 @@ const enemyTypes = [
     height: 72,
     png: { full: null, damaged: null, destroyed: null },
   }),
+
+  // [4] Éclaireur - rapide, rafale courte, zigzag serré
+  new EnemyType({
+    movementSpeed: 120,
+    shieldForce: 0,
+    life: 3,
+    baseLife: 3,
+    weapon: 9,
+    movementPattern: 'zigzag',
+    isIgnoringPlayer: true,
+    contactDamage: 1,
+    immunityTime: 0,
+    isBoss: false,
+    width: 26,
+    height: 26,
+    png: { full: null, damaged: null, destroyed: null },
+  }),
+
+  // [5] Bombardier - lent, tir en cône, résistant
+  new EnemyType({
+    movementSpeed: 35,
+    shieldForce: 1,
+    life: 8,
+    baseLife: 8,
+    weapon: 10,
+    movementPattern: 'straight',
+    isIgnoringPlayer: false,
+    contactDamage: 3,
+    immunityTime: 100,
+    isBoss: false,
+    width: 42,
+    height: 42,
+    png: { full: null, damaged: null, destroyed: null },
+  }),
+
+  // [6] Sniper - immobile en haut, tir puissant
+  new EnemyType({
+    movementSpeed: 20,
+    shieldForce: 0,
+    life: 5,
+    baseLife: 5,
+    weapon: 11,
+    movementPattern: 'sine',
+    isIgnoringPlayer: false,
+    contactDamage: 2,
+    immunityTime: 0,
+    isBoss: false,
+    width: 32,
+    height: 32,
+    png: { full: null, damaged: null, destroyed: null },
+  }),
+
+  // [7] Tourelle - résistant, salve rotative
+  new EnemyType({
+    movementSpeed: 30,
+    shieldForce: 2,
+    life: 12,
+    baseLife: 12,
+    weapon: 12,
+    movementPattern: 'straight',
+    isIgnoringPlayer: false,
+    contactDamage: 2,
+    immunityTime: 150,
+    isBoss: false,
+    width: 40,
+    height: 40,
+    png: { full: null, damaged: null, destroyed: null },
+  }),
 ]
 
 export default enemyTypes

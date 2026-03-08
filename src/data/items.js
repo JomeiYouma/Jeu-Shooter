@@ -69,6 +69,50 @@ const items = [
     rarity: 'epic',
     png: null,
   }),
+
+  // [6] Cadence amelioree - reduit le cooldown
+  new Item({
+    name: 'Cadence amelioree',
+    description: 'Reduit le temps de recharge de 50ms.',
+    type: 'weaponStat',
+    usedVar: 'cooldownTime',
+    amount: -50,
+    rarity: 'rare',
+    png: null,
+  }),
+
+  // [7] Salve supplementaire
+  new Item({
+    name: 'Salve supplementaire',
+    description: 'Ajoute 1 tir par salve.',
+    type: 'weaponStat',
+    usedVar: 'bulletsPerSalve',
+    amount: 1,
+    rarity: 'epic',
+    png: null,
+  }),
+
+  // [8] Munitions lourdes - degats
+  new Item({
+    name: 'Munitions lourdes',
+    description: 'Augmente les degats de 1.',
+    type: 'weaponStat',
+    usedVar: 'damage',
+    amount: 1,
+    rarity: 'epic',
+    png: null,
+  }),
+
+  // [9] Balles larges
+  new Item({
+    name: 'Balles larges',
+    description: 'Augmente la taille des balles de 2.',
+    type: 'weaponStat',
+    usedVar: 'bulletsSize',
+    amount: 2,
+    rarity: 'common',
+    png: null,
+  }),
 ]
 
 export default items

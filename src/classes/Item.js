@@ -4,18 +4,19 @@
  * Propriétés :
  *  - name        : Nom de l'item
  *  - description : Description
- *  - type        : "add" | "replace"
- *      • add     → ajoute la valeur à la stat (ex : +5 HP)
+ *  - type        : "add" | "replace" | "weaponStat"
+ *      • add     → ajoute la valeur à la stat du joueur (ex : +5 HP)
  *      • replace → remplace la valeur (ex : change d'arme)
- *  - usedVar     : Nom de la variable affectée sur le joueur
+ *      • weaponStat → ajoute la valeur à une stat de l'arme équipée
+ *  - usedVar     : Nom de la variable affectée sur le joueur ou l'arme
  *                  (ex: "maxHealth", "maxSpeed", "weapons", "bulletsSize", …)
  *  - amount      : Montant du changement (ex: +5, -4)
  *  - rarity      : Rareté ("common", "rare", "epic", "legendary")
  *  - png         : Chemin vers l'image de l'item
  */
 export default class Item {
-  /** @type {"add"|"replace"} */
-  static TYPES = ['add', 'replace']
+  /** @type {"add"|"replace"|"weaponStat"} */
+  static TYPES = ['add', 'replace', 'weaponStat']
 
   constructor({
     name = '',
@@ -38,11 +39,24 @@ export default class Item {
   /**
    * Applique l'item sur une cible (Player).
    * @param {import('./Player').default} target
+   * @param {Array} [weaponsTable] — tableau global des armes (nécessaire pour type 'weaponStat')
    */
-  applyTo(target) {
+  applyTo(target, weaponsTable) {
     // Special handling for weapon replacement
     if (this.type === 'replace' && this.usedVar === 'weapons') {
       target.weapons = Array.isArray(this.amount) ? [...this.amount] : [this.amount]
+      return
+    }
+
+    // Special handling for weapon stat modification
+    if (this.type === 'weaponStat') {
+      if (!weaponsTable || !target.weapons.length) return
+      for (const wIdx of target.weapons) {
+        const w = weaponsTable[wIdx]
+        if (w && this.usedVar in w) {
+          w[this.usedVar] += this.amount
+        }
+      }
       return
     }
 
