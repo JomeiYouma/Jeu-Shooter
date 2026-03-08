@@ -29,7 +29,7 @@ const items = [
   // [2] Blindage renforce - bouclier
   new Item({
     name: 'Blindage renforce',
-    description: 'Ajoute 1 point de bouclier.',
+    description: 'Restaure 1 point de bouclier (max 4).',
     type: 'add',
     usedVar: 'shieldForce',
     amount: 1,

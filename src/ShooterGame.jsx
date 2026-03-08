@@ -3,12 +3,64 @@ import './ShooterGame.css'
 import Player from './classes/Player.js'
 import Enemy from './classes/Enemy.js'
 import { weapons, enemyTypes, items, obstacles, world1 } from './data/index.js'
+import GifPlayer from './utils/gifPlayer.js'
+
+// -- GUI bar images -------------------------------------------
+import accelbar0 from './assets/gui/Accelbar/accelbar_0.png'
+import accelbar1 from './assets/gui/Accelbar/accelbar_.1.png'
+import accelbar2 from './assets/gui/Accelbar/accelbar_.2.png'
+import accelbar3 from './assets/gui/Accelbar/accelbar_.3.png'
+import accelbar4 from './assets/gui/Accelbar/accelbar_.4.png'
+import accelbar5 from './assets/gui/Accelbar/accelbar_.5.png'
+import redbar0 from './assets/gui/Redbar/redbar_0.png'
+import redbar1 from './assets/gui/Redbar/redbar_1.png'
+import redbar2 from './assets/gui/Redbar/redbar_2.png'
+import redbar3 from './assets/gui/Redbar/redbar_3.png'
+import redbar4 from './assets/gui/Redbar/redbar_4.png'
+import bluebar0 from './assets/gui/Bluebar/bluebar_0.png'
+import bluebar1 from './assets/gui/Bluebar/bluebar_1.png'
+import bluebar2 from './assets/gui/Bluebar/bluebar_2.png'
+import bluebar3 from './assets/gui/Bluebar/bluebar_3.png'
+import bluebar4 from './assets/gui/Bluebar/bluebar_4.png'
 
 // -- Helpers ----------------------------------------------------
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
 const randBetween = (a, b) => a + Math.random() * (b - a)
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)]
 const DEG2RAD = Math.PI / 180
+
+// -- Image preloader / cache (PNGs only) ----------------------
+const _imgCache = {}
+function loadImg(src) {
+  if (!src) return null
+  if (!_imgCache[src]) {
+    const img = new Image()
+    img.src = src
+    _imgCache[src] = img
+  }
+  return _imgCache[src]
+}
+
+// Pre-load bar images into arrays
+const ACCEL_BARS = [accelbar0, accelbar1, accelbar2, accelbar3, accelbar4, accelbar5].map(loadImg)
+const RED_BARS   = [redbar0, redbar1, redbar2, redbar3, redbar4].map(loadImg)
+const BLUE_BARS  = [bluebar0, bluebar1, bluebar2, bluebar3, bluebar4].map(loadImg)
+
+// -- Animated GIF players (one per unique bullet GIF) ----------
+const _gifPlayers = {}
+function getGifPlayer(src) {
+  if (!src) return null
+  if (!_gifPlayers[src]) {
+    const player = new GifPlayer()
+    player.load(src) // async, frames arrive later
+    _gifPlayers[src] = player
+  }
+  return _gifPlayers[src]
+}
+// Pre-load all weapon bullet GIFs
+for (const w of weapons) {
+  if (w.bulletGif) getGifPlayer(w.bulletGif)
+}
 
 // -- Game states ------------------------------------------------
 const STATE = {
@@ -106,6 +158,11 @@ function ShooterGame({ width = 900, height = 600 }) {
 
       // boss tracking
       bossRef: null,
+
+      // speed tracking for acceleration bar
+      playerPrevX: width / 2,
+      playerPrevY: height - 40,
+      playerSpeedPct: 0,
     }
   }, [width, height])
 
@@ -261,6 +318,7 @@ function ShooterGame({ width = 900, height = 600 }) {
           vy: -Math.cos(rad) * 500,
           radius: w.bulletsSize,
           damage: w.damage,
+          bulletGif: w.bulletGif,
         })
       }
     }
@@ -334,6 +392,7 @@ function ShooterGame({ width = 900, height = 600 }) {
                 vy: Math.cos(rad) * 300,
                 radius: w.bulletsSize,
                 damage: w.damage,
+                bulletGif: w.bulletGif,
               })
             }
             e.salveCount--
@@ -361,6 +420,7 @@ function ShooterGame({ width = 900, height = 600 }) {
             vy: Math.cos(rad) * 300,
             radius: w.bulletsSize,
             damage: w.damage,
+            bulletGif: w.bulletGif,
           })
         }
         if (w.bulletsPerSalve > 1) {
@@ -462,6 +522,8 @@ function ShooterGame({ width = 900, height = 600 }) {
           it.def.applyTo(p)
           // Cap healthPoints to maxHealth
           if (p.healthPoints > p.maxHealth) p.healthPoints = p.maxHealth
+          // Cap shield to maxShield
+          if (p.shieldForce > p.maxShield) p.shieldForce = p.maxShield
           g.itemPickedUp = it.def.name
           g.itemPickedUpTimer = 2
           return false
@@ -564,6 +626,15 @@ function ShooterGame({ width = 900, height = 600 }) {
       const maxDown = p.maxBrakeSpeed * dt * 3  // going down = brake
       const targetY = p.y + clamp(dy, -maxUp, maxDown)
       p.y = clamp(targetY, height * 0.4, height - p.height / 2)
+
+      // -- Track player speed for acceleration bar --------
+      const moveDx = p.x - g.playerPrevX
+      const moveDy = p.y - g.playerPrevY
+      const actualSpeed = Math.sqrt(moveDx * moveDx + moveDy * moveDy) / dt
+      g.playerPrevX = p.x
+      g.playerPrevY = p.y
+      // Smooth to avoid jitter
+      g.playerSpeedPct = g.playerSpeedPct * 0.75 + clamp(actualSpeed / p.maxSpeed, 0, 1) * 0.25
 
       // LEVEL TRANSITION
       if (g.phase === STATE.LEVEL_TRANSITION) {
@@ -707,28 +778,123 @@ function ShooterGame({ width = 900, height = 600 }) {
 
       // -- PLAYER BULLETS ------------------------------------
       for (const b of g.bullets) {
-        ctx.fillStyle = '#ffe995'
-        ctx.shadowColor = '#ffe995'
-        ctx.shadowBlur = 8
-        ctx.beginPath()
-        ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.shadowBlur = 0
+        const gp = b.bulletGif ? getGifPlayer(b.bulletGif) : null
+        const frame = gp ? gp.getFrame() : null
+        if (frame) {
+          const size = b.radius * 4
+          ctx.save()
+          ctx.translate(b.x, b.y)
+          const angle = Math.atan2(b.vy, b.vx) + Math.PI / 2
+          ctx.rotate(angle)
+          ctx.drawImage(frame, -size / 2, -size / 2, size, size)
+          ctx.restore()
+        } else {
+          ctx.fillStyle = '#ffe995'
+          ctx.shadowColor = '#ffe995'
+          ctx.shadowBlur = 8
+          ctx.beginPath()
+          ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2)
+          ctx.fill()
+          ctx.shadowBlur = 0
+        }
       }
 
       // -- ENEMY BULLETS ----------------------------------------
       for (const b of g.enemyBullets) {
-        ctx.fillStyle = '#ff6060'
-        ctx.shadowColor = '#ff3030'
-        ctx.shadowBlur = 8
-        ctx.beginPath()
-        ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.shadowBlur = 0
+        const gp = b.bulletGif ? getGifPlayer(b.bulletGif) : null
+        const frame = gp ? gp.getFrame() : null
+        if (frame) {
+          const size = b.radius * 4
+          ctx.save()
+          ctx.translate(b.x, b.y)
+          const angle = Math.atan2(b.vy, b.vx) + Math.PI / 2
+          ctx.rotate(angle)
+          ctx.drawImage(frame, -size / 2, -size / 2, size, size)
+          ctx.restore()
+        } else {
+          ctx.fillStyle = '#ff6060'
+          ctx.shadowColor = '#ff3030'
+          ctx.shadowBlur = 8
+          ctx.beginPath()
+          ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2)
+          ctx.fill()
+          ctx.shadowBlur = 0
+        }
       }
 
       // -- PLAYER -------------------------------------------
       drawPlayer(ctx, g.player)
+
+      // -- GUI BARS (bottom-left) ----------------------------
+      if (g.phase === STATE.PLAYING || g.phase === STATE.LEVEL_TRANSITION) {
+        const hBarW = 120          // horizontal bar width (red / blue / hp)
+        const hBarH = 16           // horizontal bar height
+        const accelW = 14          // vertical accel bar width
+        const margin = 10
+        const barGap = 5
+        const hBarX = margin + accelW + barGap
+
+        // Stack from bottom: red, blue, HP bar
+        const redY   = height - margin - hBarH
+        const blueY  = redY - hBarH - barGap
+        const hpBarY = blueY - hBarH - barGap
+
+        const accelH = (height - margin) - hpBarY  // spans all 3 bars
+        const accelX = margin
+        const accelY = hpBarY
+
+        // ── Acceleration bar (vertical, left) ─────────────
+        const logPct = g.playerSpeedPct > 0
+          ? clamp(Math.log(1 + g.playerSpeedPct * 9) / Math.log(10), 0, 1)
+          : 0
+        const accelIdx = Math.round(logPct * 5)
+        const accelImg = ACCEL_BARS[accelIdx]
+        if (accelImg && accelImg.complete && accelImg.naturalWidth > 0) {
+          ctx.drawImage(accelImg, accelX, accelY, accelW, accelH)
+        }
+
+        // ── HP bar (green, with fill) ──────────────────────
+        const hpPct = g.player.healthPercent
+        // Background
+        ctx.fillStyle = 'rgba(0,0,0,0.45)'
+        ctx.beginPath()
+        ctx.roundRect(hBarX, hpBarY, hBarW, hBarH, 4)
+        ctx.fill()
+        // Fill
+        const hpColor = hpPct > 0.5 ? '#44bb66' : hpPct > 0.25 ? '#ddaa22' : '#dd3333'
+        ctx.fillStyle = hpColor
+        ctx.beginPath()
+        ctx.roundRect(hBarX, hpBarY, hBarW * hpPct, hBarH, 4)
+        ctx.fill()
+        // Border
+        ctx.strokeStyle = 'rgba(255,255,255,0.2)'
+        ctx.lineWidth = 1
+        ctx.beginPath()
+        ctx.roundRect(hBarX, hpBarY, hBarW, hBarH, 4)
+        ctx.stroke()
+        // Text
+        ctx.fillStyle = '#fff'
+        ctx.font = '700 10px system-ui, sans-serif'
+        ctx.textAlign = 'center'
+        ctx.fillText(
+          g.player.healthPoints + ' / ' + g.player.maxHealth,
+          hBarX + hBarW / 2,
+          hpBarY + hBarH / 2 + 3.5
+        )
+
+        // ── Red bar (visual) ───────────────────────────────
+        const redImg = RED_BARS[4]
+        if (redImg && redImg.complete && redImg.naturalWidth > 0) {
+          ctx.drawImage(redImg, hBarX, redY, hBarW, hBarH)
+        }
+
+        // ── Blue bar (shield — consumable, 0-4) ───────────
+        const shieldIdx = clamp(g.player.shieldForce, 0, 4)
+        const blueImg = BLUE_BARS[shieldIdx]
+        if (blueImg && blueImg.complete && blueImg.naturalWidth > 0) {
+          ctx.drawImage(blueImg, hBarX, blueY, hBarW, hBarH)
+        }
+      }
 
       // -- BOSS HP BAR --------------------------------------
       if (g.bossRef && g.bossRef.isAlive) {
@@ -1025,17 +1191,6 @@ function ShooterGame({ width = 900, height = 600 }) {
           <span className="hud-score">Score: {uiState.score}</span>
         </div>
         <div className="hud-center">
-          {isPlaying && (
-            <div className="hp-bar-container">
-              <div
-                className="hp-bar-fill"
-                style={{ width: `${(uiState.hp / uiState.maxHp) * 100}%` }}
-              />
-              <span className="hp-bar-text">
-                {uiState.hp} / {uiState.maxHp}
-              </span>
-            </div>
-          )}
         </div>
         <div className="hud-right">
           {uiState.shield > 0 && (

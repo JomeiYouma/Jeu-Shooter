@@ -4,7 +4,7 @@
  * Propriétés :
  *  - acceleration     : Accélération (Microchip) — contrôle la réactivité
  *  - weapons          : Liste d'armes équipées (tirées simultanément au clic / hold)
- *  - shieldForce      : Force du bouclier (Bodywork) — réduit les dégâts reçus
+ *  - shieldForce      : Points de bouclier consommables (max 4) — absorbe les dégâts avant les PV
  *  - healthPoints     : PV actuels
  *  - maxHealth        : PV maximum
  *  - contactDamage    : Dégâts infligés au contact (Spikes)
@@ -35,6 +35,7 @@ export default class Player {
     this.acceleration = acceleration
     this.weapons = [...weapons]
     this.shieldForce = shieldForce
+    this.maxShield = 4
     this.healthPoints = healthPoints
     this.maxHealth = maxHealth
     this.contactDamage = contactDamage
@@ -60,15 +61,32 @@ export default class Player {
     return this.maxHealth > 0 ? this.healthPoints / this.maxHealth : 0
   }
 
+  get shieldPercent() {
+    return this.maxShield > 0 ? this.shieldForce / this.maxShield : 0
+  }
+
   takeDamage(amount) {
     if (this.isImmune) return false
-    const effective = Math.max(1, amount - this.shieldForce)
-    this.healthPoints = Math.max(0, this.healthPoints - effective)
+    let remaining = amount
+    // Shield absorbs damage first
+    if (this.shieldForce > 0) {
+      const absorbed = Math.min(this.shieldForce, remaining)
+      this.shieldForce -= absorbed
+      remaining -= absorbed
+    }
+    // Remaining damage hits HP
+    if (remaining > 0) {
+      this.healthPoints = Math.max(0, this.healthPoints - remaining)
+    }
     return this.healthPoints <= 0
   }
 
   heal(amount) {
     this.healthPoints = Math.min(this.maxHealth, this.healthPoints + amount)
+  }
+
+  addShield(amount) {
+    this.shieldForce = Math.min(this.maxShield, this.shieldForce + amount)
   }
 
   equipWeapon(weapon) {

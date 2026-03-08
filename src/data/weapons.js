@@ -2,6 +2,9 @@
  * ARMES - Liste des armes du jeu
  */
 import Weapon from '../classes/Weapon.js'
+import bulletA from '../assets/bullets/bullet_a.gif'
+import bulletB from '../assets/bullets/bullet_b.gif'
+import bulletC from '../assets/bullets/bullet_c.gif'
 
 const weapons = [
   // [0] Laser basique - arme de depart
@@ -9,14 +12,15 @@ const weapons = [
     name: 'Laser basique',
     description: 'Tir simple en ligne droite.',
     damage: 1,
-    bulletShootRotation: [0,1,2,3,4,5,6,7,8,9],
-    bulletsSize: 1,
+    bulletShootRotation: [0,10,-10],
+    bulletsSize: 5,
     bulletsPerSalve: 1,
     salveDuration: 0,
-    cooldownTime: 1000,
+    cooldownTime: 333,
     salveRotationStep: 0,
     rarity: 'common',
     png: null,
+    bulletGif: bulletB,
   }),
 
   // [1] Double canon
@@ -32,6 +36,7 @@ const weapons = [
     salveRotationStep: 0,
     rarity: 'rare',
     png: null,
+    bulletGif: bulletB,
   }),
 
   // [2] Cone de feu
@@ -47,6 +52,7 @@ const weapons = [
     salveRotationStep: 0,
     rarity: 'epic',
     png: null,
+    bulletGif: bulletC,
   }),
 
   // ── Armes ennemies ─────────────────────────────────────────
@@ -64,6 +70,7 @@ const weapons = [
     salveRotationStep: 0,
     rarity: 'common',
     png: null,
+    bulletGif: bulletC,
   }),
 
   // [4] Double tir ennemi (Tank)
@@ -79,6 +86,7 @@ const weapons = [
     salveRotationStep: 0,
     rarity: 'rare',
     png: null,
+    bulletGif: bulletA,
   }),
 
   // [5] Cone ennemi (Boss)
@@ -94,6 +102,7 @@ const weapons = [
     salveRotationStep: 8,
     rarity: 'epic',
     png: null,
+    bulletGif: bulletB,
   }),
 ]
 

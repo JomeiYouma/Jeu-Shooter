@@ -15,6 +15,7 @@
  *                        (0 = toujours la même direction, 5 = +5° par tir)
  *  - rarity           : Rareté (ex: "common", "rare", "epic", "legendary")
  *  - png              : Chemin vers l'image de l'arme
+ *  - bulletGif        : Chemin vers le GIF animé de la balle
  */
 export default class Weapon {
   constructor({
@@ -29,6 +30,7 @@ export default class Weapon {
     salveRotationStep = 0,
     rarity = 'common',
     png = null,
+    bulletGif = null,
   } = {}) {
     this.name = name
     this.description = description
@@ -41,6 +43,7 @@ export default class Weapon {
     this.salveRotationStep = salveRotationStep
     this.rarity = rarity
     this.png = png
+    this.bulletGif = bulletGif
   }
 
   /** Nombre de balles tirées simultanément (longueur du tableau de rotations). */
