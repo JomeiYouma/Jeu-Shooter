@@ -23,14 +23,14 @@ const weapons = [
     description: 'Tir simple en ligne droite.',
     damage: 1,
     bulletShootRotation: [0],
-    bulletsSize: 5,
-    bulletsPerSalve: 1,
-    salveDuration: 100,
-    cooldownTime: 333,
+    bulletsSize: 4,
+    bulletsPerSalve: 2,
+    salveDuration: 500,
+    cooldownTime: 1,
     salveRotationStep: 0,
     rarity: 'common',
     png: null,
-    bulletGif: bulletN,
+    bulletGif: bulletO,
   }),
 
   // [1] Double canon
@@ -62,7 +62,7 @@ const weapons = [
     salveRotationStep: 0,
     rarity: 'epic',
     png: null,
-    bulletGif: bulletC,
+    bulletGif: bulletO,
   }),
 
   // ── Armes ennemies ─────────────────────────────────────────

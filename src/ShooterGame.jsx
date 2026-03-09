@@ -1080,7 +1080,7 @@ function ShooterGame({ width = 900, height = 600 }) {
       }
 
       // HP bar (small)
-      if (e.type && e.type.life > 2 && !e.isBoss) {
+      if (e.type && !e.isBoss) {
         const barW = e.width
         const pct = e.life / e.type.life
         c.fillStyle = 'rgba(0,0,0,0.5)'

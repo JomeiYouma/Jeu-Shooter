@@ -2,8 +2,7 @@
  * Classe Obstacle — Objet statique ou dérivant sur le terrain.
  *
  * Propriétés :
- *  - destructionType : "blocking" | "breakThrough" | "passThrough"
- *      • blocking     → bloque le joueur et les balles
+ *  - destructionType : "breakThrough" | "passThrough"
  *      • breakThrough → peut être détruit
  *      • passThrough  → traversable (pas de casse)
  *  - damage          : Dégâts infligés au contact
@@ -13,11 +12,11 @@
  *  - height          : Hauteur (px)
  */
 export default class Obstacle {
-  /** @type {"blocking"|"breakThrough"|"passThrough"} */
-  static DESTRUCTION_TYPES = ['blocking', 'breakThrough', 'passThrough']
+  /** @type {"breakThrough"|"passThrough"} */
+  static DESTRUCTION_TYPES = ['breakThrough', 'passThrough']
 
   constructor({
-    destructionType = 'blocking',
+    destructionType = 'breakThrough',
     damage = 0,
     rarity = 'common',
     png = { full: null, damaged: null, destroyed: null },
@@ -30,10 +29,6 @@ export default class Obstacle {
     this.png = { ...png }
     this.width = width
     this.height = height
-  }
-
-  get isBlocking() {
-    return this.destructionType === 'blocking'
   }
 
   get isBreakable() {
