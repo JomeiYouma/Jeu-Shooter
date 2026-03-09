@@ -774,15 +774,33 @@ function ShooterGame({ width = 900, height = 600 }) {
 
       // -- ITEMS --------------------------------------------
       for (const it of g.activeItems) {
-        ctx.fillStyle = rarityColor(it.def.rarity)
-        ctx.strokeStyle = '#fff'
-        ctx.lineWidth = 1.5
         const s = it.w / 2
         ctx.save()
         ctx.translate(it.x, it.y)
-        ctx.rotate(Math.PI / 4)
-        ctx.fillRect(-s, -s, s * 2, s * 2)
-        ctx.strokeRect(-s, -s, s * 2, s * 2)
+
+        // Rarity halo (background glow)
+        const haloColor = rarityColor(it.def.rarity)
+        ctx.shadowColor = haloColor
+        ctx.shadowBlur = 18
+        ctx.fillStyle = haloColor
+        ctx.globalAlpha = 0.35
+        ctx.beginPath()
+        ctx.arc(0, 0, s + 4, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.globalAlpha = 1
+        ctx.shadowBlur = 0
+
+        // Item PNG (foreground)
+        const img = loadImg(it.def.png)
+        if (img && img.complete && img.naturalWidth) {
+          ctx.drawImage(img, -s, -s, s * 2, s * 2)
+        } else {
+          // Fallback diamond
+          ctx.fillStyle = haloColor
+          ctx.rotate(Math.PI / 4)
+          ctx.fillRect(-s * 0.6, -s * 0.6, s * 1.2, s * 1.2)
+        }
+
         ctx.restore()
       }
 
