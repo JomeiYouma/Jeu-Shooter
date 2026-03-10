@@ -92,11 +92,9 @@ export function handleCollisions(g) {
         if (b.bounceRemaining > 0) {
           b.bounceRemaining--
           let closest = null
-          let minD = Infinity
           for (const other of g.enemies) {
             if (other === enemy || !other.isAlive) continue
-            const d2 = Math.hypot(other.x - b.x, other.y - b.y)
-            if (d2 < minD) { minD = d2; closest = other }
+            closest = other; break // prend le premier autre ennemi vivant
           }
           if (closest) {
             const speed = Math.hypot(b.vx, b.vy)

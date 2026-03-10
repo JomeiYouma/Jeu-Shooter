@@ -37,6 +37,7 @@ function ShooterGame({ width = 900, height = 600 }) {
     let lastTime = 0
 
     const G = buildGameState(width, height)
+    G.paused = false
     gameRef.current = G
 
     // -- Input handlers ---------------------------------------
@@ -73,6 +74,13 @@ function ShooterGame({ width = 900, height = 600 }) {
       }
     }
 
+    // -- Pause handler ----------------------------------------
+    const onKeyDown = (e) => {
+      if (e.key === 'p' || e.key === 'P') {
+        G.paused = !G.paused
+      }
+    }
+
     // -- Sync UI state ----------------------------------------
     function syncUI() {
       const g = G
@@ -99,8 +107,24 @@ function ShooterGame({ width = 900, height = 600 }) {
       const dtMs = Math.min(ts - lastTime, 50)
       lastTime = ts
 
-      update(G, dtMs, bounds)
+      if (!G.paused) {
+        update(G, dtMs, bounds)
+      }
       render(ctx, G, bounds)
+      if (G.paused) {
+        ctx.save()
+        ctx.globalAlpha = 0.7
+        ctx.fillStyle = '#222'
+        ctx.fillRect(0, 0, width, height)
+        ctx.globalAlpha = 1
+        ctx.fillStyle = '#fff'
+        ctx.font = 'bold 48px system-ui, sans-serif'
+        ctx.textAlign = 'center'
+        ctx.fillText('PAUSE', width / 2, height / 2)
+        ctx.font = '400 20px system-ui, sans-serif'
+        ctx.fillText('Appuie sur P pour reprendre', width / 2, height / 2 + 40)
+        ctx.restore()
+      }
       syncUI()
 
       animId = requestAnimationFrame(loop)
@@ -113,6 +137,7 @@ function ShooterGame({ width = 900, height = 600 }) {
     canvas.addEventListener('touchstart', onTouchStart, { passive: false })
     canvas.addEventListener('touchmove', onTouchMove, { passive: false })
     canvas.addEventListener('touchend', onTouchEnd)
+    window.addEventListener('keydown', onKeyDown)
 
     animId = requestAnimationFrame(loop)
 
@@ -124,6 +149,7 @@ function ShooterGame({ width = 900, height = 600 }) {
       canvas.removeEventListener('touchstart', onTouchStart)
       canvas.removeEventListener('touchmove', onTouchMove)
       canvas.removeEventListener('touchend', onTouchEnd)
+      window.removeEventListener('keydown', onKeyDown)
       cancelAnimationFrame(animId)
     }
   }, [width, height])

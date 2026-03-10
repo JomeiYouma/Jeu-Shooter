@@ -89,17 +89,31 @@ export default class Item {
       return
     }
 
-    // Special handling for weapon stat modification (applies to one random weapon only)
+    // Special handling for weapon stat modification
     if (this.type === 'weaponStat') {
       if (!weaponsTable || !target.weapons.length) return
-      const idx = target.weapons[Math.floor(Math.random() * target.weapons.length)]
-      const w = weaponsTable[idx]
-      if (w && this.usedVar in w) {
-        // For booleans (like headed), set to true if amount > 0
-        if (typeof w[this.usedVar] === 'boolean') {
-          w[this.usedVar] = !!this.amount
-        } else {
-          w[this.usedVar] += this.amount
+      if (WEAPON_MODIFIERS_SHARED) {
+        // Applique à toutes les armes équipées
+        for (const idx of target.weapons) {
+          const w = weaponsTable[idx]
+          if (w && this.usedVar in w) {
+            if (typeof w[this.usedVar] === 'boolean') {
+              w[this.usedVar] = !!this.amount
+            } else {
+              w[this.usedVar] += this.amount
+            }
+          }
+        }
+      } else {
+        // Applique à une arme au hasard
+        const idx = target.weapons[Math.floor(Math.random() * target.weapons.length)]
+        const w = weaponsTable[idx]
+        if (w && this.usedVar in w) {
+          if (typeof w[this.usedVar] === 'boolean') {
+            w[this.usedVar] = !!this.amount
+          } else {
+            w[this.usedVar] += this.amount
+          }
         }
       }
       return

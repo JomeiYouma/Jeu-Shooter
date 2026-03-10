@@ -36,6 +36,7 @@ import itemDesintegrator from '../assets/Items/item_desintegrator.png'
 import itemAura from '../assets/Items/item_aura.png'
 
 const PLAYER_WEAPONS = [0, 1, 2, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+const EXTRA_WEAPONS = [23, 24]
 
 const items = [
   // [0] Kit de reparation - heal
@@ -331,6 +332,26 @@ const items = [
     rarity: 'divine',
     png: itemDesintegrator,
   }),
+    // [23] Rebond simple - remplace l'arme
+    new Item({
+      name: 'Lance-grenade rebondissantes',
+      description: 'Remplace votre arme par un tir rebondissant.',
+      type: 'replace',
+      usedVar: 'weapons',
+      amount: 23,
+      rarity: 'rare',
+      png: itemBuff,
+    }),
+    // [24] Guidage simple - remplace l'arme
+    new Item({
+      name: 'Fusil à têtes chercheuses',
+      description: 'Remplace votre arme par un tir téléguidé.',
+      type: 'replace',
+      usedVar: 'weapons',
+      amount: 24,
+      rarity: 'epic',
+      png: itemHpUp,
+    }),
 
   // [23] Rebond - ajoute 1 rebond à une arme au hasard
   new Item({

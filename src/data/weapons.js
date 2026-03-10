@@ -246,8 +246,8 @@ const weapons = [
     rarity: 'rare',
     png: null,
     bulletGif: bulletLaser,
-    headed: true,
-    bounce: 3,
+    /* headed: true, */
+    
   }),// [14] Gros canon
   new Weapon({
     name: 'Gros canon',
@@ -366,7 +366,7 @@ const weapons = [
     rarity: 'rare',
     png: null,
     bulletGif: bulletC,
-    headed: true,
+    /* headed: true, */
   }),
   // [22] Desintegrator
   new Weapon({
@@ -382,7 +382,40 @@ const weapons = [
     rarity: 'common',
     png: null,
     bulletGif: bulletC,
+    bounce: 3,
   }),
+    // [23] Basique rebond
+    new Weapon({
+      name: 'Rebond simple',
+      description: 'Tir simple, rebondit 2 fois sur les ennemis.',
+      damage: 0.5,
+      bulletShootRotation: [-25, 25],
+      bulletsSize: 4,
+      bulletsPerSalve: 1,
+      salveDuration: 100,
+      cooldownTime: 400,
+      salveRotationStep: 0,
+      rarity: 'common',
+      png: null,
+      bulletGif: bulletB,
+      bounce: 2,
+    }),
+    // [24] Basique heading
+    new Weapon({
+      name: 'Guidage simple',
+      description: 'Tir simple, balles téléguidées.',
+      damage: 1,
+      bulletShootRotation: [0],
+      bulletsSize: 4,
+      bulletsPerSalve: 2,
+      salveDuration: 400,
+      cooldownTime: 400,
+      salveRotationStep: 0,
+      rarity: 'common',
+      png: null,
+      bulletGif: bulletA,
+      headed: true,
+    }),
 ]
 
 export default weapons

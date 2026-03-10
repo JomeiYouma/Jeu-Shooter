@@ -1,5 +1,6 @@
 import { clamp } from './constants.js'
 import { loadImg, getGifPlayer, ACCEL_BARS, RED_BARS, BLUE_BARS } from './assets.js'
+import { weapons } from '../data/index.js'
 import { STATE } from './constants.js'
 
 // -- Rarity color -----------------------------------------------
@@ -343,10 +344,29 @@ export function render(ctx, g, bounds) {
       hpBarY + hBarH / 2 + 3.5
     )
 
-    // Red bar
-    const redImg = RED_BARS[4]
+    // Red bar (weapon cooldown)
+    // Affiche la progression de l'arme la plus "loin" d'être prête (la plus longue recharge restante)
+    let minReadyRatio = 1;
+    if (g.player.weapons && g.weaponStates) {
+      for (const wIdx of g.player.weapons) {
+        const ws = g.weaponStates.get(wIdx);
+        const w = weapons[wIdx];
+        if (ws && w) {
+          let totalCooldown = w.cooldownTime + (w.salveDuration || 0);
+          let ratio = 1;
+          if (totalCooldown > 0) {
+            ratio = 1 - Math.max(0, Math.min(ws.cooldownTimer, totalCooldown)) / totalCooldown;
+            ratio = Math.max(0, Math.min(1, ratio));
+          }
+          if (ratio < minReadyRatio) minReadyRatio = ratio;
+        }
+      }
+    }
+    // minReadyRatio = 1 (toutes prêtes), 0 = la plus longue recharge
+    const redIdx = Math.round(minReadyRatio * 4);
+    const redImg = RED_BARS[redIdx];
     if (redImg && redImg.complete && redImg.naturalWidth > 0) {
-      ctx.drawImage(redImg, hBarX, redY, hBarW, hBarH)
+      ctx.drawImage(redImg, hBarX, redY, hBarW, hBarH);
     }
 
     // Blue bar (shield)
