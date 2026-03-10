@@ -36,7 +36,7 @@ const levels = [
       { timeOfEntry: 2, positionOfEntry: 200, rotationOfEntry: 0, type: 0 },
       { timeOfEntry: 3, positionOfEntry: 'random', rotationOfEntry: 0, type: 0 },
     ],
-    amountOfItems: 1,
+    amountOfItems: 15,
     amountOfObstacles: 2,
     rarity: 'common',
   }),

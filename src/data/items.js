@@ -12,12 +12,23 @@ import itemG from '../assets/Items/item_g.png'
 import itemH from '../assets/Items/item_h.png'
 import itemI from '../assets/Items/item_i.png'
 import itemJ from '../assets/Items/item_j.png'
-import itemJ from '../assets/Items/item_k.png'
+import itemK from '../assets/Items/item_k.png'
 import itemL from '../assets/Items/item_l.png'
-import itemM from '../assets/Items/item_m.png'
+/* import itemM from '../assets/Items/item_m.png' */
 import itemN from '../assets/Items/item_n.png'
 import itemO from '../assets/Items/item_o.png'
 import itemP from '../assets/Items/item_p.png'
+import itemAmmo from '../assets/Items/item_ammo.png'
+import itemBuff from '../assets/Items/item_buff.png'
+import itemHealth from '../assets/Items/item_health.png'
+import itemSalve from '../assets/Items/item_salve.png'
+import itemGrosCanon from '../assets/Items/item_gros_cannon.png'
+import itemMachine from '../assets/Items/item_machine.png'
+import itemStronger from '../assets/Items/item_stronger.png'
+import itemHpUp from '../assets/Items/item_hp_up.png'
+
+const PLAYER_WEAPONS = [0, 1, 2, 13, 14, 15, 16, 17, 18, 19]
+
 const items = [
   // [0] Kit de reparation - heal
   new Item({
@@ -26,7 +37,7 @@ const items = [
     type: 'add',
     usedVar: 'healthPoints',
     amount: 3,
-    rarity: 'common',
+    rarity: 'rare',
     png: itemH,
   }),
 
@@ -60,7 +71,7 @@ const items = [
     usedVar: 'maxHealth',
     amount: 3,
     rarity: 'rare',
-    png: itemI,
+    png: itemHealth,
   }),
 
   // [4] Double Canon - remplace l arme
@@ -84,6 +95,36 @@ const items = [
     rarity: 'epic',
     png: itemJ,
   }),
+    // [13] Laser - remplace l arme
+  new Item({
+    name: 'Laser',
+    description: 'Remplace votre arme par un laser.',
+    type: 'replace',
+    usedVar: 'weapons',
+    amount: 13,
+    rarity: 'epic',
+    png: itemA,
+  }),
+      // [14] Gros canon - remplace l arme
+  new Item({
+    name: 'Gros canon',
+    description: 'Remplace votre arme par un gros canon.',
+    type: 'replace',
+    usedVar: 'weapons',
+    amount: 14,
+    rarity: 'rare',
+    png: itemGrosCanon,
+  }),
+      // [15] Machine - remplace l arme
+  new Item({
+    name: 'Machine',
+    description: 'Remplace votre arme par une machine.',
+    type: 'replace',
+    usedVar: 'weapons',
+    amount: 15,
+    rarity: 'rare',
+    png: itemMachine,
+  }),
 
   // [6] Cadence amelioree - reduit le cooldown
   new Item({
@@ -104,7 +145,7 @@ const items = [
     usedVar: 'bulletsPerSalve',
     amount: 1,
     rarity: 'epic',
-    png: itemP,
+    png: itemAmmo,
   }),
 
   // [8] Munitions lourdes - degats
@@ -115,7 +156,7 @@ const items = [
     usedVar: 'damage',
     amount: 1,
     rarity: 'epic',
-    png: itemO,
+    png: itemBuff,
   }),
 
   // [9] Balles larges
@@ -125,8 +166,129 @@ const items = [
     type: 'weaponStat',
     usedVar: 'bulletsSize',
     amount: 2,
-    rarity: 'common',
+    rarity: 'rare',
+    png: itemSalve,
+  }),
+
+  // [10] Microchip avance - acceleration
+  new Item({
+    name: 'Microchip avance',
+    description: 'Augmente l\'acceleration de 0.5.',
+    type: 'add',
+    usedVar: 'acceleration',
+    amount: 0.5,
+    rarity: 'rare',
+    png: itemD,
+  }),
+
+  // [11] Retro-propulseur - vitesse arriere
+  new Item({
+    name: 'Retro-propulseur',
+    description: 'Augmente la vitesse arriere de 30.',
+    type: 'add',
+    usedVar: 'maxBrakeSpeed',
+    amount: 30,
+    rarity: 'rare',
     png: itemE,
+  }),
+
+  // [12] Ailerons lateraux - vitesse laterale
+  new Item({
+    name: 'Ailerons lateraux',
+    description: 'Augmente la vitesse laterale de 30.',
+    type: 'add',
+    usedVar: 'maxSideSpeed',
+    amount: 30,
+    rarity: 'rare',
+    png: itemI,
+  }),
+
+  // [13] Eventail large (arme 16)
+  new Item({
+    name: 'Eventail large',
+    description: 'Remplace votre arme par un eventail large (4 dir).',
+    type: 'replace',
+    usedVar: 'weapons',
+    amount: 16,
+    rarity: 'legendary',
+    png: itemO,
+  }),
+
+  // [14] Eventail triple (arme 17)
+  new Item({
+    name: 'Eventail triple',
+    description: 'Remplace votre arme par un eventail triple.',
+    type: 'replace',
+    usedVar: 'weapons',
+    amount: 17,
+    rarity: 'legendary',
+    png: itemK,
+  }),
+
+  // [15] Double canon bis (arme 18)
+  new Item({
+    name: 'Double canon bis',
+    description: 'Remplace votre arme par un double canon bis.',
+    type: 'replace',
+    usedVar: 'weapons',
+    amount: 18,
+    rarity: 'rare',
+    png: itemL,
+  }),
+
+  // [16] Phase waller (arme 19)
+  new Item({
+    name: 'Phase waller',
+    description: 'Remplace votre arme par un phase waller.',
+    type: 'replace',
+    usedVar: 'weapons',
+    amount: 19,
+    rarity: 'rare',
+    png: itemP,
+  }),
+
+  // [17] Pointes de coque - degats contact
+  new Item({
+    name: 'Pointes de coque',
+    description: 'Augmente les degats de contact de 2.',
+    type: 'add',
+    usedVar: 'contactDamage',
+    amount: 2,
+    rarity: 'epic',
+    png: itemStronger,
+  }),
+
+  // [18] Arme aleatoire - remplace
+  new Item({
+    name: 'Arme aleatoire',
+    description: 'Remplace votre arme par une arme au hasard.',
+    type: 'replaceRandomWeapon',
+    usedVar: 'weapons',
+    amount: PLAYER_WEAPONS,
+    rarity: 'rare',
+    png: itemB,
+  }),
+
+  // [19] Arme supplementaire - ajoute
+  new Item({
+    name: 'Arme supplementaire',
+    description: 'Ajoute une arme au hasard a votre arsenal.',
+    type: 'addRandomWeapon',
+    usedVar: 'weapons',
+    amount: PLAYER_WEAPONS,
+    rarity: 'common',
+    png: itemHpUp,
+  }),
+
+  // [20] Talisman - ameliore la chance
+  new Item({
+    name: 'Talisman',
+    description: 'Ameliore vos chances de trouver des items rares (max 10).',
+    type: 'add',
+    usedVar: 'talismanCount',
+    amount: 1,
+    rarity: 'rare',
+    png: itemN,
   }),
 ]
 

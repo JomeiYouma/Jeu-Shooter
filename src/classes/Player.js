@@ -28,6 +28,7 @@ export default class Player {
     maxSideSpeed = 150,
     maxBrakeSpeed = 100,
     immunityTime = 1000,
+    talismanCount = 0,
     width = 48,
     height = 48,
     png = { full: null, damaged: null, destroyed: null },
@@ -43,6 +44,8 @@ export default class Player {
     this.maxSideSpeed = maxSideSpeed
     this.maxBrakeSpeed = maxBrakeSpeed
     this.immunityTime = immunityTime
+    this.talismanCount = talismanCount
+    this.maxTalisman = 10
     this.width = width
     this.height = height
     this.png = { ...png }

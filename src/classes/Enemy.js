@@ -52,7 +52,7 @@ export default class Enemy {
   }
 
   takeDamage(amount) {
-    const effective = Math.max(1, amount - this.shieldForce)
+    const effective = Math.max(0, amount - this.shieldForce)
     this.life = Math.max(0, this.life - effective)
     return this.life <= 0
   }

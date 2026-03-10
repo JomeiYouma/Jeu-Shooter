@@ -92,9 +92,9 @@ const enemyTypes = [
   // [5] Bombardier - lent, tir en cône, résistant
   new EnemyType({
     movementSpeed: 35,
-    shieldForce: 1,
-    life: 8,
-    baseLife: 8,
+    shieldForce: 0,
+    life: 12,
+    baseLife: 12,
     weapon: 10,
     movementPattern: 'straight',
     isIgnoringPlayer: false,
@@ -126,9 +126,9 @@ const enemyTypes = [
   // [7] Tourelle - résistant, salve rotative
   new EnemyType({
     movementSpeed: 30,
-    shieldForce: 2,
-    life: 12,
-    baseLife: 12,
+    shieldForce: 0,
+    life: 20,
+    baseLife: 20,
     weapon: 12,
     movementPattern: 'straight',
     isIgnoringPlayer: false,

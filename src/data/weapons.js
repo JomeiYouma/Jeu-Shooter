@@ -14,7 +14,11 @@ import bulletJ from '../assets/bullets/bullet_j.gif'
 import bulletK from '../assets/bullets/bullet_k.gif'
 import bulletL from '../assets/bullets/bullet_l.gif'
 import bulletN from '../assets/bullets/bullet_n.gif'
-import bulletO from '../assets/bullets/bullet_o.gif'  
+import bulletO from '../assets/bullets/bullet_o.gif'
+import bulletV from '../assets/bullets/bullet_v.gif'
+import bulletCannon from '../assets/bullets/bullet_cannon.gif'
+import bulletLaser from '../assets/bullets/bullet_laser.gif'
+import bulletMachine from '../assets/bullets/bullet_red_laser.gif'
 
 const weapons = [ 
   // [0] Laser basique - arme de depart
@@ -22,15 +26,15 @@ const weapons = [
     name: 'Laser basique',
     description: 'Tir simple en ligne droite.',
     damage: 1,
-    bulletShootRotation: [0],
+    bulletShootRotation: [0,10],
     bulletsSize: 5,
-    bulletsPerSalve: 1,
+    bulletsPerSalve: 10,
     salveDuration: 100,
     cooldownTime: 1,
-    salveRotationStep: 10,
+    salveRotationStep: 0,
     rarity: 'common',
     png: null,
-    bulletGif: bulletH,
+    bulletGif: bulletC,
   }),
 
   // [1] Double canon
@@ -62,7 +66,7 @@ const weapons = [
     salveRotationStep: 0,
     rarity: 'epic',
     png: null,
-    bulletGif: bulletO,
+    bulletGif: bulletV,
   }),
 
   // ── Armes ennemies ─────────────────────────────────────────
@@ -227,6 +231,109 @@ const weapons = [
     rarity: 'epic',
     png: null,
     bulletGif: bulletF,
+  }), // OTHER PLAYER WEAPONS
+  // [13] Laser
+  new Weapon({
+    name: 'Laser',
+    description: 'Laser faible mais continu.',
+    damage: 0.01,
+    bulletShootRotation: [0],
+    bulletsSize: 6,
+    bulletsPerSalve: 5,
+    salveDuration: 5,
+    cooldownTime: 0,
+    salveRotationStep: 0,
+    rarity: 'rare',
+    png: null,
+    bulletGif: bulletLaser,
+  }),// [14] Gros canon
+  new Weapon({
+    name: 'Gros canon',
+    description: 'Cadence faible et gros dégats',
+    damage: 5,
+    bulletShootRotation: [0],
+    bulletsSize: 20,
+    bulletsPerSalve: 1,
+    salveDuration: 300,
+    cooldownTime: 1200,
+    salveRotationStep: 0,
+    rarity: 'rare',
+    png: null,
+    bulletGif: bulletCannon,
+  }),// [15] Machine
+  new Weapon({
+    name: 'Machine',
+    description: 'Cadence élevée et dégâts modérés',
+    damage: 0.45,
+    bulletShootRotation: [0],
+    bulletsSize: 3,
+    bulletsPerSalve: 3,
+    salveDuration: 300,
+    cooldownTime: 200,
+    salveRotationStep: 0,
+    rarity: 'epic',
+    png: null,
+    bulletGif: bulletN,
+  }),
+  // [16] Éventail large - 5 directions
+  new Weapon({
+    name: 'Eventail large',
+    description: 'Arrose en eventail large (4 dir).',
+    damage: 1,
+    bulletShootRotation: [-90, -45, 45, 90],
+    bulletsSize: 3,
+    bulletsPerSalve: 1,
+    salveDuration: 100,
+    cooldownTime: 800,
+    salveRotationStep: 0,
+    rarity: 'legendary',
+    png: null,
+    bulletGif: bulletO,
+  }),
+    // [17] Éventail large - 5 directions
+  new Weapon({
+    name: 'Eventail large',
+    description: 'Arrose en eventail large (3 dir).',
+    damage: 2,
+    bulletShootRotation: [-92, 0, 92],
+    bulletsSize: 3,
+    bulletsPerSalve: 1,
+    salveDuration: 200,
+    cooldownTime: 400,
+    salveRotationStep: 0,
+    rarity: 'legendary',
+    png: null,
+    bulletGif: bulletMachine,
+  }),
+  // [18] Double canon
+  new Weapon({
+    name: 'Double canon bis',
+    description: 'Tire deux balles en parallele.',
+    damage: 0.7,
+    bulletShootRotation: [-10, 10],
+    bulletsSize: 4,
+    bulletsPerSalve: 2,
+    salveDuration: 640,
+    cooldownTime: 60,
+    salveRotationStep: 0,
+    rarity: 'rare',
+    png: null,
+    bulletGif: bulletB,
+  }),
+  // [19] Phase Waller
+  new Weapon({
+    name: 'Phase waller',
+    description: 'Tire des murs.',
+    damage: 1.5,
+    bulletShootRotation: [0],
+    bulletsSize: 8,
+    bulletsPerSalve: 5,
+    salveDuration: 2000,
+    cooldownTime: 700,
+    salveRotationStep: 2,
+    rarity: 'rare',
+    png: null,
+    bulletGif: bulletB,
   }),
 ]
 

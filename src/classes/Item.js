@@ -42,6 +42,22 @@ export default class Item {
    * @param {Array} [weaponsTable] — tableau global des armes (nécessaire pour type 'weaponStat')
    */
   applyTo(target, weaponsTable) {
+    // Replace all weapons with a random one
+    if (this.type === 'replaceRandomWeapon') {
+      const pool = this.amount.filter(i => !target.weapons.includes(i))
+      if (pool.length === 0) return
+      target.weapons = [pool[Math.floor(Math.random() * pool.length)]]
+      return
+    }
+
+    // Add a random weapon to the arsenal
+    if (this.type === 'addRandomWeapon') {
+      const pool = this.amount.filter(i => !target.weapons.includes(i))
+      if (pool.length === 0) return
+      target.weapons.push(pool[Math.floor(Math.random() * pool.length)])
+      return
+    }
+
     // Special handling for weapon replacement
     if (this.type === 'replace' && this.usedVar === 'weapons') {
       target.weapons = Array.isArray(this.amount) ? [...this.amount] : [this.amount]

@@ -9,7 +9,7 @@ import Level from '../classes/Level.js'
 import World from '../classes/World.js'
 
 const world1 = new World({
-  name: 'Monde 1 — Ceinture d\'astéroïdes',
+  name: 'Monde 1 - Fuite vers la base',
   levels: [
     // ── Niveau 1 : Échauffement ──────────────────────────────
     new Level({
@@ -22,7 +22,7 @@ const world1 = new World({
         { timeOfEntry: 5, positionOfEntry: 'random', type: 0 },
         { timeOfEntry: 6.5, positionOfEntry: 'random', type: 0 },
       ],
-      amountOfItems: 1,
+      amountOfItems: 5,
       amountOfObstacles: 2,
       rarity: 'common',
     }),
@@ -40,7 +40,7 @@ const world1 = new World({
         { timeOfEntry: 6, positionOfEntry: 'random', type: 1 },
         { timeOfEntry: 7.5, positionOfEntry: 'random', type: 0 },
       ],
-      amountOfItems: 1,
+      amountOfItems: 3,
       amountOfObstacles: 3,
       rarity: 'common',
     }),

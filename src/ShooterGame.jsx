@@ -29,6 +29,40 @@ const randBetween = (a, b) => a + Math.random() * (b - a)
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)]
 const DEG2RAD = Math.PI / 180
 
+// -- Rarity-weighted item picker ------------------------------
+const BASE_RATES = { common: 54.25, rare: 25, epic: 12.5, legendary: 6.25, divine: 2 }
+function pickItemByRarity(itemList, talismanCount) {
+  const t = Math.min(talismanCount, 10)
+  const rates = {
+    common:    Math.max(0, BASE_RATES.common - t * 4),
+    rare:      BASE_RATES.rare + t * 1,
+    epic:      BASE_RATES.epic + t * 1,
+    legendary: BASE_RATES.legendary + t * 1,
+    divine:    BASE_RATES.divine + t * 1,
+  }
+  const total = rates.common + rates.rare + rates.epic + rates.legendary + rates.divine
+  let roll = Math.random() * total
+  let chosenRarity = 'common'
+  for (const r of ['common', 'rare', 'epic', 'legendary', 'divine']) {
+    roll -= rates[r]
+    if (roll <= 0) { chosenRarity = r; break }
+  }
+  const pool = itemList.filter(i => i.rarity === chosenRarity)
+  if (pool.length === 0) return pick(itemList)
+  return pick(pool)
+}
+
+// -- Progressive acceleration curve ---------------------------
+// 0.3s => 40%, 0.6s => 70%, 1.2s => 85%, 3s => 100%
+function accelCurve(t) {
+  if (t <= 0) return 0
+  if (t <= 0.3) return (t / 0.3) * 0.5
+  if (t <= 0.6) return 0.4 + ((t - 0.3) / 0.3) * 0.3
+  if (t <= 1.2) return 0.7 + ((t - 0.6) / 0.6) * 0.15
+  if (t <= 3.0) return 0.85 + ((t - 1.2) / 1.8) * 0.15
+  return 1
+}
+
 // -- Image preloader / cache (PNGs only) ----------------------
 const _imgCache = {}
 function loadImg(src) {
@@ -122,7 +156,7 @@ function ShooterGame({ width = 900, height = 600 }) {
   const buildGameState = useCallback(() => {
     const player = new Player({
       acceleration: 1,
-      weapons: [0],
+      weapons: [19],
       shieldForce: 0,
       healthPoints: 10,
       maxHealth: 10,
@@ -177,6 +211,7 @@ function ShooterGame({ width = 900, height = 600 }) {
       playerPrevX: width / 2,
       playerPrevY: height - 40,
       playerSpeedPct: 0,
+      playerAccelTime: 0,
     }
   }, [width, height])
 
@@ -287,7 +322,7 @@ function ShooterGame({ width = 900, height = 600 }) {
       if (g.itemSpawnTimer >= interval) {
         g.itemSpawnTimer = 0
         g.itemsSpawnedThisLevel++
-        const itemDef = pick(items)
+        const itemDef = pickItemByRarity(items, g.player.talismanCount)
         g.activeItems.push({
           def: itemDef,
           x: randBetween(30, width - 30),
@@ -519,16 +554,26 @@ function ShooterGame({ width = 900, height = 600 }) {
       g.enemies = remainingEnemies
 
       // Enemies vs player
-      for (const enemy of g.enemies) {
+      g.enemies = g.enemies.filter((enemy) => {
         const dist = Math.hypot(enemy.x - p.x, enemy.y - p.y)
         if (dist < (enemy.width / 2) + pR) {
           if (!p.isImmune) {
             p.takeDamage(enemy.contactDamage)
             p.isImmune = true
             setTimeout(() => { p.isImmune = false }, p.immunityTime)
+            // Player spikes (contact damage)
+            if (p.contactDamage > 0) {
+              const dead = enemy.takeDamage(p.contactDamage)
+              if (dead) {
+                g.score += enemy.isBoss ? 50 : 10
+                if (enemy.isBoss && g.bossRef === enemy) g.bossRef = null
+                return false
+              }
+            }
           }
         }
-      }
+        return true
+      })
 
       // Player vs items
       g.activeItems = g.activeItems.filter((it) => {
@@ -539,6 +584,8 @@ function ShooterGame({ width = 900, height = 600 }) {
           if (p.healthPoints > p.maxHealth) p.healthPoints = p.maxHealth
           // Cap shield to maxShield
           if (p.shieldForce > p.maxShield) p.shieldForce = p.maxShield
+          // Cap talisman to maxTalisman
+          if (p.talismanCount > p.maxTalisman) p.talismanCount = p.maxTalisman
           g.itemPickedUp = it.def.name
           g.itemPickedUpTimer = 2
           return false
@@ -609,7 +656,7 @@ function ShooterGame({ width = 900, height = 600 }) {
 
         const nextLevel = g.world.getLevel(g.currentLevelIndex + 1)
         if (nextLevel) {
-          g.transitionText = `Niveau ${nextLevel.levelNo}${nextLevel.isBoss ? ' � BOSS' : nextLevel.isBonus ? ' � BONUS' : ''}`
+          g.transitionText = `Niveau ${nextLevel.levelNo}${nextLevel.isBoss ? ' BOSS' : nextLevel.isBonus ? ' BONUS' : ''}`
         } else {
           g.transitionText = 'Niveau final termine !'
         }
@@ -631,25 +678,31 @@ function ShooterGame({ width = 900, height = 600 }) {
 
       // Player movement (always active during play & transition)
       const p = g.player
+
+      // Progressive acceleration
+      const distToMouse = Math.hypot(g.mouseX - p.x, g.mouseY - p.y)
+      if (distToMouse > 5) {
+        g.playerAccelTime += dt * p.acceleration
+      } else {
+        g.playerAccelTime = Math.max(0, g.playerAccelTime - dt * 3 * p.acceleration)
+      }
+      const speedMult = accelCurve(g.playerAccelTime)
+
       // X axis — lateral (maxSideSpeed)
       const dx = g.mouseX - p.x
-      const targetX = p.x + clamp(dx, -p.maxSideSpeed * dt * 3, p.maxSideSpeed * dt * 3)
+      const targetX = p.x + clamp(dx, -p.maxSideSpeed * speedMult * dt * 3, p.maxSideSpeed * speedMult * dt * 3)
       p.x = clamp(targetX, p.width / 2, width - p.width / 2)
       // Y axis — forward = up (maxSpeed), backward = down (maxBrakeSpeed)
       const dy = g.mouseY - p.y
-      const maxUp = p.maxSpeed * dt * 3     // going up = forward
-      const maxDown = p.maxBrakeSpeed * dt * 3  // going down = brake
+      const maxUp = p.maxSpeed * speedMult * dt * 3     // going up = forward
+      const maxDown = p.maxBrakeSpeed * speedMult * dt * 3  // going down = brake
       const targetY = p.y + clamp(dy, -maxUp, maxDown)
       p.y = clamp(targetY, height * 0.4, height - p.height / 2)
 
       // -- Track player speed for acceleration bar --------
-      const moveDx = p.x - g.playerPrevX
-      const moveDy = p.y - g.playerPrevY
-      const actualSpeed = Math.sqrt(moveDx * moveDx + moveDy * moveDy) / dt
       g.playerPrevX = p.x
       g.playerPrevY = p.y
-      // Smooth to avoid jitter
-      g.playerSpeedPct = g.playerSpeedPct * 0.75 + clamp(actualSpeed / p.maxSpeed, 0, 1) * 0.25
+      g.playerSpeedPct = speedMult
 
       // LEVEL TRANSITION
       if (g.phase === STATE.LEVEL_TRANSITION) {
@@ -877,10 +930,7 @@ function ShooterGame({ width = 900, height = 600 }) {
         const accelY = hpBarY
 
         // ── Acceleration bar (vertical, left) ─────────────
-        const logPct = g.playerSpeedPct > 0
-          ? clamp(Math.log(1 + g.playerSpeedPct * 9) / Math.log(10), 0, 1)
-          : 0
-        const accelIdx = Math.round(logPct * 5)
+        const accelIdx = Math.round(clamp(g.playerSpeedPct, 0, 1) * 5)
         const accelImg = ACCEL_BARS[accelIdx]
         if (accelImg && accelImg.complete && accelImg.naturalWidth > 0) {
           ctx.drawImage(accelImg, accelX, accelY, accelW, accelH)
@@ -1133,6 +1183,7 @@ function ShooterGame({ width = 900, height = 600 }) {
 
     function rarityColor(rarity) {
       switch (rarity) {
+        case 'divine': return '#ffffff'
         case 'legendary': return '#ffaa00'
         case 'epic': return '#cc44ff'
         case 'rare': return '#4488ff'
