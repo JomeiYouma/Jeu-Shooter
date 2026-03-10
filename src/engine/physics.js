@@ -73,7 +73,7 @@ export function handleCollisions(g) {
   const p = g.player
   const pR = p.width / 2.5
 
-  // Bullets vs enemies
+  // Bullets vs enemies (with bounce support)
   const remainingEnemies = []
   for (const enemy of g.enemies) {
     let destroyed = false
@@ -87,6 +87,25 @@ export function handleCollisions(g) {
           destroyed = true
           g.score += enemy.isBoss ? 50 : 10
           if (enemy.isBoss && g.bossRef === enemy) g.bossRef = null
+        }
+        // Bounce: redirect bullet to nearest OTHER alive enemy
+        if (b.bounceRemaining > 0) {
+          b.bounceRemaining--
+          let closest = null
+          let minD = Infinity
+          for (const other of g.enemies) {
+            if (other === enemy || !other.isAlive) continue
+            const d2 = Math.hypot(other.x - b.x, other.y - b.y)
+            if (d2 < minD) { minD = d2; closest = other }
+          }
+          if (closest) {
+            const speed = Math.hypot(b.vx, b.vy)
+            const angle = Math.atan2(closest.y - b.y, closest.x - b.x)
+            b.vx = Math.cos(angle) * speed
+            b.vy = Math.sin(angle) * speed
+            b._headTarget = null // reset homing target for bounced headed bullets
+            return true // keep the bullet
+          }
         }
         return false
       }

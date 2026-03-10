@@ -45,28 +45,28 @@ export default class Item {
    * @param {Function} [resetWeaponFn] — fonction pour remettre une arme à ses stats par défaut
    */
   applyTo(target, weaponsTable, resetWeaponFn) {
-    // Replace all weapons with a random one
+    // Replace one random weapon in the arsenal with a random new weapon from the pool
     if (this.type === 'replaceRandomWeapon') {
-      const pool = this.amount.filter(i => !target.weapons.includes(i))
+      if (!target.weapons.length) return
+      const pool = this.amount
+        .filter(i => !target.weapons.includes(i))
+        .filter(i => !weaponsTable || !weaponsTable[i] || weaponsTable[i].rarity !== 'divine')
       if (pool.length === 0) return
-      const oldWeapons = [...target.weapons]
+      const slot = Math.floor(Math.random() * target.weapons.length)
+      const oldIdx = target.weapons[slot]
       const newIdx = pool[Math.floor(Math.random() * pool.length)]
-      if (REPLACE_ALL_WEAPONS) {
-        target.weapons = [newIdx]
-      } else {
-        target.weapons[0] = newIdx
-      }
-      if (!WEAPON_MODIFIERS_SHARED && resetWeaponFn) {
-        for (const wIdx of oldWeapons) {
-          if (!target.weapons.includes(wIdx)) resetWeaponFn(wIdx)
-        }
+      target.weapons[slot] = newIdx
+      if (!WEAPON_MODIFIERS_SHARED && resetWeaponFn && oldIdx !== newIdx) {
+        resetWeaponFn(oldIdx)
       }
       return
     }
 
     // Add a random weapon to the arsenal
     if (this.type === 'addRandomWeapon') {
-      const pool = this.amount.filter(i => !target.weapons.includes(i))
+      const pool = this.amount
+        .filter(i => !target.weapons.includes(i))
+        .filter(i => !weaponsTable || !weaponsTable[i] || weaponsTable[i].rarity !== 'divine')
       if (pool.length === 0) return
       target.weapons.push(pool[Math.floor(Math.random() * pool.length)])
       return
@@ -89,12 +89,16 @@ export default class Item {
       return
     }
 
-    // Special handling for weapon stat modification
+    // Special handling for weapon stat modification (applies to one random weapon only)
     if (this.type === 'weaponStat') {
       if (!weaponsTable || !target.weapons.length) return
-      for (const wIdx of target.weapons) {
-        const w = weaponsTable[wIdx]
-        if (w && this.usedVar in w) {
+      const idx = target.weapons[Math.floor(Math.random() * target.weapons.length)]
+      const w = weaponsTable[idx]
+      if (w && this.usedVar in w) {
+        // For booleans (like headed), set to true if amount > 0
+        if (typeof w[this.usedVar] === 'boolean') {
+          w[this.usedVar] = !!this.amount
+        } else {
           w[this.usedVar] += this.amount
         }
       }

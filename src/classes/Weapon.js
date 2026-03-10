@@ -31,6 +31,8 @@ export default class Weapon {
     rarity = 'common',
     png = null,
     bulletGif = null,
+    headed = false,
+    bounce = 0,
   } = {}) {
     this.name = name
     this.description = description
@@ -44,6 +46,8 @@ export default class Weapon {
     this.rarity = rarity
     this.png = png
     this.bulletGif = bulletGif
+    this.headed = headed
+    this.bounce = bounce
   }
 
   /** Nombre de balles tirées simultanément (longueur du tableau de rotations). */

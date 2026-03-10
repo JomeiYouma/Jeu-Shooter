@@ -14,15 +14,15 @@ import itemJ from '../assets/Items/item_j.png'
 import itemL from '../assets/Items/item_l.png'
 /* import itemM from '../assets/Items/item_m.png' */
 import itemN from '../assets/Items/item_n.png'
-/* import itemP from '../assets/Items/item_p.png' */
+import itemP from '../assets/Items/item_p.png'
 import itemAmmo from '../assets/Items/item_ammo.png'
 import itemBuff from '../assets/Items/item_buff.png'
 import itemHealth from '../assets/Items/item_health.png'
 import itemSalve from '../assets/Items/item_salve.png'
 import itemGrosCanon from '../assets/Items/item_gros_cannon.png'
 import itemMachine from '../assets/Items/item_machine.png'
-/* import itemStronger from '../assets/Items/item_stronger.png'
-import itemHpUp from '../assets/Items/item_hp_up.png' */
+import itemStronger from '../assets/Items/item_stronger.png'
+import itemHpUp from '../assets/Items/item_hp_up.png'
 import itemStrafe from '../assets/Items/item_strafe.png'
 import itemBrake from '../assets/Items/item_brake.png'
 import item3 from '../assets/Items/item_3.png'
@@ -32,8 +32,10 @@ import itemShamrock from '../assets/Items/item_shamrock.png'
 import itemPill from '../assets/Items/item_pill.png'
 import itemDual from '../assets/Items/item_dual.png'
 import itemSpikes from '../assets/Items/item_spikes.png'
+import itemDesintegrator from '../assets/Items/item_desintegrator.png'
+import itemAura from '../assets/Items/item_aura.png'
 
-const PLAYER_WEAPONS = [0, 1, 2, 13, 14, 15, 16, 17, 18, 19]
+const PLAYER_WEAPONS = [0, 1, 2, 13, 14, 15, 16, 17, 18, 19, 20, 21]
 
 const items = [
   // [0] Kit de reparation - heal
@@ -150,7 +152,7 @@ const items = [
     type: 'weaponStat',
     usedVar: 'bulletsPerSalve',
     amount: 1,
-    rarity: 'epic',
+    rarity: 'legendary',
     png: itemAmmo,
   }),
 
@@ -161,7 +163,7 @@ const items = [
     type: 'weaponStat',
     usedVar: 'damage',
     amount: 1,
-    rarity: 'epic',
+    rarity: 'legendary',
     png: itemBuff,
   }),
 
@@ -238,7 +240,7 @@ const items = [
     type: 'replace',
     usedVar: 'weapons',
     amount: 18,
-    rarity: 'rare',
+    rarity: 'epic',
     png: itemDoubleCanon,
   }),
 
@@ -249,7 +251,7 @@ const items = [
     type: 'replace',
     usedVar: 'weapons',
     amount: 19,
-    rarity: 'rare',
+    rarity: 'epic',
     png: itemWaller,
   }),
 
@@ -260,7 +262,7 @@ const items = [
     type: 'add',
     usedVar: 'contactDamage',
     amount: 2,
-    rarity: 'epic',
+    rarity: 'common',
     png: itemSpikes,
   }),
 
@@ -271,7 +273,7 @@ const items = [
     type: 'replaceRandomWeapon',
     usedVar: 'weapons',
     amount: PLAYER_WEAPONS,
-    rarity: 'rare',
+    rarity: 'epic',
     png: itemPill,
   }),
 
@@ -282,7 +284,7 @@ const items = [
     type: 'addRandomWeapon',
     usedVar: 'weapons',
     amount: PLAYER_WEAPONS,
-    rarity: 'common',
+    rarity: 'legendary',
     png: itemDual,
   }),
 
@@ -295,6 +297,61 @@ const items = [
     amount: 1,
     rarity: 'rare',
     png: itemShamrock,
+  }),
+
+  // [21] Gros calibre (arme 20)
+  new Item({
+    name: 'Gros calibre',
+    description: 'Remplace votre arme par un gros calibre.',
+    type: 'replace',
+    usedVar: 'weapons',
+    amount: 20,
+    rarity: 'rare',
+    png: itemL,
+  }),
+
+  // [22] Désintégrateur (arme 21)
+  new Item({
+    name: 'Champ de répulsion',
+    description: 'Inflige des dégats modérés aux ennemis autour de vous.',
+    type: 'replace',
+    usedVar: 'weapons',
+    amount: 21,
+    rarity: 'common',
+    png: itemAura,
+    
+  }),
+  // [22] Désintégrateur (arme 21)
+  new Item({
+    name: 'Désintégrateur',
+    description: 'Remplace votre arme par le désintégrateur.',
+    type: 'replace',
+    usedVar: 'weapons',
+    amount: 22,
+    rarity: 'divine',
+    png: itemDesintegrator,
+  }),
+
+  // [23] Rebond - ajoute 1 rebond à une arme au hasard
+  new Item({
+    name: 'Module de ricochet',
+    description: 'Les balles d\'une arme au hasard rebondissent +1 fois.',
+    type: 'weaponStat',
+    usedVar: 'bounce',
+    amount: 1,
+    rarity: 'legendary',
+    png: itemStronger,
+  }),
+
+  // [24] Heading - ajoute le guidage à une arme au hasard
+  new Item({
+    name: 'Module de guidage',
+    description: 'Une arme au hasard tire des balles téléguidées.',
+    type: 'weaponStat',
+    usedVar: 'headed',
+    amount: 1,
+    rarity: 'legendary',
+    png: itemHpUp,
   }),
 ]
 

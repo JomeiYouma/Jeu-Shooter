@@ -10,6 +10,8 @@ const _weaponDefaults = weapons.map(w => ({
   cooldownTime: w.cooldownTime,
   salveRotationStep: w.salveRotationStep,
   bulletShootRotation: [...w.bulletShootRotation],
+  headed: w.headed,
+  bounce: w.bounce,
 }))
 
 /** Reset ALL weapons to their default stats. */
@@ -50,6 +52,9 @@ function emitPlayerBullets(g, w, salveIdx) {
       radius: w.bulletsSize,
       damage: w.damage,
       bulletGif: w.bulletGif,
+      headed: w.headed || false,
+      bounceRemaining: w.bounce || 0,
+      _headTarget: null,
     })
   }
 }

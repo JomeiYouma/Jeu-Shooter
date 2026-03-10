@@ -50,6 +50,28 @@ function drawPlayer(c, p) {
     c.stroke()
   }
 
+  // Spikes visual effect
+  if (p.contactDamage > 0) {
+    const spikeCount = 10
+    const innerR = 24
+    const outerR = 34
+    const rotation = Date.now() / 600
+    c.fillStyle = 'rgba(255, 79, 40, 0)'
+    c.strokeStyle = 'rgba(255, 120, 60, 0.55)'
+    c.lineWidth = 1.5
+    c.beginPath()
+    for (let i = 0; i < spikeCount; i++) {
+      const aOuter = (i / spikeCount) * Math.PI * 2 + rotation
+      const aInner = ((i + 0.5) / spikeCount) * Math.PI * 2 + rotation
+      if (i === 0) c.moveTo(Math.cos(aOuter) * outerR, Math.sin(aOuter) * outerR)
+      else c.lineTo(Math.cos(aOuter) * outerR, Math.sin(aOuter) * outerR)
+      c.lineTo(Math.cos(aInner) * innerR, Math.sin(aInner) * innerR)
+    }
+    c.closePath()
+    c.fill()
+    c.stroke()
+  }
+
   c.restore()
 }
 
@@ -352,19 +374,25 @@ export function render(ctx, g, bounds) {
 
   // -- LEVEL TRANSITION --
   if (g.phase === STATE.LEVEL_TRANSITION) {
-    ctx.fillStyle = 'rgba(0,0,0,0.5)'
-    ctx.fillRect(0, 0, width, height)
-    ctx.fillStyle = '#ffffff'
-    ctx.font = '700 34px system-ui, sans-serif'
+    ctx.save()
     ctx.textAlign = 'center'
-    ctx.fillText('Niveau termine !', width / 2, height / 2 - 30)
-    ctx.font = '500 20px system-ui, sans-serif'
-    ctx.fillStyle = '#b0c4ff'
-    ctx.fillText(g.transitionText, width / 2, height / 2 + 10)
-    ctx.font = '400 15px system-ui, sans-serif'
-    ctx.fillStyle = 'rgba(255,255,255,0.6)'
+
+    // Semi-transparent banner at center
+    const bannerH = 90
+    const bannerY = height / 2 - bannerH / 2
+    ctx.fillStyle = 'rgba(0,0,0,0.45)'
+    ctx.fillRect(0, bannerY, width, bannerH)
+
+    ctx.fillStyle = '#ffffff'
+    ctx.font = '700 28px system-ui, sans-serif'
+    ctx.fillText(g.transitionText, width / 2, bannerY + 35)
+
+    ctx.font = '400 16px system-ui, sans-serif'
+    ctx.fillStyle = 'rgba(180,200,255,0.8)'
     const secs = Math.ceil(g.transitionTimer)
-    ctx.fillText('Suite dans ' + secs + 's...', width / 2, height / 2 + 45)
+    ctx.fillText('Suite dans ' + secs + 's...', width / 2, bannerY + 65)
+
+    ctx.restore()
   }
 
   // -- GAME OVER --

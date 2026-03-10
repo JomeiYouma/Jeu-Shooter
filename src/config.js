@@ -7,7 +7,7 @@
  *  1 = quand on ramasse une arme de remplacement, ça remplace TOUTES les armes équipées.
  *  0 = ça ne remplace que la première arme (les autres restent).
  */
-export const REPLACE_ALL_WEAPONS = 1
+export const REPLACE_ALL_WEAPONS = 0
 
 /**
  * WEAPON_MODIFIERS_SHARED

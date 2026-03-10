@@ -79,8 +79,6 @@ export function startLevel(g) {
   g.enemies = []
   g.bullets = []
   g.enemyBullets = []
-  g.activeItems = []
-  g.activeObstacles = []
   g.spawnedEnemyIds = new Set()
   g.itemSpawnTimer = 0
   g.obstacleSpawnTimer = 0
@@ -103,7 +101,7 @@ function checkLevelEnd(g) {
       if (g.activeItems.length > 0) return
     }
     g.phase = STATE.LEVEL_TRANSITION
-    g.transitionTimer = 3
+    g.transitionTimer = 5
 
     const nextLevel = g.world.getLevel(g.currentLevelIndex + 1)
     if (nextLevel) {
@@ -131,7 +129,7 @@ export function update(G, dtMs, bounds) {
   // Player movement
   movePlayer(g, dt, bounds)
 
-  // LEVEL TRANSITION
+  // LEVEL TRANSITION countdown
   if (g.phase === STATE.LEVEL_TRANSITION) {
     g.transitionTimer -= dt
     if (g.transitionTimer <= 0) {
@@ -141,11 +139,12 @@ export function update(G, dtMs, bounds) {
       } else {
         startLevel(g)
       }
+      return
     }
-    return
+    // Continue to game logic below (no enemies, but items/obstacles/shooting persist)
   }
 
-  // PLAYING
+  // PLAYING or LEVEL_TRANSITION
   const level = g.world.getLevel(g.currentLevelIndex)
   if (!level) return
   g.levelTime += dt
@@ -153,17 +152,56 @@ export function update(G, dtMs, bounds) {
   // Fire
   fireWeapon(g, dt)
 
-  // Move bullets
+  // Move bullets (with homing support)
+  const HOMING_TURN = 8 // radians/s – how fast headed bullets steer
   g.bullets = g.bullets
-    .map((b) => ({ ...b, x: b.x + b.vx * dt, y: b.y + b.vy * dt }))
+    .map((b) => {
+      if (b.headed) {
+        // Lock onto first target; never switch
+        if (!b._headTarget || !b._headTarget.isAlive) {
+          if (!b._headTarget) {
+            // First assignment: pick nearest enemy
+            let closest = null
+            let minDist = Infinity
+            for (const e of g.enemies) {
+              const d = Math.hypot(e.x - b.x, e.y - b.y)
+              if (d < minDist) { minDist = d; closest = e }
+            }
+            b._headTarget = closest // may be null if no enemies
+          }
+          // Target dead or no target → fly straight
+          if (!b._headTarget || !b._headTarget.isAlive) {
+            return { ...b, x: b.x + b.vx * dt, y: b.y + b.vy * dt }
+          }
+        }
+        const t = b._headTarget
+        const speed = Math.hypot(b.vx, b.vy)
+        const curAngle = Math.atan2(b.vy, b.vx)
+        const targetAngle = Math.atan2(t.y - b.y, t.x - b.x)
+        let diff = targetAngle - curAngle
+        while (diff > Math.PI) diff -= Math.PI * 2
+        while (diff < -Math.PI) diff += Math.PI * 2
+        const maxTurn = HOMING_TURN * dt
+        const turn = Math.max(-maxTurn, Math.min(maxTurn, diff))
+        const newAngle = curAngle + turn
+        return {
+          ...b,
+          vx: Math.cos(newAngle) * speed,
+          vy: Math.sin(newAngle) * speed,
+          x: b.x + Math.cos(newAngle) * speed * dt,
+          y: b.y + Math.sin(newAngle) * speed * dt,
+        }
+      }
+      return { ...b, x: b.x + b.vx * dt, y: b.y + b.vy * dt }
+    })
     .filter((b) => b.y > -20 && b.y < height + 20 && b.x > -20 && b.x < width + 20)
 
-  // Spawn & move enemies
-  spawnEnemies(g, level, bounds)
-  moveEnemies(g, dt, bounds)
-
-  // Fire enemy weapons
-  fireEnemyWeapons(g, dt, bounds)
+  // Spawn & move enemies (only while playing)
+  if (g.phase === STATE.PLAYING) {
+    spawnEnemies(g, level, bounds)
+    moveEnemies(g, dt, bounds)
+    fireEnemyWeapons(g, dt, bounds)
+  }
 
   // Spawn & move items
   spawnItems(g, level, dt, bounds)
@@ -197,6 +235,8 @@ export function update(G, dtMs, bounds) {
     return
   }
 
-  // Level done?
-  checkLevelEnd(g)
+  // Level done? (only while playing)
+  if (g.phase === STATE.PLAYING) {
+    checkLevelEnd(g)
+  }
 }
