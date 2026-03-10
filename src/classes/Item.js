@@ -14,6 +14,8 @@
  *  - rarity      : Rareté ("common", "rare", "epic", "legendary")
  *  - png         : Chemin vers l'image de l'item
  */
+import { REPLACE_ALL_WEAPONS, WEAPON_MODIFIERS_SHARED } from '../config.js'
+
 export default class Item {
   /** @type {"add"|"replace"|"weaponStat"} */
   static TYPES = ['add', 'replace', 'weaponStat']
@@ -40,13 +42,25 @@ export default class Item {
    * Applique l'item sur une cible (Player).
    * @param {import('./Player').default} target
    * @param {Array} [weaponsTable] — tableau global des armes (nécessaire pour type 'weaponStat')
+   * @param {Function} [resetWeaponFn] — fonction pour remettre une arme à ses stats par défaut
    */
-  applyTo(target, weaponsTable) {
+  applyTo(target, weaponsTable, resetWeaponFn) {
     // Replace all weapons with a random one
     if (this.type === 'replaceRandomWeapon') {
       const pool = this.amount.filter(i => !target.weapons.includes(i))
       if (pool.length === 0) return
-      target.weapons = [pool[Math.floor(Math.random() * pool.length)]]
+      const oldWeapons = [...target.weapons]
+      const newIdx = pool[Math.floor(Math.random() * pool.length)]
+      if (REPLACE_ALL_WEAPONS) {
+        target.weapons = [newIdx]
+      } else {
+        target.weapons[0] = newIdx
+      }
+      if (!WEAPON_MODIFIERS_SHARED && resetWeaponFn) {
+        for (const wIdx of oldWeapons) {
+          if (!target.weapons.includes(wIdx)) resetWeaponFn(wIdx)
+        }
+      }
       return
     }
 
@@ -60,7 +74,18 @@ export default class Item {
 
     // Special handling for weapon replacement
     if (this.type === 'replace' && this.usedVar === 'weapons') {
-      target.weapons = Array.isArray(this.amount) ? [...this.amount] : [this.amount]
+      const oldWeapons = [...target.weapons]
+      const newIdx = Array.isArray(this.amount) ? this.amount[0] : this.amount
+      if (REPLACE_ALL_WEAPONS) {
+        target.weapons = Array.isArray(this.amount) ? [...this.amount] : [this.amount]
+      } else {
+        target.weapons[0] = newIdx
+      }
+      if (!WEAPON_MODIFIERS_SHARED && resetWeaponFn) {
+        for (const wIdx of oldWeapons) {
+          if (!target.weapons.includes(wIdx)) resetWeaponFn(wIdx)
+        }
+      }
       return
     }
 

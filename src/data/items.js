@@ -3,29 +3,35 @@
  */
 import Item from '../classes/Item.js'
 import itemA from '../assets/Items/item_a.png'
-import itemB from '../assets/Items/item_b.png'
+/* import itemB from '../assets/Items/item_b.png' */
 import itemC from '../assets/Items/item_c.png'
 import itemD from '../assets/Items/item_d.png'
 import itemE from '../assets/Items/item_e.png'
 import itemF from '../assets/Items/item_f.png'
 import itemG from '../assets/Items/item_g.png'
 import itemH from '../assets/Items/item_h.png'
-import itemI from '../assets/Items/item_i.png'
 import itemJ from '../assets/Items/item_j.png'
-import itemK from '../assets/Items/item_k.png'
 import itemL from '../assets/Items/item_l.png'
 /* import itemM from '../assets/Items/item_m.png' */
 import itemN from '../assets/Items/item_n.png'
-import itemO from '../assets/Items/item_o.png'
-import itemP from '../assets/Items/item_p.png'
+/* import itemP from '../assets/Items/item_p.png' */
 import itemAmmo from '../assets/Items/item_ammo.png'
 import itemBuff from '../assets/Items/item_buff.png'
 import itemHealth from '../assets/Items/item_health.png'
 import itemSalve from '../assets/Items/item_salve.png'
 import itemGrosCanon from '../assets/Items/item_gros_cannon.png'
 import itemMachine from '../assets/Items/item_machine.png'
-import itemStronger from '../assets/Items/item_stronger.png'
-import itemHpUp from '../assets/Items/item_hp_up.png'
+/* import itemStronger from '../assets/Items/item_stronger.png'
+import itemHpUp from '../assets/Items/item_hp_up.png' */
+import itemStrafe from '../assets/Items/item_strafe.png'
+import itemBrake from '../assets/Items/item_brake.png'
+import item3 from '../assets/Items/item_3.png'
+import itemDoubleCanon from '../assets/Items/item_double.png'
+import itemWaller from '../assets/Items/item_waller.png'
+import itemShamrock from '../assets/Items/item_shamrock.png'
+import itemPill from '../assets/Items/item_pill.png'
+import itemDual from '../assets/Items/item_dual.png'
+import itemSpikes from '../assets/Items/item_spikes.png'
 
 const PLAYER_WEAPONS = [0, 1, 2, 13, 14, 15, 16, 17, 18, 19]
 
@@ -37,7 +43,7 @@ const items = [
     type: 'add',
     usedVar: 'healthPoints',
     amount: 3,
-    rarity: 'rare',
+    rarity: 'common',
     png: itemH,
   }),
 
@@ -48,7 +54,7 @@ const items = [
     type: 'add',
     usedVar: 'maxSpeed',
     amount: 30,
-    rarity: 'rare',
+    rarity: 'common',
     png: itemF,
   }),
 
@@ -59,7 +65,7 @@ const items = [
     type: 'add',
     usedVar: 'shieldForce',
     amount: 1,
-    rarity: 'epic',
+    rarity: 'common',
     png: itemC,
   }),
 
@@ -178,7 +184,7 @@ const items = [
     usedVar: 'acceleration',
     amount: 0.5,
     rarity: 'rare',
-    png: itemD,
+    png: itemE,
   }),
 
   // [11] Retro-propulseur - vitesse arriere
@@ -189,7 +195,7 @@ const items = [
     usedVar: 'maxBrakeSpeed',
     amount: 30,
     rarity: 'rare',
-    png: itemE,
+    png: itemBrake,
   }),
 
   // [12] Ailerons lateraux - vitesse laterale
@@ -200,40 +206,40 @@ const items = [
     usedVar: 'maxSideSpeed',
     amount: 30,
     rarity: 'rare',
-    png: itemI,
+    png: itemStrafe,
   }),
 
   // [13] Eventail large (arme 16)
   new Item({
-    name: 'Eventail large',
+    name: 'Star-canon',
     description: 'Remplace votre arme par un eventail large (4 dir).',
     type: 'replace',
     usedVar: 'weapons',
     amount: 16,
     rarity: 'legendary',
-    png: itemO,
+    png: itemD,
   }),
 
   // [14] Eventail triple (arme 17)
   new Item({
-    name: 'Eventail triple',
+    name: 'Tri-canon',
     description: 'Remplace votre arme par un eventail triple.',
     type: 'replace',
     usedVar: 'weapons',
     amount: 17,
     rarity: 'legendary',
-    png: itemK,
+    png: item3,
   }),
 
   // [15] Double canon bis (arme 18)
   new Item({
-    name: 'Double canon bis',
-    description: 'Remplace votre arme par un double canon bis.',
+    name: 'Super double canon',
+    description: 'Remplace votre arme par un double canon amélioré.',
     type: 'replace',
     usedVar: 'weapons',
     amount: 18,
     rarity: 'rare',
-    png: itemL,
+    png: itemDoubleCanon,
   }),
 
   // [16] Phase waller (arme 19)
@@ -244,18 +250,18 @@ const items = [
     usedVar: 'weapons',
     amount: 19,
     rarity: 'rare',
-    png: itemP,
+    png: itemWaller,
   }),
 
   // [17] Pointes de coque - degats contact
   new Item({
-    name: 'Pointes de coque',
+    name: 'Pointes métalliques',
     description: 'Augmente les degats de contact de 2.',
     type: 'add',
     usedVar: 'contactDamage',
     amount: 2,
     rarity: 'epic',
-    png: itemStronger,
+    png: itemSpikes,
   }),
 
   // [18] Arme aleatoire - remplace
@@ -266,7 +272,7 @@ const items = [
     usedVar: 'weapons',
     amount: PLAYER_WEAPONS,
     rarity: 'rare',
-    png: itemB,
+    png: itemPill,
   }),
 
   // [19] Arme supplementaire - ajoute
@@ -277,7 +283,7 @@ const items = [
     usedVar: 'weapons',
     amount: PLAYER_WEAPONS,
     rarity: 'common',
-    png: itemHpUp,
+    png: itemDual,
   }),
 
   // [20] Talisman - ameliore la chance
@@ -288,7 +294,7 @@ const items = [
     usedVar: 'talismanCount',
     amount: 1,
     rarity: 'rare',
-    png: itemN,
+    png: itemShamrock,
   }),
 ]
 
