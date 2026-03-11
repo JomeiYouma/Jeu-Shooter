@@ -14,7 +14,7 @@
  *  - rarity      : Rareté ("common", "rare", "epic", "legendary")
  *  - png         : Chemin vers l'image de l'item
  */
-import { REPLACE_ALL_WEAPONS, WEAPON_MODIFIERS_SHARED } from '../config.js'
+import { REPLACE_ALL_WEAPONS, WEAPON_MODIFIERS_SHARED, BOUNCE_HEADED_APPLY_ALL_WEAPONS } from '../config.js'
 
 export default class Item {
   /** @type {"add"|"replace"|"weaponStat"} */
@@ -92,29 +92,26 @@ export default class Item {
     // Special handling for weapon stat modification
     if (this.type === 'weaponStat') {
       if (!weaponsTable || !target.weapons.length) return
-      if (WEAPON_MODIFIERS_SHARED) {
-        // Applique à toutes les armes équipées
-        for (const idx of target.weapons) {
-          const w = weaponsTable[idx]
-          if (w && this.usedVar in w) {
-            if (typeof w[this.usedVar] === 'boolean') {
-              w[this.usedVar] = !!this.amount
-            } else {
-              w[this.usedVar] += this.amount
-            }
-          }
+
+      // bounce & headed : respectent leur propre config
+      const isBounceOrHeaded = this.usedVar === 'bounce' || this.usedVar === 'headed'
+      const applyToAll = WEAPON_MODIFIERS_SHARED || (isBounceOrHeaded && BOUNCE_HEADED_APPLY_ALL_WEAPONS)
+
+      const applyToWeapon = (w) => {
+        if (!w || !(this.usedVar in w)) return
+        if (typeof w[this.usedVar] === 'boolean') {
+          w[this.usedVar] = !!this.amount
+        } else {
+          w[this.usedVar] += this.amount
         }
+      }
+
+      if (applyToAll) {
+        for (const idx of target.weapons) applyToWeapon(weaponsTable[idx])
       } else {
         // Applique à une arme au hasard
         const idx = target.weapons[Math.floor(Math.random() * target.weapons.length)]
-        const w = weaponsTable[idx]
-        if (w && this.usedVar in w) {
-          if (typeof w[this.usedVar] === 'boolean') {
-            w[this.usedVar] = !!this.amount
-          } else {
-            w[this.usedVar] += this.amount
-          }
-        }
+        applyToWeapon(weaponsTable[idx])
       }
       return
     }

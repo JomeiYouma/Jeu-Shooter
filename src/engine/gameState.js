@@ -2,7 +2,7 @@ import Player from '../classes/Player.js'
 import { world1 } from '../data/index.js'
 import { STATE, createStars, clamp } from './constants.js'
 import { resetWeapons, fireWeapon, fireEnemyWeapons } from './weapons.js'
-import { spawnEnemies, spawnItems, spawnObstacles } from './spawners.js'
+import { spawnEnemies, spawnItems, spawnObstacles, queueObstacleRespawn } from './spawners.js'
 import { movePlayer, moveEnemies, handleCollisions } from './physics.js'
 import explosionPlayerGif from '../assets/fx/explosion_player.gif'
 
@@ -10,7 +10,7 @@ import explosionPlayerGif from '../assets/fx/explosion_player.gif'
 export function buildGameState(width, height) {
   const player = new Player({
     acceleration: 1,
-    weapons: [21],
+    weapons: [0],
     shieldForce: 0,
     healthPoints: 10,
     maxHealth: 10,
@@ -50,6 +50,7 @@ export function buildGameState(width, height) {
     obstaclesSpawnedThisLevel: 0,
     weaponStates: new Map(),
     enemyBullets: [],
+    obstacleRespawnQueue: [], // { timer } obstacles attendant de respawn
 
     stars: createStars(80, width, height),
     itemPickedUp: null,
@@ -64,6 +65,8 @@ export function buildGameState(width, height) {
     playerDirX: 0,
 
     deathEffects: [],
+    trail: [],         // afterimages du joueur
+    trailSpawnTimer: 0, // temps depuis le dernier point de traînée
   }
 }
 
@@ -89,6 +92,8 @@ export function startLevel(g) {
   g.itemsSpawnedThisLevel = 0
   g.obstaclesSpawnedThisLevel = 0
   g.bossRef = null
+  g.activeObstacles = []
+  g.obstacleRespawnQueue = []
 }
 
 // -- Check level completion --------------------------------------
@@ -222,7 +227,11 @@ export function update(G, dtMs, bounds) {
   spawnObstacles(g, level, dt, bounds)
   g.activeObstacles = g.activeObstacles
     .map((obs) => ({ ...obs, y: obs.y + obs.speed * dt }))
-    .filter((obs) => obs.y < height + 60)
+    .filter((obs) => {
+      if (obs.y < height + 60) return true
+      queueObstacleRespawn(g)  // sorti par le bas → respawn dans 2s
+      return false
+    })
 
   // Collisions
   handleCollisions(g)
@@ -240,6 +249,21 @@ export function update(G, dtMs, bounds) {
 
   // Player horizontal direction (for sprite selection)
   g.playerDirX = g.mouseX - g.player.x
+
+  // Trail afterimages (uniquement quand la moto avance)
+  const TRAIL_INTERVAL = 0.035  // nouveau point toutes les 35ms
+  const TRAIL_LIFE     = 0.30   // chaque point dure 0.3s
+  const TRAIL_MIN_SPEED = 0.95  // uniquement à vitesse max
+  if (g.playerSpeedPct >= TRAIL_MIN_SPEED) {
+    g.trailSpawnTimer += dt
+    if (g.trailSpawnTimer >= TRAIL_INTERVAL) {
+      g.trailSpawnTimer = 0
+      g.trail.push({ x: g.player.x, y: g.player.y, timer: TRAIL_LIFE, maxTimer: TRAIL_LIFE })
+    }
+  }
+  g.trail = g.trail
+    .map(pt => ({ ...pt, timer: pt.timer - dt }))
+    .filter(pt => pt.timer > 0)
 
   // Player dead?
   if (!g.player.isAlive) {

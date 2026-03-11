@@ -57,22 +57,52 @@ export function spawnItems(g, level, dt, bounds) {
   }
 }
 
-// -- Spawn obstacles falling ------------------------------------
+// -- Spawn one obstacle -----------------------------------------
+function spawnOneObstacle(g, width) {
+  const obsDef = pick(obstacles)
+  g.activeObstacles.push({
+    def: obsDef,
+    x: randBetween(30, width - 30),
+    y: -obsDef.height,
+    speed: 45 + Math.random() * 25,
+    hp: obsDef.isBreakable ? 3 : -1,
+  })
+}
+
+// -- Spawn obstacles falling (initial quota) + respawn ----------
 export function spawnObstacles(g, level, dt, bounds) {
-  const { width } = bounds
-  if (g.obstaclesSpawnedThisLevel >= level.amountOfObstacles) return
-  g.obstacleSpawnTimer += dt
-  const interval = 6 / Math.max(1, level.amountOfObstacles)
-  if (g.obstacleSpawnTimer >= interval) {
-    g.obstacleSpawnTimer = 0
-    g.obstaclesSpawnedThisLevel++
-    const obsDef = pick(obstacles)
-    g.activeObstacles.push({
-      def: obsDef,
-      x: randBetween(30, width - 30),
-      y: -obsDef.height,
-      speed: 45 + Math.random() * 25,
-      hp: obsDef.isBreakable ? 3 : -1,
-    })
+  const { width, height } = bounds
+
+  // Initial quota spawn
+  if (g.obstaclesSpawnedThisLevel < level.amountOfObstacles) {
+    g.obstacleSpawnTimer += dt
+    const interval = 6 / Math.max(1, level.amountOfObstacles)
+    if (g.obstacleSpawnTimer >= interval) {
+      g.obstacleSpawnTimer = 0
+      g.obstaclesSpawnedThisLevel++
+      spawnOneObstacle(g, width)
+    }
   }
+
+  // Respawn queue : obstacles détruits ou sortis de l'écran
+  if (!g.obstacleRespawnQueue) g.obstacleRespawnQueue = []
+
+  g.obstacleRespawnQueue = g.obstacleRespawnQueue
+    .map(entry => ({ ...entry, timer: entry.timer - dt }))
+    .filter(entry => {
+      if (entry.timer <= 0) {
+        spawnOneObstacle(g, width)
+        return false  // retirer de la queue
+      }
+      return true
+    })
+}
+
+/**
+ * Appelée depuis gameState.js quand un obstacle est détruit ou sort de l'écran.
+ * Enfile un respawn dans 2 secondes.
+ */
+export function queueObstacleRespawn(g) {
+  if (!g.obstacleRespawnQueue) g.obstacleRespawnQueue = []
+  g.obstacleRespawnQueue.push({ timer: 2 })
 }

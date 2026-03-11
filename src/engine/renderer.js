@@ -328,6 +328,34 @@ export function render(ctx, g, bounds) {
     }
   }
 
+  // -- GHOST TRAIL (afterimages de la moto) ----------------------
+  if (g.trail && g.trail.length > 0) {
+    for (const pt of g.trail) {
+      const alpha = (pt.timer / pt.maxTimer) * 0.45  // fade de 45% → 0%
+      const sprite = getPlayerSprite(g.playerDirX || 0)
+      ctx.save()
+      ctx.globalAlpha = alpha
+      // Teinte rouge (overlay) pour marquer la différence avec le joueur réel
+      ctx.filter = 'hue-rotate(180deg) saturate(3) brightness(0.9)'
+      if (sprite && sprite.complete && sprite.naturalWidth > 0) {
+        const p = g.player
+        const maxW = p.width
+        const maxH = p.height
+        const ratio = Math.min(maxW / sprite.naturalWidth, maxH / sprite.naturalHeight)
+        const dw = sprite.naturalWidth * ratio
+        const dh = sprite.naturalHeight * ratio
+        ctx.drawImage(sprite, pt.x - dw / 2, pt.y - dh / 2, dw, dh)
+      } else {
+        // Fallback : ellipse rouge
+        ctx.fillStyle = '#ff2020'
+        ctx.beginPath()
+        ctx.ellipse(pt.x, pt.y, 10, 16, 0, 0, Math.PI * 2)
+        ctx.fill()
+      }
+      ctx.restore()
+    }
+  }
+
   // -- PLAYER --
   drawPlayer(ctx, g.player, g.playerDirX || 0)
 

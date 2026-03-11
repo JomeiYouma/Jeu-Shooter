@@ -4,6 +4,8 @@ import { resetWeapon } from './weapons.js'
 import { getGifPlayer } from './assets.js'
 import explosionEnemyGif from '../assets/fx/explosion_enemy.gif'
 import explosionPlayerGif from '../assets/fx/explosion_player.gif'
+import { KEYBOARD_MOVEMENT } from '../config.js'
+import { queueObstacleRespawn } from './spawners.js'
 
 export { explosionEnemyGif, explosionPlayerGif }
 
@@ -49,24 +51,56 @@ export function moveEnemies(g, dt, bounds) {
 export function movePlayer(g, dt, bounds) {
   const { width, height } = bounds
   const p = g.player
+  let speedMult = 0
 
-  const distToMouse = Math.hypot(g.mouseX - p.x, g.mouseY - p.y)
-  if (distToMouse > 5) {
-    g.playerAccelTime += dt * p.acceleration
+  if (KEYBOARD_MOVEMENT) {
+    // -- Keyboard mode : ZQSD ou flèches --
+    const keys = g.keys || {}
+    const left  = keys['ArrowLeft']  || keys['q'] || keys['Q']
+    const right = keys['ArrowRight'] || keys['d'] || keys['D']
+    const up    = keys['ArrowUp']    || keys['z'] || keys['Z']
+    const down  = keys['ArrowDown']  || keys['s'] || keys['S']
+    const moving = left || right || up || down
+
+    if (moving) {
+      g.playerAccelTime = Math.min(3.0, g.playerAccelTime + dt * p.acceleration)
+    } else {
+      g.playerAccelTime = Math.max(0, g.playerAccelTime - dt * 3 * p.acceleration)
+    }
+    speedMult = accelCurve(g.playerAccelTime)
+
+    if (left)  p.x -= p.maxSideSpeed * speedMult * dt
+    if (right) p.x += p.maxSideSpeed * speedMult * dt
+    if (up)    p.y -= p.maxSpeed     * speedMult * dt
+    if (down)  p.y += p.maxBrakeSpeed * speedMult * dt
+
+    p.x = clamp(p.x, p.width / 2, width - p.width / 2)
+    p.y = clamp(p.y, height * 0.4, height - p.height / 2)
+
+    // Espace = tirer
+    g.mouseDown = !!(keys[' '] || keys['Space'])
+    // Direction horizontale pour les sprites
+    g.playerDirX = (right ? 1 : left ? -1 : 0) * 80
   } else {
-    g.playerAccelTime = Math.max(0, g.playerAccelTime - dt * 3 * p.acceleration)
+    // -- Mouse mode (original) --
+    const distToMouse = Math.hypot(g.mouseX - p.x, g.mouseY - p.y)
+    if (distToMouse > 5) {
+      g.playerAccelTime = Math.min(3.0, g.playerAccelTime + dt * p.acceleration)
+    } else {
+      g.playerAccelTime = Math.max(0, g.playerAccelTime - dt * 3 * p.acceleration)
+    }
+    speedMult = accelCurve(g.playerAccelTime)
+
+    const dx = g.mouseX - p.x
+    const targetX = p.x + clamp(dx, -p.maxSideSpeed * speedMult * dt * 3, p.maxSideSpeed * speedMult * dt * 3)
+    p.x = clamp(targetX, p.width / 2, width - p.width / 2)
+
+    const dy = g.mouseY - p.y
+    const maxUp = p.maxSpeed * speedMult * dt * 3
+    const maxDown = p.maxBrakeSpeed * speedMult * dt * 3
+    const targetY = p.y + clamp(dy, -maxUp, maxDown)
+    p.y = clamp(targetY, height * 0.4, height - p.height / 2)
   }
-  const speedMult = accelCurve(g.playerAccelTime)
-
-  const dx = g.mouseX - p.x
-  const targetX = p.x + clamp(dx, -p.maxSideSpeed * speedMult * dt * 3, p.maxSideSpeed * speedMult * dt * 3)
-  p.x = clamp(targetX, p.width / 2, width - p.width / 2)
-
-  const dy = g.mouseY - p.y
-  const maxUp = p.maxSpeed * speedMult * dt * 3
-  const maxDown = p.maxBrakeSpeed * speedMult * dt * 3
-  const targetY = p.y + clamp(dy, -maxUp, maxDown)
-  p.y = clamp(targetY, height * 0.4, height - p.height / 2)
 
   g.playerPrevX = p.x
   g.playerPrevY = p.y
@@ -168,7 +202,7 @@ export function handleCollisions(g) {
 
   // Bullets vs breakable obstacles
   g.activeObstacles = g.activeObstacles.filter((obs) => {
-    if (obs.hp <= 0 && obs.def.isBreakable) return false
+    if (obs.hp <= 0 && obs.def.isBreakable) { queueObstacleRespawn(g); return false }
     if (!obs.def.isBreakable) return true
     const oR = obs.def.width / 2
     g.bullets = g.bullets.filter((b) => {
@@ -179,7 +213,8 @@ export function handleCollisions(g) {
       }
       return true
     })
-    return obs.hp > 0
+    if (obs.hp <= 0) { queueObstacleRespawn(g); return false }
+    return true
   })
 
   // Enemy bullets vs player

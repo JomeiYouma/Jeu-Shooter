@@ -17,3 +17,17 @@ export const REPLACE_ALL_WEAPONS = 0
  *      quand on change d'arme, les anciennes modifs sont perdues (l'arme reprend ses stats par défaut).
  */
 export const WEAPON_MODIFIERS_SHARED = 1
+
+/**
+ * KEYBOARD_MOVEMENT
+ *  1 = déplacement au clavier (Z/Q/S/D ou flèches directionnelles) + espace pour tirer.
+ *  0 = déplacement à la souris (curseur) + clic pour tirer.
+ */
+export const KEYBOARD_MOVEMENT = 0
+
+/**
+ * BOUNCE_HEADED_APPLY_ALL_WEAPONS
+ *  1 = les modules "rebond" et "guidage" s'appliquent à TOUTES les armes équipées simultanément.
+ *  0 = ils s'appliquent à une seule arme au hasard (comportement original).
+ */
+export const BOUNCE_HEADED_APPLY_ALL_WEAPONS = 0

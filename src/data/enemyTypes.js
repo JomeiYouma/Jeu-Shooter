@@ -59,7 +59,7 @@ const enemyTypes = [
   new EnemyType({
     movementSpeed: 25,
     shieldForce: 0,
-    life: 800,
+    life: 400,
     baseLife: 800,
     weapon: 5,
     movementPattern: 'sine',

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './ShooterGame.css'
 import { STATE, clamp } from './engine/constants.js'
 import { buildGameState, resetGame, startLevel, update } from './engine/gameState.js'
@@ -32,6 +32,7 @@ function ShooterGame({ width = 900, height = 600 }) {
 
     const G = buildGameState(width, height)
     G.paused = false
+    G.keys = {}   // held keys map pour le mode clavier
     gameRef.current = G
 
     // -- Input handlers ---------------------------------------
@@ -68,11 +69,15 @@ function ShooterGame({ width = 900, height = 600 }) {
       }
     }
 
-    // -- Pause handler ----------------------------------------
+    // -- Pause + keyboard input handler ----------------------
     const onKeyDown = (e) => {
       if (e.key === 'p' || e.key === 'P') {
         G.paused = !G.paused
       }
+      G.keys[e.key] = true
+    }
+    const onKeyUp = (e) => {
+      G.keys[e.key] = false
     }
 
     // -- Sync UI state ----------------------------------------
@@ -126,6 +131,7 @@ function ShooterGame({ width = 900, height = 600 }) {
     canvas.addEventListener('touchmove', onTouchMove, { passive: false })
     canvas.addEventListener('touchend', onTouchEnd)
     window.addEventListener('keydown', onKeyDown)
+    window.addEventListener('keyup', onKeyUp)
 
     animId = requestAnimationFrame(loop)
 
@@ -138,6 +144,7 @@ function ShooterGame({ width = 900, height = 600 }) {
       canvas.removeEventListener('touchmove', onTouchMove)
       canvas.removeEventListener('touchend', onTouchEnd)
       window.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('keyup', onKeyUp)
       cancelAnimationFrame(animId)
     }
   }, [width, height])
