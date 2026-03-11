@@ -60,11 +60,20 @@ export function spawnItems(g, level, dt, bounds) {
 // -- Spawn one obstacle -----------------------------------------
 function spawnOneObstacle(g, width) {
   const obsDef = pick(obstacles)
+  
+  // Choose random png variant
+  const variant = obsDef.pngVariants[Math.floor(Math.random() * obsDef.pngVariants.length)]
+
+  // Fixed base speed that scales by +15% per level
+  const baseSpeed = 100
+  const speedMult = Math.pow(1.15, g.currentLevelIndex || 0)
+
   g.activeObstacles.push({
     def: obsDef,
+    png: variant, // The instance keeps this variant
     x: randBetween(30, width - 30),
     y: -obsDef.height,
-    speed: 45 + Math.random() * 25,
+    speed: baseSpeed * speedMult,
     hp: obsDef.isBreakable ? 3 : -1,
   })
 }

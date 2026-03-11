@@ -243,14 +243,45 @@ export function render(ctx, g, bounds) {
   // -- OBSTACLES --
   for (const obs of g.activeObstacles) {
     const isPass = obs.def.isPassThrough
-    ctx.fillStyle = isPass ? 'rgba(100,100,120,0.5)' : '#8a7250'
-    ctx.strokeStyle = isPass ? 'rgba(150,150,170,0.4)' : '#bfa46e'
-    ctx.lineWidth = 2
+    let imgPath = null
+
+    // Determine which sprite state to show
+    if (obs.png) {
+      if (obs.def.isBreakable) {
+        if (obs.hp >= 3) imgPath = obs.png.full
+        else if (obs.hp === 2) imgPath = obs.png.damaged || obs.png.full
+        else imgPath = obs.png.destroyed || obs.png.full
+      } else {
+        imgPath = obs.png.full
+      }
+    }
+
+    const img = imgPath ? loadImg(imgPath) : null
     const r = obs.def.width / 2
-    ctx.beginPath()
-    ctx.arc(obs.x, obs.y, r, 0, Math.PI * 2)
-    ctx.fill()
-    ctx.stroke()
+
+    if (img && img.complete && img.naturalWidth) {
+      // Affichage du sprite centré
+      ctx.save()
+      ctx.translate(obs.x, obs.y)
+      
+      const maxW = obs.def.width
+      const maxH = obs.def.height
+      const ratio = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight)
+      const dw = img.naturalWidth * ratio * 2
+      const dh = img.naturalHeight * ratio * 2
+      
+      ctx.drawImage(img, -dw / 2, -dh / 2, dw, dh)
+      ctx.restore()
+    } else {
+      // Fallback: ancien affichage géométrique (ronds)
+      ctx.fillStyle = isPass ? 'rgba(100,100,120,0.5)' : '#8a7250'
+      ctx.strokeStyle = isPass ? 'rgba(150,150,170,0.4)' : '#bfa46e'
+      ctx.lineWidth = 2
+      ctx.beginPath()
+      ctx.arc(obs.x, obs.y, r, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.stroke()
+    }
   }
 
   // -- ITEMS --

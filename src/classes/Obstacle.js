@@ -19,14 +19,14 @@ export default class Obstacle {
     destructionType = 'breakThrough',
     damage = 0,
     rarity = 'common',
-    png = { full: null, damaged: null, destroyed: null },
+    pngVariants = [ { full: null, damaged: null, destroyed: null } ],
     width = 32,
     height = 32,
   } = {}) {
     this.destructionType = destructionType
     this.damage = damage
     this.rarity = rarity
-    this.png = { ...png }
+    this.pngVariants = [...pngVariants]
     this.width = width
     this.height = height
   }
