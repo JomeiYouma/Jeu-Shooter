@@ -19,6 +19,13 @@ import bulletV from '../assets/bullets/bullet_v.gif'
 import bulletCannon from '../assets/bullets/bullet_cannon.gif'
 import bulletLaser from '../assets/bullets/bullet_laser.gif'
 import bulletMachine from '../assets/bullets/bullet_red_laser.gif'
+import bulletPhase from '../assets/bullets/bullet_phase.gif'
+import bulletStar from '../assets/bullets/bullet_star.gif'
+import bulletRoll from '../assets/bullets/bullet_roll.gif'
+import bulletFire from '../assets/bullets/bullet_fire.gif'
+import bulletBig from '../assets/bullets/bullet_big.gif'
+import bulletPhose from '../assets/bullets/bullet_phose.gif'
+import bulletFlash from '../assets/bullets/bullet_flash.gif'  
 
 const weapons = [ 
   // [0] Laser basique - arme de depart
@@ -317,14 +324,14 @@ const weapons = [
     bulletsPerSalve: 2,
     salveDuration: 640,
     cooldownTime: 60,
-    salveRotationStep: 0,
+    salveRotationStep: 5,
     rarity: 'rare',
     png: null,
-    bulletGif: bulletB,
+    bulletGif: bulletFlash,
   }),
   // [19] Phase Waller
   new Weapon({
-    name: 'Phase waller',
+    name: 'Pulseur de protons',
     description: 'Tire des murs.',
     damage: 1.5,
     bulletShootRotation: [0],
@@ -335,7 +342,7 @@ const weapons = [
     salveRotationStep: 2,
     rarity: 'rare',
     png: null,
-    bulletGif: bulletB,
+    bulletGif: bulletPhose,
   }),
   // [20] Better basic laser
   new Weapon({
@@ -350,7 +357,7 @@ const weapons = [
     salveRotationStep: 0,
     rarity: 'common',
     png: null,
-    bulletGif: bulletA,
+    bulletGif: bulletBig,
   }),
    // [21] Champ de répulsion
   new Weapon({
@@ -360,7 +367,7 @@ const weapons = [
     bulletShootRotation: [0],
     bulletsSize: 5,
     bulletsPerSalve: 100,
-    salveDuration: 100,
+    salveDuration: 50,
     cooldownTime: 1000,
     salveRotationStep: 10,
     rarity: 'rare',
@@ -381,8 +388,7 @@ const weapons = [
     salveRotationStep: 0,
     rarity: 'common',
     png: null,
-    bulletGif: bulletC,
-    bounce: 3,
+    bulletGif: bulletFire,
   }),
     // [23] Basique rebond
     new Weapon({
@@ -390,14 +396,14 @@ const weapons = [
       description: 'Tir simple, rebondit 2 fois sur les ennemis.',
       damage: 0.5,
       bulletShootRotation: [-25, 25],
-      bulletsSize: 4,
+      bulletsSize: 6,
       bulletsPerSalve: 1,
       salveDuration: 100,
       cooldownTime: 400,
       salveRotationStep: 0,
       rarity: 'common',
       png: null,
-      bulletGif: bulletB,
+      bulletGif: bulletRoll,
       bounce: 2,
     }),
     // [24] Basique heading
@@ -413,8 +419,23 @@ const weapons = [
       salveRotationStep: 0,
       rarity: 'common',
       png: null,
-      bulletGif: bulletA,
+      bulletGif: bulletStar,
       headed: true,
+    }),
+    // [25] Basique heading
+    new Weapon({
+      name: 'Bazooka mitrailleeur',
+      description: 'Tir simple, balles téléguidées.',
+      damage: 2.7,
+      bulletShootRotation: [0],
+      bulletsSize: 40,
+      bulletsPerSalve: 10,
+      salveDuration: 1500,
+      cooldownTime: 10,
+      salveRotationStep: 0,
+      rarity: 'common',
+      png: null,
+      bulletGif: bulletPhase,
     }),
 ]
 

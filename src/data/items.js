@@ -153,7 +153,7 @@ const items = [
     type: 'weaponStat',
     usedVar: 'bulletsPerSalve',
     amount: 1,
-    rarity: 'legendary',
+    rarity: 'epic',
     png: itemAmmo,
   }),
 
@@ -186,7 +186,7 @@ const items = [
     type: 'add',
     usedVar: 'acceleration',
     amount: 0.5,
-    rarity: 'rare',
+    rarity: 'epic',
     png: itemE,
   }),
 
@@ -197,7 +197,7 @@ const items = [
     type: 'add',
     usedVar: 'maxBrakeSpeed',
     amount: 30,
-    rarity: 'rare',
+    rarity: 'common',
     png: itemBrake,
   }),
 
@@ -263,7 +263,7 @@ const items = [
     type: 'add',
     usedVar: 'contactDamage',
     amount: 2,
-    rarity: 'common',
+    rarity: 'rare',
     png: itemSpikes,
   }),
 
@@ -274,7 +274,7 @@ const items = [
     type: 'replaceRandomWeapon',
     usedVar: 'weapons',
     amount: PLAYER_WEAPONS,
-    rarity: 'epic',
+    rarity: 'rare',
     png: itemPill,
   }),
 
@@ -286,6 +286,17 @@ const items = [
     usedVar: 'weapons',
     amount: PLAYER_WEAPONS,
     rarity: 'legendary',
+    png: itemDual,
+  }),
+
+  // [19] Arme supplementaire - ajoute
+  new Item({
+    name: 'Arme supplementaire',
+    description: 'Ajoute une arme au hasard a votre arsenal.',
+    type: 'addRandomWeapon',
+    usedVar: 'weapons',
+    amount: PLAYER_WEAPONS,
+    rarity: 'divine',
     png: itemDual,
   }),
 
@@ -318,7 +329,7 @@ const items = [
     type: 'replace',
     usedVar: 'weapons',
     amount: 21,
-    rarity: 'common',
+    rarity: 'legendary',
     png: itemAura,
     
   }),
@@ -360,7 +371,7 @@ const items = [
     type: 'weaponStat',
     usedVar: 'bounce',
     amount: 1,
-    rarity: 'legendary',
+    rarity: 'rare',
     png: itemStronger,
   }),
 
@@ -371,7 +382,18 @@ const items = [
     type: 'weaponStat',
     usedVar: 'headed',
     amount: 1,
-    rarity: 'legendary',
+    rarity: 'epic',
+    png: itemHpUp,
+  }),
+
+    // [25] Heading - ajoute le guidage à une arme au hasard
+  new Item({
+    name: 'Bazooka mitrailleur',
+    description: 'Lourd canon militaire sous zaza.',
+    type: 'replace',
+    usedVar: 'weapons',
+    amount: 25,
+    rarity: 'divine',
     png: itemHpUp,
   }),
 ]
