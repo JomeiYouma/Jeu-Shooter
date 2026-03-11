@@ -9,7 +9,7 @@ import { movePlayer, moveEnemies, handleCollisions } from './physics.js'
 export function buildGameState(width, height) {
   const player = new Player({
     acceleration: 1,
-    weapons: [18],
+    weapons: [23],
     shieldForce: 0,
     healthPoints: 10,
     maxHealth: 10,

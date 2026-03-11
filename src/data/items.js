@@ -14,15 +14,12 @@ import itemJ from '../assets/Items/item_j.png'
 import itemL from '../assets/Items/item_l.png'
 /* import itemM from '../assets/Items/item_m.png' */
 import itemN from '../assets/Items/item_n.png'
-import itemP from '../assets/Items/item_p.png'
 import itemAmmo from '../assets/Items/item_ammo.png'
-import itemBuff from '../assets/Items/item_buff.png'
 import itemHealth from '../assets/Items/item_health.png'
 import itemSalve from '../assets/Items/item_salve.png'
 import itemGrosCanon from '../assets/Items/item_gros_cannon.png'
 import itemMachine from '../assets/Items/item_machine.png'
 import itemStronger from '../assets/Items/item_stronger.png'
-import itemHpUp from '../assets/Items/item_hp_up.png'
 import itemStrafe from '../assets/Items/item_strafe.png'
 import itemBrake from '../assets/Items/item_brake.png'
 import item3 from '../assets/Items/item_3.png'
@@ -34,6 +31,11 @@ import itemDual from '../assets/Items/item_dual.png'
 import itemSpikes from '../assets/Items/item_spikes.png'
 import itemDesintegrator from '../assets/Items/item_desintegrator.png'
 import itemAura from '../assets/Items/item_aura.png'
+import itemBazooka from '../assets/Items/item_bazooka.png'
+import itemRebounce from '../assets/Items/item_rebounce.png'
+import itemSnipe from '../assets/Items/item_snipe.png'
+import itemHook from '../assets/Items/item_hook.png'
+import itemBowl from '../assets/Items/item_bowl.png'
 
 const PLAYER_WEAPONS = [0, 1, 2, 13, 14, 15, 16, 17, 18, 19, 20, 21]
 const EXTRA_WEAPONS = [23, 24]
@@ -165,7 +167,7 @@ const items = [
     usedVar: 'damage',
     amount: 1,
     rarity: 'legendary',
-    png: itemBuff,
+    png: itemStronger,
   }),
 
   // [9] Balles larges
@@ -351,7 +353,7 @@ const items = [
       usedVar: 'weapons',
       amount: 23,
       rarity: 'rare',
-      png: itemBuff,
+      png: itemBowl,
     }),
     // [24] Guidage simple - remplace l'arme
     new Item({
@@ -361,7 +363,7 @@ const items = [
       usedVar: 'weapons',
       amount: 24,
       rarity: 'epic',
-      png: itemHpUp,
+      png: itemSnipe,
     }),
 
   // [23] Rebond - ajoute 1 rebond à une arme au hasard
@@ -372,7 +374,7 @@ const items = [
     usedVar: 'bounce',
     amount: 1,
     rarity: 'rare',
-    png: itemStronger,
+    png: itemRebounce,
   }),
 
   // [24] Heading - ajoute le guidage à une arme au hasard
@@ -383,7 +385,7 @@ const items = [
     usedVar: 'headed',
     amount: 1,
     rarity: 'epic',
-    png: itemHpUp,
+    png: itemHook,
   }),
 
     // [25] Heading - ajoute le guidage à une arme au hasard
@@ -394,7 +396,7 @@ const items = [
     usedVar: 'weapons',
     amount: 25,
     rarity: 'divine',
-    png: itemHpUp,
+    png: itemBazooka,
   }),
 ]
 
