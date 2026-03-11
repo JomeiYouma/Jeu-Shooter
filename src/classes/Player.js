@@ -32,6 +32,9 @@ export default class Player {
     width = 48,
     height = 48,
     png = { full: null, damaged: null, destroyed: null },
+    turboBars = 4,
+    turboBarDuration = 0.5,
+    turboRechargeTime = 5.0,
   } = {}) {
     this.acceleration = acceleration
     this.weapons = [...weapons]
@@ -49,6 +52,9 @@ export default class Player {
     this.width = width
     this.height = height
     this.png = { ...png }
+    this.turboBars = turboBars
+    this.turboBarDuration = turboBarDuration
+    this.turboRechargeTime = turboRechargeTime
 
     // État d'exécution (géré par le moteur)
     this.x = 0

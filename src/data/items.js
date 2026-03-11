@@ -34,6 +34,8 @@ import itemRebounce from '../assets/Items/item_rebounce.png'
 import itemSnipe from '../assets/Items/item_snipe.png'
 import itemHook from '../assets/Items/item_hook.png'
 import itemBowl from '../assets/Items/item_bowl.png'
+import itemEngineImg from '../assets/Items/item_engine.png'
+import itemFuelImg from '../assets/Items/item_fuel.png'
 
 const PLAYER_WEAPONS = [0, 1, 2, 13, 14, 15, 16, 17, 18, 19, 20, 21]
 const EXTRA_WEAPONS = [23, 24]
@@ -61,7 +63,29 @@ const items = [
     png: itemF,
   }),
 
-  // [2] Blindage renforce - bouclier
+  // [2] Engine (Rare) - Turbo Bar Duration +0.2s
+  new Item({
+    name: 'Engine',
+    description: 'La barre de turbo dure 0.2s de plus par charge.',
+    type: 'add',
+    usedVar: 'turboBarDuration',
+    amount: 0.2,
+    rarity: 'rare',
+    png: itemEngineImg,
+  }),
+
+  // [3] Fuel (Common) - Refill Turbo
+  new Item({
+    name: 'Fuel',
+    description: 'Restaure toutes les barres de turbo.',
+    type: 'add',
+    usedVar: '_dummy_fuel', // Custom logic in physics.js
+    amount: 0,
+    rarity: 'common',
+    png: itemFuelImg,
+  }),
+
+  // [4] Blindage renforce - bouclier
   new Item({
     name: 'Blindage renforce',
     description: 'Restaure 1 point de bouclier (max 4).',

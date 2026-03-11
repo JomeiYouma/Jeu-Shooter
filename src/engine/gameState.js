@@ -66,6 +66,9 @@ export function buildGameState(width, height) {
     playerDirX: 0,
     playerVx: 0,
     playerVy: 0,
+    turboActive: false,
+    turboActiveTimer: 0,
+    turboTime: player.turboBars * player.turboBarDuration,
 
     deathEffects: [],
     trail: [],         // afterimages du joueur

@@ -53,6 +53,42 @@ export function movePlayer(g, dt, bounds) {
   const p = g.player
   let speedMult = 0
 
+  // -- Turbo Logic (Discrete Bars) --
+  const keys = g.keys || {}
+  const shiftPressed = !!(keys['ShiftLeft'] || keys['ShiftRight'] || keys['Shift'])
+  const maxTurboTime = p.turboBars * p.turboBarDuration
+
+  if (shiftPressed) {
+    if (g.turboActiveTimer > 0) {
+      // Continue consuming the current bar
+      g.turboActiveTimer -= dt
+      g.turboActive = true
+    } else if (g.turboTime >= p.turboBarDuration) {
+      // Consume a new bar
+      g.turboTime -= p.turboBarDuration
+      g.turboActiveTimer = p.turboBarDuration - dt
+      g.turboActive = true
+    } else {
+      // Out of bars
+      g.turboActiveTimer = 0
+      g.turboActive = false
+    }
+  } else {
+    // Releasing Shift instantly cancels the current active bar
+    g.turboActiveTimer = 0
+    g.turboActive = false
+  }
+
+  // Recharge happens anytime we're not actively spending a new bar
+  // (We allow recharging even during the 0.5s of an active bar, or strictly only when !shift)
+  // Let's recharge only when not pressing shift, to be simpler.
+  if (!shiftPressed && g.turboTime < maxTurboTime) {
+    const rechargeRate = p.turboBarDuration / p.turboRechargeTime // ex: 0.5s par 5s = 0.1/s
+    g.turboTime = Math.min(maxTurboTime, g.turboTime + rechargeRate * dt)
+  }
+
+  const turboMult = g.turboActive ? 1.5 : 1.0
+
   if (KEYBOARD_MOVEMENT) {
     // -- Keyboard mode avec inertie (même feeling que la souris) --
     const keys = g.keys || {}
@@ -61,14 +97,14 @@ export function movePlayer(g, dt, bounds) {
     const up    = keys['ArrowUp']    || keys['z'] || keys['Z']
     const down  = keys['ArrowDown']  || keys['s'] || keys['S']
 
-    // Vitesses cibles selon les touches pressées
-    const targetVx = (right ? 1 : left ? -1 : 0) * p.maxSideSpeed
-    const targetVy = up ? -p.maxSpeed : down ? p.maxBrakeSpeed : 0
+    // Vitesses cibles selon les touches pressées (×1.1 de base, ×turboMult)
+    const targetVx = (right ? 1 : left ? -1 : 0) * p.maxSideSpeed * 1.1 * turboMult
+    const targetVy = (up ? -p.maxSpeed : down ? p.maxBrakeSpeed : 0) * 1.1 * turboMult
 
-    // Constante d'accélération : plus elle est haute, plus la réponse est rapide
-    // On utilise la même logique que la courbe souris (x3 facteur de deceleration)
-    const accelRate = p.acceleration * 6   // vitesse d'atteinte de la cible
-    const frictionRate = p.acceleration * 9 // vitesse de retour à 0
+    // Constante d'accélération
+    const currentAccel = p.acceleration * turboMult
+    const accelRate = currentAccel * 6   // vitesse d'atteinte de la cible
+    const frictionRate = currentAccel * 9 // vitesse de retour à 0
 
     if (targetVx !== 0) {
       // Accélération vers la cible latérale
@@ -95,11 +131,11 @@ export function movePlayer(g, dt, bounds) {
     // playerAccelTime / speedMult basés sur la vitesse réelle
     const realSpeed = Math.hypot(g.playerVx, g.playerVy)
     const maxPossible = Math.max(p.maxSpeed, p.maxSideSpeed)
-    speedMult = clamp(realSpeed / maxPossible, 0, 1)
+    speedMult = clamp(realSpeed / maxPossible, 0, 1.5) // Pct can go up to 1.5 with Turbo
     if (realSpeed > 5) {
-      g.playerAccelTime = Math.min(3.0, g.playerAccelTime + dt * p.acceleration)
+      g.playerAccelTime = Math.min(3.0, g.playerAccelTime + dt * currentAccel)
     } else {
-      g.playerAccelTime = Math.max(0, g.playerAccelTime - dt * 3 * p.acceleration)
+      g.playerAccelTime = Math.max(0, g.playerAccelTime - dt * 3 * currentAccel)
     }
 
     // Espace = tirer
@@ -108,13 +144,14 @@ export function movePlayer(g, dt, bounds) {
     g.playerDirX = g.playerVx
   } else {
     // -- Mouse mode (original) --
+    const currentAccel = p.acceleration * turboMult
     const distToMouse = Math.hypot(g.mouseX - p.x, g.mouseY - p.y)
     if (distToMouse > 5) {
-      g.playerAccelTime = Math.min(3.0, g.playerAccelTime + dt * p.acceleration)
+      g.playerAccelTime = Math.min(3.0, g.playerAccelTime + dt * currentAccel)
     } else {
-      g.playerAccelTime = Math.max(0, g.playerAccelTime - dt * 3 * p.acceleration)
+      g.playerAccelTime = Math.max(0, g.playerAccelTime - dt * 3 * currentAccel)
     }
-    speedMult = accelCurve(g.playerAccelTime)
+    speedMult = accelCurve(g.playerAccelTime) * turboMult
 
     const dx = g.mouseX - p.x
     const targetX = p.x + clamp(dx, -p.maxSideSpeed * speedMult * dt * 3, p.maxSideSpeed * speedMult * dt * 3)
@@ -206,6 +243,7 @@ export function handleCollisions(g) {
       if (p.healthPoints > p.maxHealth) p.healthPoints = p.maxHealth
       if (p.shieldForce > p.maxShield) p.shieldForce = p.maxShield
       if (p.talismanCount > p.maxTalisman) p.talismanCount = p.maxTalisman
+      if (it.def.name === 'Fuel') g.turboTime = p.turboBars * p.turboBarDuration
       g.itemPickedUp = it.def.name
       g.itemPickedUpTimer = 2
       return false

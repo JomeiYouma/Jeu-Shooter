@@ -75,9 +75,15 @@ function ShooterGame({ width = 900, height = 600 }) {
         G.paused = !G.paused
       }
       G.keys[e.key] = true
+      if (e.key.toLowerCase) G.keys[e.key.toLowerCase()] = true
+      if (e.key.toUpperCase) G.keys[e.key.toUpperCase()] = true
+      if (e.code) G.keys[e.code] = true
     }
     const onKeyUp = (e) => {
       G.keys[e.key] = false
+      if (e.key.toLowerCase) G.keys[e.key.toLowerCase()] = false
+      if (e.key.toUpperCase) G.keys[e.key.toUpperCase()] = false
+      if (e.code) G.keys[e.code] = false
     }
 
     // -- Sync UI state ----------------------------------------

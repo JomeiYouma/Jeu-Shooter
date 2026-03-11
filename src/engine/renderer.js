@@ -38,13 +38,18 @@ function rarityColor(rarity) {
 }
 
 // -- Draw helpers ------------------------------------------------
-function drawPlayer(c, p, dirX) {
+function drawPlayer(c, p, dirX, turboActive = false) {
   if (p.isImmune && Math.floor(Date.now() / 80) % 2 === 0) return
 
   const sprite = getPlayerSprite(dirX)
 
   c.save()
   c.translate(p.x, p.y)
+
+  if (turboActive) {
+    c.shadowColor = '#ff3333'
+    c.shadowBlur = 12  // Plus discret
+  }
 
   if (sprite && sprite.complete && sprite.naturalWidth > 0) {
     // Redimensionne le sprite pour tenir dans la hitbox (ratio préservé), centré
@@ -330,13 +335,20 @@ export function render(ctx, g, bounds) {
 
   // -- GHOST TRAIL (afterimages de la moto) ----------------------
   if (g.trail && g.trail.length > 0) {
+    let ptIndex = 0
     for (const pt of g.trail) {
       const alpha = (pt.timer / pt.maxTimer) * 0.45  // fade de 45% → 0%
       const sprite = getPlayerSprite(g.playerDirX || 0)
       ctx.save()
       ctx.globalAlpha = alpha
-      // Teinte rouge (overlay) pour marquer la différence avec le joueur réel
-      ctx.filter = 'hue-rotate(180deg) saturate(3) brightness(0.9)'
+      // Une frame sur deux: vert clair vs rouge
+      if (g.turboActive && ptIndex % 2 !== 0) {
+        // Vert clair (shift depuis le bleu) au lieu de rouge
+        ctx.filter = 'hue-rotate(-230deg) brightness(1.5)'
+      } else {
+        // Rouge par défaut (180deg)
+        ctx.filter = 'hue-rotate(-190deg) brightness(1.5)'
+      }
       if (sprite && sprite.complete && sprite.naturalWidth > 0) {
         const p = g.player
         const maxW = p.width
@@ -353,11 +365,12 @@ export function render(ctx, g, bounds) {
         ctx.fill()
       }
       ctx.restore()
+      ptIndex++
     }
   }
 
   // -- PLAYER --
-  drawPlayer(ctx, g.player, g.playerDirX || 0)
+  drawPlayer(ctx, g.player, g.playerDirX || 0, g.turboActive)
 
   // -- DEATH EFFECTS --
   for (const fx of g.deathEffects) {
@@ -422,29 +435,24 @@ export function render(ctx, g, bounds) {
       hpBarY + hBarH / 2 + 3.5
     )
 
-    // Red bar (weapon cooldown)
-    // Affiche la progression de l'arme la plus "loin" d'être prête (la plus longue recharge restante)
-    let minReadyRatio = 1;
-    if (g.player.weapons && g.weaponStates) {
-      for (const wIdx of g.player.weapons) {
-        const ws = g.weaponStates.get(wIdx);
-        const w = weapons[wIdx];
-        if (ws && w) {
-          let totalCooldown = w.cooldownTime + (w.salveDuration || 0);
-          let ratio = 1;
-          if (totalCooldown > 0) {
-            ratio = 1 - Math.max(0, Math.min(ws.cooldownTimer, totalCooldown)) / totalCooldown;
-            ratio = Math.max(0, Math.min(1, ratio));
-          }
-          if (ratio < minReadyRatio) minReadyRatio = ratio;
-        }
-      }
+    // Red bar (Turbo) - Discrete Bars
+    let redIdx = 0
+    if (g.player.turboBars > 0 && g.player.turboBarDuration > 0) {
+      // Nombre de barres entières disponibles
+      const fullBars = Math.floor(g.turboTime / g.player.turboBarDuration)
+      // On convertit le nombre de barres en index (0 à 4 pour nos images RED_BARS)
+      // Si max bars = 3, on map 0->0, 1->1, 2->2, 3->3, 4->4 (au cas où max >= 4)
+      redIdx = clamp(fullBars, 0, 4)
     }
-    // minReadyRatio = 1 (toutes prêtes), 0 = la plus longue recharge
-    const redIdx = Math.round(minReadyRatio * 4);
-    const redImg = RED_BARS[redIdx];
+
+    const redImg = RED_BARS[redIdx]
     if (redImg && redImg.complete && redImg.naturalWidth > 0) {
-      ctx.drawImage(redImg, hBarX, redY, hBarW, hBarH);
+      if (g.turboActive) {
+        ctx.shadowColor = '#ff2020'
+        ctx.shadowBlur = 15
+      }
+      ctx.drawImage(redImg, hBarX, redY, hBarW, hBarH)
+      ctx.shadowBlur = 0
     }
 
     // Blue bar (shield)
