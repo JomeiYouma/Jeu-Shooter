@@ -54,33 +54,58 @@ export function movePlayer(g, dt, bounds) {
   let speedMult = 0
 
   if (KEYBOARD_MOVEMENT) {
-    // -- Keyboard mode : ZQSD ou flèches --
+    // -- Keyboard mode avec inertie (même feeling que la souris) --
     const keys = g.keys || {}
     const left  = keys['ArrowLeft']  || keys['q'] || keys['Q']
     const right = keys['ArrowRight'] || keys['d'] || keys['D']
     const up    = keys['ArrowUp']    || keys['z'] || keys['Z']
     const down  = keys['ArrowDown']  || keys['s'] || keys['S']
-    const moving = left || right || up || down
 
-    if (moving) {
+    // Vitesses cibles selon les touches pressées
+    const targetVx = (right ? 1 : left ? -1 : 0) * p.maxSideSpeed
+    const targetVy = up ? -p.maxSpeed : down ? p.maxBrakeSpeed : 0
+
+    // Constante d'accélération : plus elle est haute, plus la réponse est rapide
+    // On utilise la même logique que la courbe souris (x3 facteur de deceleration)
+    const accelRate = p.acceleration * 6   // vitesse d'atteinte de la cible
+    const frictionRate = p.acceleration * 9 // vitesse de retour à 0
+
+    if (targetVx !== 0) {
+      // Accélération vers la cible latérale
+      g.playerVx += (targetVx - g.playerVx) * Math.min(1, accelRate * dt)
+    } else {
+      // Friction latérale
+      g.playerVx *= Math.max(0, 1 - frictionRate * dt)
+      if (Math.abs(g.playerVx) < 0.5) g.playerVx = 0
+    }
+
+    if (targetVy !== 0) {
+      // Accélération vers la cible verticale
+      g.playerVy += (targetVy - g.playerVy) * Math.min(1, accelRate * dt)
+    } else {
+      // Friction verticale
+      g.playerVy *= Math.max(0, 1 - frictionRate * dt)
+      if (Math.abs(g.playerVy) < 0.5) g.playerVy = 0
+    }
+
+    // Appliquer la position
+    p.x = clamp(p.x + g.playerVx * dt, p.width / 2, width - p.width / 2)
+    p.y = clamp(p.y + g.playerVy * dt, height * 0.4, height - p.height / 2)
+
+    // playerAccelTime / speedMult basés sur la vitesse réelle
+    const realSpeed = Math.hypot(g.playerVx, g.playerVy)
+    const maxPossible = Math.max(p.maxSpeed, p.maxSideSpeed)
+    speedMult = clamp(realSpeed / maxPossible, 0, 1)
+    if (realSpeed > 5) {
       g.playerAccelTime = Math.min(3.0, g.playerAccelTime + dt * p.acceleration)
     } else {
       g.playerAccelTime = Math.max(0, g.playerAccelTime - dt * 3 * p.acceleration)
     }
-    speedMult = accelCurve(g.playerAccelTime)
-
-    if (left)  p.x -= p.maxSideSpeed * speedMult * dt
-    if (right) p.x += p.maxSideSpeed * speedMult * dt
-    if (up)    p.y -= p.maxSpeed     * speedMult * dt
-    if (down)  p.y += p.maxBrakeSpeed * speedMult * dt
-
-    p.x = clamp(p.x, p.width / 2, width - p.width / 2)
-    p.y = clamp(p.y, height * 0.4, height - p.height / 2)
 
     // Espace = tirer
     g.mouseDown = !!(keys[' '] || keys['Space'])
-    // Direction horizontale pour les sprites
-    g.playerDirX = (right ? 1 : left ? -1 : 0) * 80
+    // Direction pour les sprites (basée sur la vitesse réelle, pas juste la touche)
+    g.playerDirX = g.playerVx
   } else {
     // -- Mouse mode (original) --
     const distToMouse = Math.hypot(g.mouseX - p.x, g.mouseY - p.y)

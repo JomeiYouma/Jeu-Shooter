@@ -5,6 +5,7 @@ import { resetWeapons, fireWeapon, fireEnemyWeapons } from './weapons.js'
 import { spawnEnemies, spawnItems, spawnObstacles, queueObstacleRespawn } from './spawners.js'
 import { movePlayer, moveEnemies, handleCollisions } from './physics.js'
 import explosionPlayerGif from '../assets/fx/explosion_player.gif'
+import { KEYBOARD_MOVEMENT } from '../config.js'
 
 // -- Build initial game state ------------------------------------
 export function buildGameState(width, height) {
@@ -63,6 +64,8 @@ export function buildGameState(width, height) {
     playerSpeedPct: 0,
     playerAccelTime: 0,
     playerDirX: 0,
+    playerVx: 0,
+    playerVy: 0,
 
     deathEffects: [],
     trail: [],         // afterimages du joueur
@@ -248,7 +251,8 @@ export function update(G, dtMs, bounds) {
     .filter((fx) => fx.timer > 0)
 
   // Player horizontal direction (for sprite selection)
-  g.playerDirX = g.mouseX - g.player.x
+  // En mode clavier, playerDirX est déjà mis à jour dans movePlayer via g.playerVx
+  if (!KEYBOARD_MOVEMENT) g.playerDirX = g.mouseX - g.player.x
 
   // Trail afterimages (uniquement quand la moto avance)
   const TRAIL_INTERVAL = 0.035  // nouveau point toutes les 35ms

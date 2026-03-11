@@ -23,7 +23,7 @@ export const WEAPON_MODIFIERS_SHARED = 1
  *  1 = déplacement au clavier (Z/Q/S/D ou flèches directionnelles) + espace pour tirer.
  *  0 = déplacement à la souris (curseur) + clic pour tirer.
  */
-export const KEYBOARD_MOVEMENT = 0
+export const KEYBOARD_MOVEMENT = 1
 
 /**
  * BOUNCE_HEADED_APPLY_ALL_WEAPONS
