@@ -47,8 +47,13 @@ function drawPlayer(c, p, dirX) {
   c.translate(p.x, p.y)
 
   if (sprite && sprite.complete && sprite.naturalWidth > 0) {
-    // Superpose le sprite à la position réelle (taille naturelle, centré sur la hitbox)
-    c.drawImage(sprite, -sprite.naturalWidth / 2, -sprite.naturalHeight / 2)
+    // Redimensionne le sprite pour tenir dans la hitbox (ratio préservé), centré
+    const maxW = p.width
+    const maxH = p.height
+    const ratio = Math.min(maxW / sprite.naturalWidth, maxH / sprite.naturalHeight)
+    const dw = sprite.naturalWidth * ratio
+    const dh = sprite.naturalHeight * ratio
+    c.drawImage(sprite, -dw / 2, -dh / 2, dw, dh)
   } else {
     // Fallback géométrique si le sprite n'est pas encore chargé
     c.fillStyle = '#7db5ff'

@@ -307,7 +307,7 @@ const items = [
     type: 'add',
     usedVar: 'talismanCount',
     amount: 1,
-    rarity: 'rare',
+    rarity: 'common',
     png: itemShamrock,
   }),
 

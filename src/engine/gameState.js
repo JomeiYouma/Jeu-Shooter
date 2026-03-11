@@ -10,7 +10,7 @@ import explosionPlayerGif from '../assets/fx/explosion_player.gif'
 export function buildGameState(width, height) {
   const player = new Player({
     acceleration: 1,
-    weapons: [23],
+    weapons: [21],
     shieldForce: 0,
     healthPoints: 10,
     maxHealth: 10,
