@@ -253,8 +253,6 @@ const weapons = [
     rarity: 'rare',
     png: null,
     bulletGif: bulletLaser,
-    /* headed: true, */
-    
   }),// [14] Gros canon
   new Weapon({
     name: 'Gros canon',
@@ -373,7 +371,6 @@ const weapons = [
     rarity: 'rare',
     png: null,
     bulletGif: bulletC,
-    /* headed: true, */
   }),
   // [22] Desintegrator
   new Weapon({

@@ -14,17 +14,11 @@ function ShooterGame({ width = 900, height = 600 }) {
   const gameRef = useRef(null)
   const [uiState, setUiState] = useState({
     phase: STATE.START,
-    score: 0,
     hp: 10,
     maxHp: 10,
-    shield: 0,
     levelNo: 1,
     levelType: 'attack',
     worldName: world1.name,
-    transitionText: '',
-    itemPickedUp: null,
-    bossHp: 0,
-    bossMaxHp: 0,
   })
 
   const bounds = { width, height }
@@ -87,17 +81,11 @@ function ShooterGame({ width = 900, height = 600 }) {
       const p = g.player
       setUiState({
         phase: g.phase,
-        score: g.score,
         hp: p.healthPoints,
         maxHp: p.maxHealth,
-        shield: p.shieldForce,
         levelNo: (g.world.getLevel(g.currentLevelIndex)?.levelNo) ?? '-',
         levelType: (g.world.getLevel(g.currentLevelIndex)?.type) ?? '',
         worldName: g.world.name,
-        transitionText: g.transitionText,
-        itemPickedUp: g.itemPickedUp,
-        bossHp: g.bossRef?.life ?? 0,
-        bossMaxHp: g.bossRef?.type?.life ?? 0,
       })
     }
 
@@ -180,14 +168,10 @@ function ShooterGame({ width = 900, height = 600 }) {
       <div className="hud">
         <div className="hud-left">
           <span className="hud-level">{levelLabel}</span>
-          <span className="hud-score">Score: {uiState.score}</span>
         </div>
         <div className="hud-center">
         </div>
         <div className="hud-right">
-          {uiState.shield > 0 && (
-            <span className="hud-shield">Bouclier: {uiState.shield}</span>
-          )}
         </div>
       </div>
 

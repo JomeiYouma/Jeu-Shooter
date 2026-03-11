@@ -4,6 +4,7 @@ import { STATE, createStars, clamp } from './constants.js'
 import { resetWeapons, fireWeapon, fireEnemyWeapons } from './weapons.js'
 import { spawnEnemies, spawnItems, spawnObstacles } from './spawners.js'
 import { movePlayer, moveEnemies, handleCollisions } from './physics.js'
+import explosionPlayerGif from '../assets/fx/explosion_player.gif'
 
 // -- Build initial game state ------------------------------------
 export function buildGameState(width, height) {
@@ -33,7 +34,7 @@ export function buildGameState(width, height) {
     transitionText: '',
 
     player,
-    score: 0,
+
     mouseX: width / 2,
     mouseY: height - 40,
     mouseDown: false,
@@ -60,6 +61,9 @@ export function buildGameState(width, height) {
     playerPrevY: height - 40,
     playerSpeedPct: 0,
     playerAccelTime: 0,
+    playerDirX: 0,
+
+    deathEffects: [],
   }
 }
 
@@ -229,8 +233,19 @@ export function update(G, dtMs, bounds) {
     if (g.itemPickedUpTimer <= 0) g.itemPickedUp = null
   }
 
+  // Death effects timer
+  g.deathEffects = g.deathEffects
+    .map((fx) => ({ ...fx, timer: fx.timer - dt }))
+    .filter((fx) => fx.timer > 0)
+
+  // Player horizontal direction (for sprite selection)
+  g.playerDirX = g.mouseX - g.player.x
+
   // Player dead?
   if (!g.player.isAlive) {
+    if (g.phase !== STATE.GAME_OVER) {
+      g.deathEffects.push({ x: g.player.x, y: g.player.y, gif: explosionPlayerGif, timer: 1.5 })
+    }
     g.phase = STATE.GAME_OVER
     return
   }

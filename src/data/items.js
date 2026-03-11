@@ -3,7 +3,6 @@
  */
 import Item from '../classes/Item.js'
 import itemA from '../assets/Items/item_a.png'
-/* import itemB from '../assets/Items/item_b.png' */
 import itemC from '../assets/Items/item_c.png'
 import itemD from '../assets/Items/item_d.png'
 import itemE from '../assets/Items/item_e.png'
@@ -12,7 +11,6 @@ import itemG from '../assets/Items/item_g.png'
 import itemH from '../assets/Items/item_h.png'
 import itemJ from '../assets/Items/item_j.png'
 import itemL from '../assets/Items/item_l.png'
-/* import itemM from '../assets/Items/item_m.png' */
 import itemN from '../assets/Items/item_n.png'
 import itemAmmo from '../assets/Items/item_ammo.png'
 import itemHealth from '../assets/Items/item_health.png'

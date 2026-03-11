@@ -76,6 +76,9 @@ export function fireWeapon(g, dt) {
         ws.salveRemaining--
         if (ws.salveRemaining > 0) {
           ws.salveTimer = w.salveDuration / w.bulletsPerSalve
+        } else {
+          // Salve terminée — démarre le cooldown inter-salve
+          ws.cooldownTimer = w.cooldownTime
         }
       }
       continue
@@ -87,16 +90,18 @@ export function fireWeapon(g, dt) {
     if (!g.mouseDown) continue
 
     // --- Start a new salve --------------------------------------
-    ws.cooldownTimer = w.cooldownTime + w.salveDuration
-
     // Fire the first burst immediately
     emitPlayerBullets(g, w, 0)
 
-    // Schedule remaining bursts if salve > 1
     if (w.bulletsPerSalve > 1) {
+      // Schedule remaining bursts
       ws.salveRemaining = w.bulletsPerSalve - 1
       ws.salveFiredCount = 1
       ws.salveTimer = w.salveDuration / w.bulletsPerSalve
+      ws.cooldownTimer = 0 // cooldown ne démarre qu'à la fin de la salve
+    } else {
+      // Salve d'un seul tir : cooldown immédiat
+      ws.cooldownTimer = w.cooldownTime
     }
   }
 }

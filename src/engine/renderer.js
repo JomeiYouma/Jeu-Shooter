@@ -2,6 +2,29 @@ import { clamp } from './constants.js'
 import { loadImg, getGifPlayer, ACCEL_BARS, RED_BARS, BLUE_BARS } from './assets.js'
 import { weapons } from '../data/index.js'
 import { STATE } from './constants.js'
+import playerFarLeft from '../assets/player/player_far_left.png'
+import playerLeft from '../assets/player/player_left.png'
+import playerNormal from '../assets/player/player_normal.png'
+import playerRight from '../assets/player/player_right.png'
+import playerFarRight from '../assets/player/player_far_right.png'
+
+// Preload player sprites
+const PLAYER_SPRITES = [
+  loadImg(playerFarLeft),
+  loadImg(playerLeft),
+  loadImg(playerNormal),
+  loadImg(playerRight),
+  loadImg(playerFarRight),
+]
+
+/** Returns the sprite image based on horizontal direction offset */
+function getPlayerSprite(dirX) {
+  if (dirX < -60) return PLAYER_SPRITES[0]  // far left
+  if (dirX < -15) return PLAYER_SPRITES[1]  // left
+  if (dirX >  60) return PLAYER_SPRITES[4]  // far right
+  if (dirX >  15) return PLAYER_SPRITES[3]  // right
+  return PLAYER_SPRITES[2]                  // center
+}
 
 // -- Rarity color -----------------------------------------------
 function rarityColor(rarity) {
@@ -15,33 +38,41 @@ function rarityColor(rarity) {
 }
 
 // -- Draw helpers ------------------------------------------------
-function drawPlayer(c, p) {
+function drawPlayer(c, p, dirX) {
   if (p.isImmune && Math.floor(Date.now() / 80) % 2 === 0) return
+
+  const sprite = getPlayerSprite(dirX)
 
   c.save()
   c.translate(p.x, p.y)
 
-  c.fillStyle = '#7db5ff'
-  c.beginPath()
-  c.moveTo(0, -24)
-  c.lineTo(-16, 10)
-  c.lineTo(-8, 14)
-  c.lineTo(0, 6)
-  c.lineTo(8, 14)
-  c.lineTo(16, 10)
-  c.closePath()
-  c.fill()
+  if (sprite && sprite.complete && sprite.naturalWidth > 0) {
+    // Superpose le sprite à la position réelle (taille naturelle, centré sur la hitbox)
+    c.drawImage(sprite, -sprite.naturalWidth / 2, -sprite.naturalHeight / 2)
+  } else {
+    // Fallback géométrique si le sprite n'est pas encore chargé
+    c.fillStyle = '#7db5ff'
+    c.beginPath()
+    c.moveTo(0, -24)
+    c.lineTo(-16, 10)
+    c.lineTo(-8, 14)
+    c.lineTo(0, 6)
+    c.lineTo(8, 14)
+    c.lineTo(16, 10)
+    c.closePath()
+    c.fill()
 
-  c.fillStyle = '#dce9ff'
-  c.beginPath()
-  c.arc(0, -4, 5, 0, Math.PI * 2)
-  c.fill()
+    c.fillStyle = '#dce9ff'
+    c.beginPath()
+    c.arc(0, -4, 5, 0, Math.PI * 2)
+    c.fill()
 
-  c.shadowColor = '#7db5ff'
-  c.shadowBlur = 12
-  c.fillStyle = '#4a90d0'
-  c.fillRect(-5, 12, 10, 4)
-  c.shadowBlur = 0
+    c.shadowColor = '#7db5ff'
+    c.shadowBlur = 12
+    c.fillStyle = '#4a90d0'
+    c.fillRect(-5, 12, 10, 4)
+    c.shadowBlur = 0
+  }
 
   if (p.shieldForce > 0) {
     c.strokeStyle = 'rgba(100,200,255,0.35)'
@@ -293,7 +324,21 @@ export function render(ctx, g, bounds) {
   }
 
   // -- PLAYER --
-  drawPlayer(ctx, g.player)
+  drawPlayer(ctx, g.player, g.playerDirX || 0)
+
+  // -- DEATH EFFECTS --
+  for (const fx of g.deathEffects) {
+    const gp = fx.gif ? getGifPlayer(fx.gif) : null
+    const frame = gp ? gp.getFrame() : null
+    if (frame) {
+      const size = 80 // taille fixe de l'effet en px
+      ctx.save()
+      ctx.globalAlpha = Math.min(1, fx.timer)
+      ctx.drawImage(frame, fx.x - size / 2, fx.y - size / 2, size, size)
+      ctx.globalAlpha = 1
+      ctx.restore()
+    }
+  }
 
   // -- GUI BARS --
   if (g.phase === STATE.PLAYING || g.phase === STATE.LEVEL_TRANSITION) {
@@ -422,13 +467,10 @@ export function render(ctx, g, bounds) {
     ctx.fillStyle = '#ff4444'
     ctx.font = '700 44px system-ui, sans-serif'
     ctx.textAlign = 'center'
-    ctx.fillText('GAME OVER', width / 2, height / 2 - 20)
-    ctx.fillStyle = '#ffffff'
-    ctx.font = '500 20px system-ui, sans-serif'
-    ctx.fillText('Score : ' + g.score, width / 2, height / 2 + 20)
+    ctx.fillText('GAME OVER', width / 2, height / 2 - 10)
     ctx.font = '400 16px system-ui, sans-serif'
     ctx.fillStyle = 'rgba(255,255,255,0.6)'
-    ctx.fillText('Clique pour recommencer', width / 2, height / 2 + 55)
+    ctx.fillText('Clique pour recommencer', width / 2, height / 2 + 35)
   }
 
   // -- VICTORY --
@@ -438,14 +480,12 @@ export function render(ctx, g, bounds) {
     ctx.fillStyle = '#ffcc00'
     ctx.font = '700 44px system-ui, sans-serif'
     ctx.textAlign = 'center'
-    ctx.fillText('VICTOIRE !', width / 2, height / 2 - 30)
+    ctx.fillText('VICTOIRE !', width / 2, height / 2 - 20)
     ctx.fillStyle = '#ffffff'
     ctx.font = '500 22px system-ui, sans-serif'
-    ctx.fillText(g.world.name, width / 2, height / 2 + 10)
-    ctx.font = '500 20px system-ui, sans-serif'
-    ctx.fillText('Score final : ' + g.score, width / 2, height / 2 + 45)
+    ctx.fillText(g.world.name, width / 2, height / 2 + 20)
     ctx.font = '400 15px system-ui, sans-serif'
     ctx.fillStyle = 'rgba(255,255,255,0.6)'
-    ctx.fillText('Clique pour recommencer', width / 2, height / 2 + 80)
+    ctx.fillText('Clique pour recommencer', width / 2, height / 2 + 60)
   }
 }

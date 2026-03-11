@@ -1,6 +1,11 @@
 import { clamp, randBetween, accelCurve } from './constants.js'
 import { weapons } from '../data/index.js'
 import { resetWeapon } from './weapons.js'
+import { getGifPlayer } from './assets.js'
+import explosionEnemyGif from '../assets/fx/explosion_enemy.gif'
+import explosionPlayerGif from '../assets/fx/explosion_player.gif'
+
+export { explosionEnemyGif, explosionPlayerGif }
 
 // -- Move enemies -----------------------------------------------
 export function moveEnemies(g, dt, bounds) {
@@ -85,7 +90,7 @@ export function handleCollisions(g) {
         const dead = enemy.takeDamage(b.damage)
         if (dead) {
           destroyed = true
-          g.score += enemy.isBoss ? 50 : 10
+          g.deathEffects.push({ x: enemy.x, y: enemy.y, gif: explosionEnemyGif, timer: 0.6 })
           if (enemy.isBoss && g.bossRef === enemy) g.bossRef = null
         }
         // Bounce: redirect bullet to nearest OTHER alive enemy
@@ -124,7 +129,7 @@ export function handleCollisions(g) {
         if (p.contactDamage > 0) {
           const dead = enemy.takeDamage(p.contactDamage)
           if (dead) {
-            g.score += enemy.isBoss ? 50 : 10
+            g.deathEffects.push({ x: enemy.x, y: enemy.y, gif: explosionEnemyGif, timer: 0.6 })
             if (enemy.isBoss && g.bossRef === enemy) g.bossRef = null
             return false
           }
