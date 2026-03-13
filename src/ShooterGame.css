@@ -13,6 +13,7 @@
   cursor: crosshair;
   user-select: none;
   -webkit-user-select: none;
+  position: relative;
 }
 
 .shooter-container:fullscreen {
@@ -43,6 +44,12 @@
 }
 .hud-right { justify-content: flex-end; }
 .hud-center { flex: 1; display: flex; justify-content: center; }
+
+.hud-controls-hint {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+}
 
 .hud-level {
   color: #b0c4ff;
@@ -105,4 +112,99 @@
 
 .shooter-container:fullscreen .fullscreen-hint {
   display: none;
+}
+
+/* -- Controls Popup ------------------------------------ */
+.controls-popup-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.65);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+.controls-popup {
+  background: rgba(15, 20, 30, 0.95);
+  border: 1px solid rgba(125, 181, 255, 0.25);
+  border-radius: 12px;
+  padding: 30px 40px;
+  color: #fff;
+  text-align: center;
+  max-width: 400px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+  /* Apparition smooth */
+  animation: fadeInDown 0.35s ease-out forwards;
+}
+@keyframes fadeInDown {
+  0% { opacity: 0; transform: translateY(-20px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.controls-popup h2 { 
+  margin-top: 0; 
+  color: #7db5ff; 
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+.controls-popup p { 
+  font-size: 1.05rem; 
+  line-height: 1.6; 
+  margin-bottom: 30px; 
+  color: #e0e8ff;
+}
+.controls-popup p strong {
+  color: #fff;
+}
+.controls-popup button {
+  background: linear-gradient(135deg, #4a90d0, #367abb);
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  font-size: 1.15rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.controls-popup button:hover {
+  background: linear-gradient(135deg, #5aa0e0, #468acb);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(74, 144, 208, 0.4);
+}
+
+/* -- Loading Overlay ----------------------------------- */
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: #050710;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+  color: #fff;
+  border-radius: 12px;
+}
+.shooter-container:fullscreen .loading-overlay {
+  border-radius: 0;
+}
+.loading-overlay h2 {
+  margin-top: 25px;
+  color: #7db5ff;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+}
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(125, 181, 255, 0.2);
+  border-top-color: #7db5ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }

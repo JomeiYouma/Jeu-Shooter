@@ -53,7 +53,6 @@ export function buildGameState(width, height) {
     enemyBullets: [],
     obstacleRespawnQueue: [], // { timer } obstacles attendant de respawn
 
-    stars: createStars(80, width, height),
     itemPickedUp: null,
     itemPickedUpTimer: 0,
 
@@ -73,6 +72,10 @@ export function buildGameState(width, height) {
     deathEffects: [],
     trail: [],         // afterimages du joueur
     trailSpawnTimer: 0, // temps depuis le dernier point de traînée
+
+    roadOffsetY: 0,
+    hasShownControls: false,
+    isControlsPopupOpen: false,
   }
 }
 
@@ -133,16 +136,16 @@ export function update(G, dtMs, bounds) {
   const g = G
   const { width, height } = bounds
 
-  // Animate stars always
-  for (const s of g.stars) {
-    s.y += s.speed * dt
-    if (s.y > height) { s.y = -2; s.x = Math.random() * width }
-  }
-
   if (g.phase === STATE.START || g.phase === STATE.GAME_OVER || g.phase === STATE.VICTORY) return
 
   // Player movement
   movePlayer(g, dt, bounds)
+
+  // Scroll the road (matching obstacle speed multiplier)
+  if (g.phase !== STATE.START) {
+    const roadSpeedMult = Math.pow(1.15, g.currentLevelIndex || 0)
+    g.roadOffsetY += 100 * roadSpeedMult * dt
+  }
 
   // LEVEL TRANSITION countdown
   if (g.phase === STATE.LEVEL_TRANSITION) {

@@ -1,5 +1,5 @@
 import { clamp } from './constants.js'
-import { loadImg, getGifPlayer, ACCEL_BARS, RED_BARS, BLUE_BARS } from './assets.js'
+import { loadImg, getGifPlayer, ACCEL_BARS, RED_BARS, BLUE_BARS, ROAD_TILE } from './assets.js'
 import { weapons } from '../data/index.js'
 import { STATE } from './constants.js'
 import playerFarLeft from '../assets/player/player_far_left.png'
@@ -198,10 +198,6 @@ function drawStartScreen(c, g, bounds) {
   c.font = '600 22px system-ui, sans-serif'
   c.fillStyle = '#ffffff'
   c.fillText('Clique pour commencer', width / 2, height / 2 + 30)
-
-  c.font = '400 14px system-ui, sans-serif'
-  c.fillStyle = 'rgba(255,255,255,0.5)'
-  c.fillText('Deplace la souris pour bouger, maintiens clic pour tirer', width / 2, height / 2 + 65)
 }
 
 // -- Main render function ----------------------------------------
@@ -215,23 +211,18 @@ export function render(ctx, g, bounds) {
   ctx.fillStyle = grad
   ctx.fillRect(0, 0, width, height)
 
-  // Stars
-  for (const s of g.stars) {
-    ctx.globalAlpha = s.alpha
-    ctx.fillStyle = '#fff'
-    ctx.beginPath()
-    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2)
-    ctx.fill()
-  }
-  ctx.globalAlpha = 1
+  // Draw scrolling road
+  if (g.phase !== STATE.START && ROAD_TILE && ROAD_TILE.complete && ROAD_TILE.naturalWidth > 0) {
+    // Fill width and scale height
+    const scale = width / ROAD_TILE.naturalWidth
+    const scaledH = ROAD_TILE.naturalHeight * scale
+    const offset = (g.roadOffsetY || 0) % scaledH
 
-  // Grid
-  ctx.strokeStyle = 'rgba(255,255,255,0.03)'
-  for (let x = 0; x <= width; x += 40) {
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke()
-  }
-  for (let y = 0; y <= height; y += 40) {
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke()
+    ctx.drawImage(ROAD_TILE, 0, offset - scaledH, width, scaledH)
+    ctx.drawImage(ROAD_TILE, 0, offset, width, scaledH)
+    if (offset < height - scaledH) {
+      ctx.drawImage(ROAD_TILE, 0, offset + scaledH, width, scaledH)
+    }
   }
 
   // -- START SCREEN --

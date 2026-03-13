@@ -1,5 +1,6 @@
 import GifPlayer from '../utils/gifPlayer.js'
 import { weapons } from '../data/index.js'
+import roadTileSrc from '../assets/road_tile.jpg'
 
 // -- Factorized GUI bar imports (Vite glob) ----------------------
 const accelbarModules = import.meta.glob('../assets/gui/Accelbar/*.png', { eager: true, import: 'default' })
@@ -14,20 +15,32 @@ const bluebarPaths  = Object.entries(bluebarModules).sort(sortByPath).map(([, v]
 
 // -- Image preloader / cache (PNGs only) ------------------------
 const _imgCache = {}
+const _loadingPromises = []
+
 export function loadImg(src) {
   if (!src) return null
   if (!_imgCache[src]) {
     const img = new Image()
+    const p = new Promise(resolve => {
+      img.onload = resolve
+      img.onerror = resolve
+    })
+    _loadingPromises.push(p)
     img.src = src
     _imgCache[src] = img
   }
   return _imgCache[src]
 }
 
+export function getAssetsPromise() {
+  return Promise.all(_loadingPromises)
+}
+
 // Pre-load bar images into arrays
 export const ACCEL_BARS = accelbarPaths.map(loadImg)
 export const RED_BARS   = redbarPaths.map(loadImg)
 export const BLUE_BARS  = bluebarPaths.map(loadImg)
+export const ROAD_TILE  = loadImg(roadTileSrc)
 
 // -- Animated GIF players (one per unique bullet GIF) -----------
 const _gifPlayers = {}

@@ -3,6 +3,7 @@ import './ShooterGame.css'
 import { STATE, clamp } from './engine/constants.js'
 import { buildGameState, resetGame, startLevel, update } from './engine/gameState.js'
 import { render } from './engine/renderer.js'
+import { getAssetsPromise } from './engine/assets.js'
 import { world1 } from './data/index.js'
 
 // ---------------------------------------------------------------
@@ -19,7 +20,17 @@ function ShooterGame({ width = 900, height = 600 }) {
     levelNo: 1,
     levelType: 'attack',
     worldName: world1.name,
+    isControlsPopupOpen: false,
   })
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    let mounted = true
+    getAssetsPromise().then(() => {
+      if (mounted) setIsLoading(false)
+    })
+    return () => mounted = false
+  }, [])
 
   const bounds = { width, height }
 
@@ -63,7 +74,12 @@ function ShooterGame({ width = 900, height = 600 }) {
 
     const onClick = () => {
       if (G.phase === STATE.START) {
-        startLevel(G)
+        if (!G.hasShownControls) {
+          G.hasShownControls = true
+          G.isControlsPopupOpen = true
+        } else if (!G.isControlsPopupOpen) {
+          startLevel(G)
+        }
       } else if (G.phase === STATE.GAME_OVER || G.phase === STATE.VICTORY) {
         resetGame(G, width, height)
       }
@@ -97,6 +113,7 @@ function ShooterGame({ width = 900, height = 600 }) {
         levelNo: (g.world.getLevel(g.currentLevelIndex)?.levelNo) ?? '-',
         levelType: (g.world.getLevel(g.currentLevelIndex)?.type) ?? '',
         worldName: g.world.name,
+        isControlsPopupOpen: g.isControlsPopupOpen,
       })
     }
 
@@ -162,6 +179,14 @@ function ShooterGame({ width = 900, height = 600 }) {
     c.requestFullscreen?.().catch(() => {})
   }
 
+  // -- Event handler from popup -------------------------------
+  const handleStartFromPopup = () => {
+    if (gameRef.current) {
+      gameRef.current.isControlsPopupOpen = false
+      startLevel(gameRef.current)
+    }
+  }
+
   // -- JSX ----------------------------------------------------
   const isPlaying = uiState.phase === STATE.PLAYING || uiState.phase === STATE.LEVEL_TRANSITION
   const levelLabel = uiState.levelType === 'boss' ? 'BOSS'
@@ -185,10 +210,34 @@ function ShooterGame({ width = 900, height = 600 }) {
         <div className="hud-center">
         </div>
         <div className="hud-right">
+          {isPlaying && (
+            <span className="hud-controls-hint">Deplacement: Souris | Tir: Clic gauche | Pause: P</span>
+          )}
         </div>
       </div>
 
       <canvas ref={canvasRef} width={width} height={height} className="shooter-canvas" />
+      
+      {uiState.isControlsPopupOpen && (
+        <div className="controls-popup-overlay">
+          <div className="controls-popup" onClick={(e) => e.stopPropagation()}>
+            <h2>Commandes</h2>
+            <p>
+              <strong>Deplacement :</strong> Mouvement de la souris<br/>
+              <strong>Tirer :</strong> Maintenir le Clic Gauche<br/>
+              <strong>Pause :</strong> Touche P
+            </p>
+            <button autoFocus onClick={handleStartFromPopup}>Jouer</button>
+          </div>
+        </div>
+      )}
+
+      {isLoading && (
+        <div className="loading-overlay">
+          <div className="spinner"></div>
+          <h2>Chargement des assets...</h2>
+        </div>
+      )}
 
       <div className="fullscreen-hint">Clique dans le jeu pour le plein ecran</div>
     </div>
