@@ -20,9 +20,3 @@ Le composant accepte une prop `config` permettant de définir :
 * Le comportement des ennemis (IA de base, points de vie, dégâts).
 * La table de loot (fréquence d'apparition des items).
 * Les assets visuels (sprites, arrière-plans).
-
-### 🚀 Utilisation
-1. Installez les dépendances : `npm install`
-2. Importez le composant :
-   ```javascript
-   import { ShooterGame } from './components/ShooterGame';
