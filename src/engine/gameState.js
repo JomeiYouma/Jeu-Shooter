@@ -93,43 +93,16 @@ export function startLevel(g) {
   g.phase = STATE.PLAYING
   g.levelTime = 0
   g.enemies = []
+  g.bullets = []
+  g.enemyBullets = []
   g.spawnedEnemyIds = new Set()
   g.itemSpawnTimer = 0
   g.obstacleSpawnTimer = 0
   g.itemsSpawnedThisLevel = 0
   g.obstaclesSpawnedThisLevel = 0
   g.bossRef = null
-  // Ne jamais supprimer les items, balles et obstacles ici
-  // Le nettoyage progressif est géré uniquement par le flag levelTransitionCleanup dans update()
-  // Nettoyage progressif des items, balles et obstacles après transition
-  if (g.levelTransitionCleanup) {
-    // Items : laisse finir leur chute
-    g.activeItems = g.activeItems
-      .map((it) => ({ ...it, y: it.y + it.speed * dt }))
-      .filter((it) => it.y < height + 30)
-    // Balle : laisse sortir de l'écran
-    g.bullets = g.bullets
-      .map((b) => ({ ...b, x: b.x + b.vx * dt, y: b.y + b.vy * dt }))
-      .filter((b) => b.y > -20 && b.y < height + 40 && b.x > -20 && b.x < width + 20)
-    g.enemyBullets = g.enemyBullets
-      .map((b) => ({ ...b, x: b.x + b.vx * dt, y: b.y + b.vy * dt }))
-      .filter((b) => b.y > -20 && b.y < height + 40 && b.x > -20 && b.x < width + 20)
-    // Obstacles : laisse finir leur chute
-    g.activeObstacles = g.activeObstacles
-      .map((obs) => ({ ...obs, y: obs.y + obs.speed * dt }))
-      .filter((obs) => obs.y < height + 60)
-    // Quand tout est sorti, on retire le flag
-    if (
-      g.activeItems.length === 0 &&
-      g.bullets.length === 0 &&
-      g.enemyBullets.length === 0 &&
-      g.activeObstacles.length === 0
-    ) {
-      g.levelTransitionCleanup = false
-    }
-    // Ne pas continuer le reste de la logique
-    return
-  }
+  g.activeObstacles = []
+  g.obstacleRespawnQueue = []
 }
 
 // -- Check level completion --------------------------------------
@@ -182,10 +155,7 @@ export function update(G, dtMs, bounds) {
       if (g.currentLevelIndex >= g.world.levelCount) {
         g.phase = STATE.VICTORY
       } else {
-        // Active le flag de nettoyage progressif
-        g.levelTransitionCleanup = true
-        // On ne lance startLevel qu'après le nettoyage
-        // startLevel(g) sera appelé automatiquement quand tout est nettoyé
+        startLevel(g)
       }
       return
     }
@@ -196,8 +166,6 @@ export function update(G, dtMs, bounds) {
   const level = g.world.getLevel(g.currentLevelIndex)
   if (!level) return
   g.levelTime += dt
-  // Si on est en phase de nettoyage, ne pas respawn
-  if (g.levelTransitionCleanup) return
 
   // Fire
   fireWeapon(g, dt)
