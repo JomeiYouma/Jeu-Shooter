@@ -1,16 +1,22 @@
-# React + Vite
+# 🔫 Custom 2D Shooter Component
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Un moteur de jeu de tir 2D hautement personnalisable et configurable, conçu comme un composant **React** robuste utilisant **JavaScript**. Traversez des niveaux, collectez des items et éliminez vos ennemis pour atteindre la victoire.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🇫🇷 Français
 
-## React Compiler
+### 📝 Description
+Ce projet est un composant React polyvalent qui permet d'intégrer un shooter 2D dans n'importe quelle application web. Entièrement piloté par la configuration, vous pouvez modifier les types d'ennemis, les loots et les propriétés des niveaux via des simples objets JSON ou des props.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🎮 Gameplay
+* **Mouvement** : Navigation fluide dans l'environnement 2D.
+* **Combat** : Système de tir pour éliminer les vagues d'ennemis.
+* **Objectifs** : Récupérer des items spécifiques pour débloquer la progression et atteindre la fin du niveau.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### ⚙️ Personnalisation
+Le composant accepte une prop `config` permettant de définir :
+* Les statistiques du joueur (vitesse, points de vie, cadence de tir).
+* Le comportement des ennemis (IA de base, points de vie, dégâts).
+* La table de loot (fréquence d'apparition des items).
+* Les assets visuels (sprites, arrière-plans).
