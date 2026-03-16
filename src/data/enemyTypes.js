@@ -2,6 +2,7 @@
  * TYPES D'ENNEMIS - Blueprints d'ennemis
  */
 import EnemyType from '../classes/EnemyType.js'
+import { enemyPngs } from './enemyPngs.js'
 
 const enemyTypes = [
   // [0] Scout - petit et rapide
@@ -18,7 +19,7 @@ const enemyTypes = [
     isBoss: false,
     width: 28,
     height: 28,
-    png: { full: null, damaged: null, destroyed: null },
+      png: enemyPngs.punkmoto,
   }),
 
   // [1] Soldat - moyen, zigzag
@@ -35,7 +36,7 @@ const enemyTypes = [
     isBoss: false,
     width: 36,
     height: 36,
-    png: { full: null, damaged: null, destroyed: null },
+      png: enemyPngs.armedcar,
   }),
 
   // [2] Tank - lent, blinde
@@ -52,7 +53,7 @@ const enemyTypes = [
     isBoss: false,
     width: 44,
     height: 44,
-    png: { full: null, damaged: null, destroyed: null },
+      png: enemyPngs.tank,
   }),
 
   // [3] Boss - gros, barre de vie
@@ -69,7 +70,7 @@ const enemyTypes = [
     isBoss: true,
     width: 72,
     height: 72,
-    png: { full: null, damaged: null, destroyed: null },
+      png: enemyPngs.helicopter,
   }),
 
   // [4] Éclaireur - rapide, rafale courte, zigzag serré
@@ -86,7 +87,7 @@ const enemyTypes = [
     isBoss: false,
     width: 26,
     height: 26,
-    png: { full: null, damaged: null, destroyed: null },
+      png: enemyPngs.punkmoto,
   }),
 
   // [5] Bombardier - lent, tir en cône, résistant
@@ -103,7 +104,7 @@ const enemyTypes = [
     isBoss: false,
     width: 42,
     height: 42,
-    png: { full: null, damaged: null, destroyed: null },
+      png: enemyPngs.armedcar,
   }),
 
   // [6] Sniper - immobile en haut, tir puissant
@@ -120,7 +121,7 @@ const enemyTypes = [
     isBoss: false,
     width: 32,
     height: 32,
-    png: { full: null, damaged: null, destroyed: null },
+      png: enemyPngs.tank,
   }),
 
   // [7] Tourelle - résistant, salve rotative
@@ -137,7 +138,7 @@ const enemyTypes = [
     isBoss: false,
     width: 40,
     height: 40,
-    png: { full: null, damaged: null, destroyed: null },
+      png: enemyPngs.helicopter,
   }),
 ]
 

@@ -118,39 +118,83 @@ function drawPlayer(c, p, dirX, turboActive = false) {
 }
 
 function drawEnemy(c, e) {
+    // DEBUG: début du drawEnemy
+    console.log('[drawEnemy] id:', e.id, 'type:', e.type?.name, 'life:', e.life, 'max:', e.type?.life)
+    console.log('[drawEnemy] PNG:', e.type?.png)
   c.save()
   c.translate(e.x, e.y)
   const r = e.width / 2
 
-  if (e.isBoss) {
-    c.fillStyle = '#cc3333'
-    c.beginPath()
-    c.moveTo(0, -r)
-    c.lineTo(-r, r * 0.6)
-    c.lineTo(-r * 0.5, r)
-    c.lineTo(r * 0.5, r)
-    c.lineTo(r, r * 0.6)
-    c.closePath()
-    c.fill()
-    c.fillStyle = '#ff8888'
-    c.beginPath()
-    c.arc(0, 0, r * 0.3, 0, Math.PI * 2)
-    c.fill()
-  } else {
-    const colors = { 0: '#ff6a6a', 1: '#ffa040', 2: '#8866cc' }
-    const color = e.life <= 2 ? colors[0] : e.life <= 5 ? colors[1] : colors[2]
-    c.fillStyle = color
-    c.beginPath()
-    c.arc(0, 0, r, 0, Math.PI * 2)
-    c.fill()
+  // Choix du sprite selon l'état de vie
+  let imgPath = null
+  if (e.type && e.type.png) {
+    if (e.life >= e.type.life) {
+      imgPath = e.type.png.full
+        console.log('[drawEnemy] Choix sprite: full', imgPath)
+    } else if (e.life > e.type.life / 2) {
+      imgPath = e.type.png.damaged || e.type.png.full
+        console.log('[drawEnemy] Choix sprite: damaged', imgPath)
+    } else {
+      imgPath = e.type.png.destroyed || e.type.png.full
+        console.log('[drawEnemy] Choix sprite: destroyed', imgPath)
+    }
+  }
+  const img = imgPath ? loadImg(imgPath) : null
+    console.log('[drawEnemy] imgPath:', imgPath, 'img:', img)
 
-    c.fillStyle = '#fff'
-    c.beginPath()
-    c.arc(-r * 0.35, -r * 0.15, r * 0.18, 0, Math.PI * 2)
-    c.arc(r * 0.35, -r * 0.15, r * 0.18, 0, Math.PI * 2)
-    c.fill()
+  // Affichage du boss
+  if (e.isBoss) {
+    if (img && img.complete && img.naturalWidth > 0) {
+        console.log('[drawEnemy] Affichage boss PNG', imgPath)
+      const maxW = e.width
+      const maxH = e.height
+      const ratio = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight)
+      const dw = img.naturalWidth * ratio
+      const dh = img.naturalHeight * ratio
+      c.drawImage(img, -dw / 2, -dh / 2, dw, dh)
+    } else {
+        console.log('[drawEnemy] Affichage boss fallback')
+      c.fillStyle = '#cc3333'
+      c.beginPath()
+      c.moveTo(0, -r)
+      c.lineTo(-r, r * 0.6)
+      c.lineTo(-r * 0.5, r)
+      c.lineTo(r * 0.5, r)
+      c.lineTo(r, r * 0.6)
+      c.closePath()
+      c.fill()
+      c.fillStyle = '#ff8888'
+      c.beginPath()
+      c.arc(0, 0, r * 0.3, 0, Math.PI * 2)
+      c.fill()
+    }
+  } else {
+    if (img && img.complete && img.naturalWidth > 0) {
+        console.log('[drawEnemy] Affichage enemy PNG', imgPath)
+      const maxW = e.width
+      const maxH = e.height
+      const ratio = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight)
+        const dw = img.naturalWidth * ratio * 2
+        const dh = img.naturalHeight * ratio * 2
+      c.drawImage(img, -dw / 2, -dh / 2, dw, dh)
+    } else {
+        console.log('[drawEnemy] Affichage enemy fallback')
+      const colors = { 0: '#ff6a6a', 1: '#ffa040', 2: '#8866cc' }
+      const color = e.life <= 2 ? colors[0] : e.life <= 5 ? colors[1] : colors[2]
+      c.fillStyle = color
+      c.beginPath()
+      c.arc(0, 0, r, 0, Math.PI * 2)
+      c.fill()
+
+      c.fillStyle = '#fff'
+      c.beginPath()
+      c.arc(-r * 0.35, -r * 0.15, r * 0.18, 0, Math.PI * 2)
+      c.arc(r * 0.35, -r * 0.15, r * 0.18, 0, Math.PI * 2)
+      c.fill()
+    }
   }
 
+  // Barre de vie
   if (e.type && !e.isBoss) {
     const barW = e.width
     const pct = e.life / e.type.life

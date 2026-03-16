@@ -211,7 +211,11 @@ function ShooterGame({ width = 900, height = 600 }) {
         </div>
         <div className="hud-right">
           {isPlaying && (
-            <span className="hud-controls-hint">Deplacement: Souris | Tir: Clic gauche | Pause: P</span>
+            <span className="hud-controls-hint">
+              {window.KEYBOARD_MOVEMENT === 1
+                ? 'Déplacement: Z/Q/S/D ou flèches | Tir: Espace | Turbo: Shift | Pause: P'
+                : 'Déplacement: Souris | Tir: Clic gauche | Turbo: Shift | Pause: P'}
+            </span>
           )}
         </div>
       </div>
@@ -223,9 +227,21 @@ function ShooterGame({ width = 900, height = 600 }) {
           <div className="controls-popup" onClick={(e) => e.stopPropagation()}>
             <h2>Commandes</h2>
             <p>
-              <strong>Deplacement :</strong> Mouvement de la souris<br/>
-              <strong>Tirer :</strong> Maintenir le Clic Gauche<br/>
-              <strong>Pause :</strong> Touche P
+              {window.KEYBOARD_MOVEMENT === 1 ? (
+                <>
+                  <strong>Déplacement :</strong> Z/Q/S/D ou flèches directionnelles<br/>
+                  <strong>Tirer :</strong> Espace<br/>
+                  <strong>Turbo :</strong> Shift<br/>
+                  <strong>Pause :</strong> Touche P
+                </>
+              ) : (
+                <>
+                  <strong>Déplacement :</strong> Mouvement de la souris<br/>
+                  <strong>Tirer :</strong> Maintenir le Clic Gauche<br/>
+                  <strong>Turbo :</strong> Shift<br/>
+                  <strong>Pause :</strong> Touche P
+                </>
+              )}
             </p>
             <button autoFocus onClick={handleStartFromPopup}>Jouer</button>
           </div>

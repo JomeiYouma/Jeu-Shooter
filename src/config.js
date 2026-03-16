@@ -24,6 +24,9 @@ export const WEAPON_MODIFIERS_SHARED = 1
  *  0 = déplacement à la souris (curseur) + clic pour tirer.
  */
 export const KEYBOARD_MOVEMENT = 1
+if (typeof window !== 'undefined') {
+	window.KEYBOARD_MOVEMENT = KEYBOARD_MOVEMENT;
+}
 
 /**
  * BOUNCE_HEADED_APPLY_ALL_WEAPONS
