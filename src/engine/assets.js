@@ -1,6 +1,12 @@
 import GifPlayer from '../utils/gifPlayer.js'
-import { weapons } from '../data/index.js'
+import { weapons, enemyTypes, items, obstacles } from '../data/index.js'
 import roadTileSrc from '../assets/road_tile.jpg'
+import explosionPlayerGif from '../assets/fx/explosion_player.gif'
+import playerFarLeft from '../assets/player/player_far_left.png'
+import playerLeft from '../assets/player/player_left.png'
+import playerNormal from '../assets/player/player_normal.png'
+import playerRight from '../assets/player/player_right.png'
+import playerFarRight from '../assets/player/player_far_right.png'
 
 // -- Factorized GUI bar imports (Vite glob) ----------------------
 const accelbarModules = import.meta.glob('../assets/gui/Accelbar/*.png', { eager: true, import: 'default' })
@@ -51,13 +57,48 @@ export function getGifPlayer(src) {
   if (!src) return null
   if (!_gifPlayers[src]) {
     const player = new GifPlayer()
-    player.load(src)
+    // Register the decode promise so getAssetsPromise() actually waits on GIFs
+    _loadingPromises.push(player.load(src).catch(() => {}))
     _gifPlayers[src] = player
   }
   return _gifPlayers[src]
 }
 
-// Pre-load all weapon bullet GIFs
+// -- Preload everything used at runtime -------------------------
+// Player sprites
+loadImg(playerFarLeft)
+loadImg(playerLeft)
+loadImg(playerNormal)
+loadImg(playerRight)
+loadImg(playerFarRight)
+
+// All weapon bullet GIFs
 for (const w of weapons) {
   if (w.bulletGif) getGifPlayer(w.bulletGif)
+}
+
+// Player explosion GIF
+getGifPlayer(explosionPlayerGif)
+
+// All enemy PNGs (full / damaged / destroyed for each type)
+for (const e of enemyTypes) {
+  if (!e?.png) continue
+  if (e.png.full) loadImg(e.png.full)
+  if (e.png.damaged) loadImg(e.png.damaged)
+  if (e.png.destroyed) loadImg(e.png.destroyed)
+}
+
+// All item PNGs
+for (const it of items) {
+  if (it?.png) loadImg(it.png)
+}
+
+// All obstacle PNG variants
+for (const o of obstacles) {
+  if (!o?.pngVariants) continue
+  for (const v of o.pngVariants) {
+    if (v?.full) loadImg(v.full)
+    if (v?.damaged) loadImg(v.damaged)
+    if (v?.destroyed) loadImg(v.destroyed)
+  }
 }

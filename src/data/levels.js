@@ -16,6 +16,7 @@
  *  | amountOfItems      | number   | Nombre d'items qui spawnent                                   |
  *  | amountOfObstacles  | number   | Nombre d'obstacles                                            |
  *  | rarity             | string   | Rareté minimale des drops                                     |
+ *  | enemyScale         | number   | Multiplicateur des stats ennemis (1 = base, 2 = ×2 vie, etc.) |
  *
  *  Pour le champ `enemies`, chaque élément peut contenir :
  *    - timeOfEntry      : secondes depuis le début du niveau

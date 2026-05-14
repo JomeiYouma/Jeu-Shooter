@@ -20,6 +20,7 @@ export default class Level {
     amountOfItems = 0,
     amountOfObstacles = 0,
     rarity = 'common',
+    enemyScale = 1,
   } = {}) {
     this.levelNo = levelNo
     this.type = type
@@ -27,6 +28,7 @@ export default class Level {
     this.amountOfItems = amountOfItems
     this.amountOfObstacles = amountOfObstacles
     this.rarity = rarity
+    this.enemyScale = enemyScale
   }
 
   get isBonus() { return this.type === 'bonus' }

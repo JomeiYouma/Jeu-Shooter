@@ -1,18 +1,53 @@
 import Enemy from '../classes/Enemy.js'
+import EnemyType from '../classes/EnemyType.js'
 import { enemyTypes, items, obstacles } from '../data/index.js'
 import { randBetween, pick } from './constants.js'
 import { pickItemByRarity } from './itemPicker.js'
 
+// Scaled-type cache to avoid rebuilding identical EnemyType instances
+const _scaledTypeCache = new WeakMap()
+function getScaledType(baseType, scale) {
+  if (!scale || scale === 1) return baseType
+  let perScale = _scaledTypeCache.get(baseType)
+  if (perScale && perScale.has(scale)) return perScale.get(scale)
+  if (!perScale) {
+    perScale = new Map()
+    _scaledTypeCache.set(baseType, perScale)
+  }
+  // Less aggressive scaling on speed/damage than on life
+  const speedScale = Math.pow(scale, 0.35)
+  const dmgScale = Math.pow(scale, 0.6)
+  const scaled = new EnemyType({
+    movementSpeed: baseType.movementSpeed * speedScale,
+    shieldForce: baseType.shieldForce,
+    life: Math.max(1, Math.ceil(baseType.life * scale)),
+    baseLife: Math.max(1, Math.ceil(baseType.baseLife * scale)),
+    weapon: baseType.weapon,
+    movementPattern: baseType.movementPattern,
+    isIgnoringPlayer: baseType.isIgnoringPlayer,
+    contactDamage: Math.max(1, Math.round(baseType.contactDamage * dmgScale)),
+    immunityTime: baseType.immunityTime,
+    isBoss: baseType.isBoss,
+    width: baseType.width,
+    height: baseType.height,
+    png: baseType.png,
+  })
+  perScale.set(scale, scaled)
+  return scaled
+}
+
 // -- Spawn enemies from level data ------------------------------
 export function spawnEnemies(g, level, bounds) {
   const { width } = bounds
+  const scale = level.enemyScale ?? 1
   for (let i = 0; i < level.enemies.length; i++) {
     if (g.spawnedEnemyIds.has(i)) continue
     const def = level.enemies[i]
     if (g.levelTime >= (def.timeOfEntry ?? 0)) {
       g.spawnedEnemyIds.add(i)
       const typeIndex = typeof def.type === 'number' ? def.type : 0
-      const etype = enemyTypes[typeIndex] || enemyTypes[0]
+      const baseType = enemyTypes[typeIndex] || enemyTypes[0]
+      const etype = getScaledType(baseType, scale)
       const posX = def.positionOfEntry === 'random'
         ? randBetween(etype.width, width - etype.width)
         : def.positionOfEntry

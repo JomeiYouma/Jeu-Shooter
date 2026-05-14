@@ -14,7 +14,10 @@
       "Bash(node /tmp/extract_i18n_keys.js)",
       "PowerShell($f1 = [System.IO.File]::ReadAllBytes\\('src\\\\data\\\\items.js'\\)[0..2]; $f2 = [System.IO.File]::ReadAllBytes\\('src\\\\data\\\\weapons.js'\\)[0..2]; \"items.js bytes: $\\($f1 -join ','\\)\"; \"weapons.js bytes: $\\($f2 -join ','\\)\")",
       "Bash(npx eslint *)",
-      "Bash(git stash *)"
+      "Bash(git stash *)",
+      "Bash(ls \"C:\\\\Users\\\\rapha\\\\.claude\\\\projects\\\\c--Users-rapha-Documents-08-Projets-Jeu-Shooter\\\\memory\" 2>&1)",
+      "Read(//c/Users/rapha/.claude/projects/c--Users-rapha-Documents-08-Projets-Jeu-Shooter/**)",
+      "Bash(npx vite *)"
     ]
   }
 }
