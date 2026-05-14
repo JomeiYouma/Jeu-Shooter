@@ -2,6 +2,8 @@ import { clamp } from './constants.js'
 import { loadImg, getGifPlayer, ACCEL_BARS, RED_BARS, BLUE_BARS, ROAD_TILE } from './assets.js'
 import { weapons } from '../data/index.js'
 import { STATE } from './constants.js'
+import i18next from '../i18n.js'
+import { getLocalizedName } from '../utils/i18nLocalize.js'
 import playerFarLeft from '../assets/player/player_far_left.png'
 import playerLeft from '../assets/player/player_left.png'
 import playerNormal from '../assets/player/player_normal.png'
@@ -118,9 +120,6 @@ function drawPlayer(c, p, dirX, turboActive = false) {
 }
 
 function drawEnemy(c, e) {
-    // DEBUG: début du drawEnemy
-    console.log('[drawEnemy] id:', e.id, 'type:', e.type?.name, 'life:', e.life, 'max:', e.type?.life)
-    console.log('[drawEnemy] PNG:', e.type?.png)
   c.save()
   c.translate(e.x, e.y)
   const r = e.width / 2
@@ -130,22 +129,17 @@ function drawEnemy(c, e) {
   if (e.type && e.type.png) {
     if (e.life >= e.type.life) {
       imgPath = e.type.png.full
-        console.log('[drawEnemy] Choix sprite: full', imgPath)
     } else if (e.life > e.type.life / 2) {
       imgPath = e.type.png.damaged || e.type.png.full
-        console.log('[drawEnemy] Choix sprite: damaged', imgPath)
     } else {
       imgPath = e.type.png.destroyed || e.type.png.full
-        console.log('[drawEnemy] Choix sprite: destroyed', imgPath)
     }
   }
   const img = imgPath ? loadImg(imgPath) : null
-    console.log('[drawEnemy] imgPath:', imgPath, 'img:', img)
 
   // Affichage du boss
   if (e.isBoss) {
     if (img && img.complete && img.naturalWidth > 0) {
-        console.log('[drawEnemy] Affichage boss PNG', imgPath)
       const maxW = e.width
       const maxH = e.height
       const ratio = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight)
@@ -153,7 +147,6 @@ function drawEnemy(c, e) {
       const dh = img.naturalHeight * ratio
       c.drawImage(img, -dw / 2, -dh / 2, dw, dh)
     } else {
-        console.log('[drawEnemy] Affichage boss fallback')
       c.fillStyle = '#cc3333'
       c.beginPath()
       c.moveTo(0, -r)
@@ -170,7 +163,6 @@ function drawEnemy(c, e) {
     }
   } else {
     if (img && img.complete && img.naturalWidth > 0) {
-        console.log('[drawEnemy] Affichage enemy PNG', imgPath)
       const maxW = e.width
       const maxH = e.height
       const ratio = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight)
@@ -178,7 +170,6 @@ function drawEnemy(c, e) {
         const dh = img.naturalHeight * ratio * 2
       c.drawImage(img, -dw / 2, -dh / 2, dw, dh)
     } else {
-        console.log('[drawEnemy] Affichage enemy fallback')
       const colors = { 0: '#ff6a6a', 1: '#ffa040', 2: '#8866cc' }
       const color = e.life <= 2 ? colors[0] : e.life <= 5 ? colors[1] : colors[2]
       c.fillStyle = color
@@ -233,15 +224,15 @@ function drawStartScreen(c, g, bounds) {
   c.fillStyle = '#ffffff'
   c.font = '700 42px system-ui, sans-serif'
   c.textAlign = 'center'
-  c.fillText(g.world.name, width / 2, height / 2 - 60)
+  c.fillText(getLocalizedName(g.world), width / 2, height / 2 - 60)
 
   c.font = '400 18px system-ui, sans-serif'
-  c.fillStyle = '#b0c4ff'
-  c.fillText(g.world.levelCount + ' niveaux', width / 2, height / 2 - 25)
+  c.fillStyle = '#ff8888'
+  c.fillText(g.world.levelCount + ' ' + i18next.t('jeu_hud.levels_count'), width / 2, height / 2 - 25)
 
   c.font = '600 22px system-ui, sans-serif'
   c.fillStyle = '#ffffff'
-  c.fillText('Clique pour commencer', width / 2, height / 2 + 30)
+  c.fillText(i18next.t('jeu_hud.click_to_start'), width / 2, height / 2 + 30)
 }
 
 // -- Main render function ----------------------------------------
@@ -250,8 +241,8 @@ export function render(ctx, g, bounds) {
 
   // Background
   const grad = ctx.createLinearGradient(0, 0, 0, height)
-  grad.addColorStop(0, '#0a0e1a')
-  grad.addColorStop(1, '#050710')
+  grad.addColorStop(0, '#120a0a')
+  grad.addColorStop(1, '#0a0404')
   ctx.fillStyle = grad
   ctx.fillRect(0, 0, width, height)
 
@@ -560,9 +551,9 @@ export function render(ctx, g, bounds) {
     ctx.fillText(g.transitionText, width / 2, bannerY + 35)
 
     ctx.font = '400 16px system-ui, sans-serif'
-    ctx.fillStyle = 'rgba(180,200,255,0.8)'
+    ctx.fillStyle = 'rgba(255,160,160,0.85)'
     const secs = Math.ceil(g.transitionTimer)
-    ctx.fillText('Suite dans ' + secs + 's...', width / 2, bannerY + 65)
+    ctx.fillText(i18next.t('jeu_hud.next_in', { secs }), width / 2, bannerY + 65)
 
     ctx.restore()
   }
@@ -574,25 +565,36 @@ export function render(ctx, g, bounds) {
     ctx.fillStyle = '#ff4444'
     ctx.font = '700 44px system-ui, sans-serif'
     ctx.textAlign = 'center'
-    ctx.fillText('GAME OVER', width / 2, height / 2 - 10)
+    ctx.fillText(i18next.t('jeu_hud.game_over'), width / 2, height / 2 - 10)
     ctx.font = '400 16px system-ui, sans-serif'
     ctx.fillStyle = 'rgba(255,255,255,0.6)'
-    ctx.fillText('Clique pour recommencer', width / 2, height / 2 + 35)
+    ctx.fillText(i18next.t('jeu_hud.click_to_restart'), width / 2, height / 2 + 35)
   }
 
   // -- VICTORY --
   if (g.phase === STATE.VICTORY) {
-    ctx.fillStyle = 'rgba(0,0,0,0.55)'
+    ctx.fillStyle = 'rgba(0,0,0,0.75)'
     ctx.fillRect(0, 0, width, height)
     ctx.fillStyle = '#ffcc00'
     ctx.font = '700 44px system-ui, sans-serif'
     ctx.textAlign = 'center'
-    ctx.fillText('VICTOIRE !', width / 2, height / 2 - 20)
+    ctx.fillText(i18next.t('jeu_hud.victory'), width / 2, height / 2 - 80)
+    
     ctx.fillStyle = '#ffffff'
     ctx.font = '500 22px system-ui, sans-serif'
-    ctx.fillText(g.world.name, width / 2, height / 2 + 20)
+    ctx.fillText(getLocalizedName(g.world), width / 2, height / 2 - 35)
+    
+    // Promo Code (hardcoded)
+    ctx.fillStyle = '#ff6666'
+    ctx.font = '700 26px system-ui, sans-serif'
+    ctx.fillText(i18next.t('jeu_hud.promo_code'), width / 2, height / 2 + 15)
+    
+    ctx.fillStyle = '#e0e8ff'
+    ctx.font = '400 16px system-ui, sans-serif'
+    ctx.fillText(i18next.t('jeu_hud.promo_desc'), width / 2, height / 2 + 45)
+    
     ctx.font = '400 15px system-ui, sans-serif'
-    ctx.fillStyle = 'rgba(255,255,255,0.6)'
-    ctx.fillText('Clique pour recommencer', width / 2, height / 2 + 60)
+    ctx.fillStyle = 'rgba(255,255,255,0.4)'
+    ctx.fillText(i18next.t('jeu_hud.click_to_restart'), width / 2, height / 2 + 100)
   }
 }

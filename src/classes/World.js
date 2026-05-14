@@ -6,8 +6,9 @@
  *  - levels  : Tableau d'instances Level (dans l'ordre)
  */
 export default class World {
-  constructor({ name = 'Monde sans nom', levels = [] } = {}) {
+  constructor({ name = 'Monde sans nom', nameKey, levels = [] } = {}) {
     this.name = name
+    this.nameKey = nameKey
     this.levels = [...levels]
   }
 

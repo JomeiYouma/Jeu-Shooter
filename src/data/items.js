@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ITEMS - Objets ramassables (add = ajoute, replace = remplace)
  */
 import Item from '../classes/Item.js'
@@ -44,7 +44,9 @@ const items = [
   // [0] Kit de reparation - heal
   new Item({
     name: 'Kit de reparation',
-    description: 'Restaure 3 PV.',
+    nameKey: 'game.items.repair_kit.name',
+    description: 'Restaure 3 PV',
+    descriptionKey: 'game.items.repair_kit.desc',
     type: 'add',
     usedVar: 'healthPoints',
     amount: 3,
@@ -54,8 +56,10 @@ const items = [
 
   // [1] Turbo Engine - vitesse
   new Item({
-    name: 'Turbo Engine',
-    description: 'Augmente la vitesse max de 30.',
+    name: 'Moteur forgé',
+    nameKey: 'game.items.engine.name',
+    description: 'Vitesse max +30',
+    descriptionKey: 'game.items.engine.desc',
     type: 'add',
     usedVar: 'maxSpeed',
     amount: 30,
@@ -63,10 +67,12 @@ const items = [
     png: itemF,
   }),
 
-  // [2] Engine (Rare) - Turbo Bar Duration +0.2s
+  // [2] Booster turbo
   new Item({
-    name: 'Engine',
-    description: 'La barre de turbo dure 0.2s de plus par charge.',
+    name: 'Booster turbo',
+    nameKey: 'game.items.turbo_booster.name',
+    description: 'Temps de turbo + 0.2s',
+    descriptionKey: 'game.items.turbo_booster.desc',
     type: 'add',
     usedVar: 'turboBarDuration',
     amount: 0.2,
@@ -74,12 +80,14 @@ const items = [
     png: itemEngineImg,
   }),
 
-  // [3] Fuel (Common) - Refill Turbo
+  // [3] Fuel - Refill Turbo
   new Item({
-    name: 'Fuel',
-    description: 'Restaure toutes les barres de turbo.',
+    name: 'Nitro',
+    nameKey: 'game.items.nitro.name',
+    description: 'Restaure tout le turbo',
+    descriptionKey: 'game.items.nitro.desc',
     type: 'add',
-    usedVar: '_dummy_fuel', // Custom logic in physics.js
+    usedVar: '_dummy_fuel',
     amount: 0,
     rarity: 'common',
     png: itemFuelImg,
@@ -87,8 +95,10 @@ const items = [
 
   // [4] Blindage renforce - bouclier
   new Item({
-    name: 'Blindage renforce',
-    description: 'Restaure 1 point de bouclier (max 4).',
+    name: 'Plaque de blindage',
+    nameKey: 'game.items.armor_plate.name',
+    description: '+1 bouclier - max 4',
+    descriptionKey: 'game.items.armor_plate.desc',
     type: 'add',
     usedVar: 'shieldForce',
     amount: 1,
@@ -96,10 +106,12 @@ const items = [
     png: itemC,
   }),
 
-  // [3] Coeur de cristal - maxHealth
+  // [5] Blindage renforce - maxHealth
   new Item({
-    name: 'Coeur de cristal',
-    description: 'Augmente la sante max de 3.',
+    name: 'Blindage renforce',
+    nameKey: 'game.items.reinforced_armor.name',
+    description: '+3 PV max',
+    descriptionKey: 'game.items.reinforced_armor.desc',
     type: 'add',
     usedVar: 'maxHealth',
     amount: 3,
@@ -107,10 +119,12 @@ const items = [
     png: itemHealth,
   }),
 
-  // [4] Double Canon - remplace l arme
+  // [6] Double Canon
   new Item({
     name: 'Double Canon',
-    description: 'Remplace votre arme par un double canon.',
+    nameKey: 'game.items.double_cannon.name',
+    description: 'Remplace votre arme',
+    descriptionKey: 'game.items.replaces_weapon.desc',
     type: 'replace',
     usedVar: 'weapons',
     amount: 1,
@@ -118,40 +132,51 @@ const items = [
     png: itemN,
   }),
 
-  // [5] Cone de feu - remplace l arme
+  // [7] Cone de feu
   new Item({
     name: 'Cone de feu',
-    description: 'Remplace votre arme par un cone de feu.',
+    nameKey: 'game.items.fire_cone.name',
+    description: 'Remplace votre arme',
+    descriptionKey: 'game.items.replaces_weapon.desc',
     type: 'replace',
     usedVar: 'weapons',
     amount: 2,
     rarity: 'epic',
     png: itemJ,
   }),
-    // [13] Laser - remplace l arme
+
+  // [8] Laser
   new Item({
     name: 'Laser',
-    description: 'Remplace votre arme par un laser.',
+    nameKey: 'game.items.laser.name',
+    description: 'Remplace votre arme',
+    descriptionKey: 'game.items.replaces_weapon.desc',
     type: 'replace',
     usedVar: 'weapons',
     amount: 13,
     rarity: 'epic',
     png: itemA,
   }),
-      // [14] Gros canon - remplace l arme
+
+  // [9] Gros canon
   new Item({
     name: 'Gros canon',
-    description: 'Remplace votre arme par un gros canon.',
+    nameKey: 'game.items.heavy_cannon.name',
+    description: 'Remplace votre arme',
+    descriptionKey: 'game.items.replaces_weapon.desc',
     type: 'replace',
     usedVar: 'weapons',
     amount: 14,
     rarity: 'rare',
     png: itemGrosCanon,
   }),
-      // [15] Machine - remplace l arme
+
+  // [10] Mitrailleuse
   new Item({
-    name: 'Machine',
-    description: 'Remplace votre arme par une machine.',
+    name: 'Mitrailleuse',
+    nameKey: 'game.items.machine_gun.name',
+    description: 'Remplace votre arme',
+    descriptionKey: 'game.items.replaces_weapon.desc',
     type: 'replace',
     usedVar: 'weapons',
     amount: 15,
@@ -159,10 +184,12 @@ const items = [
     png: itemMachine,
   }),
 
-  // [6] Cadence amelioree - reduit le cooldown
+  // [11] Cadence amelioree
   new Item({
-    name: 'Cadence amelioree',
-    description: 'Reduit le temps de recharge de 50ms.',
+    name: 'Cadence améliorée',
+    nameKey: 'game.items.fire_rate.name',
+    description: 'Temps de recharge -50ms',
+    descriptionKey: 'game.items.fire_rate.desc',
     type: 'weaponStat',
     usedVar: 'cooldownTime',
     amount: -50,
@@ -170,10 +197,12 @@ const items = [
     png: itemG,
   }),
 
-  // [7] Salve supplementaire
+  // [12] Salve supplementaire
   new Item({
     name: 'Salve supplementaire',
-    description: 'Ajoute 1 tir par salve.',
+    nameKey: 'game.items.extra_burst.name',
+    description: '+1 tir par salve',
+    descriptionKey: 'game.items.extra_burst.desc',
     type: 'weaponStat',
     usedVar: 'bulletsPerSalve',
     amount: 1,
@@ -181,10 +210,12 @@ const items = [
     png: itemAmmo,
   }),
 
-  // [8] Munitions lourdes - degats
+  // [13] Munitions lourdes
   new Item({
     name: 'Munitions lourdes',
-    description: 'Augmente les degats de 1.',
+    nameKey: 'game.items.heavy_ammo.name',
+    description: '+1 degat par balle',
+    descriptionKey: 'game.items.heavy_ammo.desc',
     type: 'weaponStat',
     usedVar: 'damage',
     amount: 1,
@@ -192,10 +223,12 @@ const items = [
     png: itemStronger,
   }),
 
-  // [9] Balles larges
+  // [14] Balles larges
   new Item({
     name: 'Balles larges',
-    description: 'Augmente la taille des balles de 2.',
+    nameKey: 'game.items.wide_bullets.name',
+    description: '+2 taille des balles',
+    descriptionKey: 'game.items.wide_bullets.desc',
     type: 'weaponStat',
     usedVar: 'bulletsSize',
     amount: 2,
@@ -203,10 +236,12 @@ const items = [
     png: itemSalve,
   }),
 
-  // [10] Microchip avance - acceleration
+  // [15] Microchip avance
   new Item({
-    name: 'Microchip avance',
-    description: 'Augmente l\'acceleration de 0.5.',
+    name: 'Microchip avancé',
+    nameKey: 'game.items.microchip.name',
+    description: '+0.5 accélération',
+    descriptionKey: 'game.items.microchip.desc',
     type: 'add',
     usedVar: 'acceleration',
     amount: 0.5,
@@ -214,10 +249,12 @@ const items = [
     png: itemE,
   }),
 
-  // [11] Retro-propulseur - vitesse arriere
+  // [16] Retro-propulseur
   new Item({
     name: 'Retro-propulseur',
-    description: 'Augmente la vitesse arriere de 30.',
+    nameKey: 'game.items.retro_thruster.name',
+    description: 'Vitesse de recul +30',
+    descriptionKey: 'game.items.retro_thruster.desc',
     type: 'add',
     usedVar: 'maxBrakeSpeed',
     amount: 30,
@@ -225,10 +262,12 @@ const items = [
     png: itemBrake,
   }),
 
-  // [12] Ailerons lateraux - vitesse laterale
+  // [17] Ailerons lateraux
   new Item({
     name: 'Ailerons lateraux',
-    description: 'Augmente la vitesse laterale de 30.',
+    nameKey: 'game.items.side_fins.name',
+    description: 'Vitesse latérale +30',
+    descriptionKey: 'game.items.side_fins.desc',
     type: 'add',
     usedVar: 'maxSideSpeed',
     amount: 30,
@@ -236,10 +275,12 @@ const items = [
     png: itemStrafe,
   }),
 
-  // [13] Eventail large (arme 16)
+  // [18] Star-canon
   new Item({
     name: 'Star-canon',
-    description: 'Remplace votre arme par un eventail large (4 dir).',
+    nameKey: 'game.items.star_cannon.name',
+    description: 'Remplace votre arme',
+    descriptionKey: 'game.items.replaces_weapon.desc',
     type: 'replace',
     usedVar: 'weapons',
     amount: 16,
@@ -247,10 +288,12 @@ const items = [
     png: itemD,
   }),
 
-  // [14] Eventail triple (arme 17)
+  // [19] Tri-canon
   new Item({
     name: 'Tri-canon',
-    description: 'Remplace votre arme par un eventail triple.',
+    nameKey: 'game.items.tri_cannon.name',
+    description: 'Remplace votre arme',
+    descriptionKey: 'game.items.replaces_weapon.desc',
     type: 'replace',
     usedVar: 'weapons',
     amount: 17,
@@ -258,10 +301,12 @@ const items = [
     png: item3,
   }),
 
-  // [15] Double canon bis (arme 18)
+  // [20] Super double canon
   new Item({
     name: 'Super double canon',
-    description: 'Remplace votre arme par un double canon amélioré.',
+    nameKey: 'game.items.super_double_cannon.name',
+    description: 'Remplace votre arme',
+    descriptionKey: 'game.items.replaces_weapon.desc',
     type: 'replace',
     usedVar: 'weapons',
     amount: 18,
@@ -269,10 +314,12 @@ const items = [
     png: itemDoubleCanon,
   }),
 
-  // [16] Phase waller (arme 19)
+  // [21] Phase waller
   new Item({
     name: 'Phase waller',
-    description: 'Remplace votre arme par un phase waller.',
+    nameKey: 'game.items.phase_waller.name',
+    description: 'Remplace votre arme',
+    descriptionKey: 'game.items.replaces_weapon.desc',
     type: 'replace',
     usedVar: 'weapons',
     amount: 19,
@@ -280,10 +327,12 @@ const items = [
     png: itemWaller,
   }),
 
-  // [17] Pointes de coque - degats contact
+  // [22] Pointes metalliques
   new Item({
     name: 'Pointes métalliques',
-    description: 'Augmente les degats de contact de 2.',
+    nameKey: 'game.items.metal_spikes.name',
+    description: 'Degats de contact +2',
+    descriptionKey: 'game.items.metal_spikes.desc',
     type: 'add',
     usedVar: 'contactDamage',
     amount: 2,
@@ -291,10 +340,12 @@ const items = [
     png: itemSpikes,
   }),
 
-  // [18] Arme aleatoire - remplace
+  // [23] Arme aleatoire - remplace
   new Item({
     name: 'Arme aleatoire',
-    description: 'Remplace votre arme par une arme au hasard.',
+    nameKey: 'game.items.random_weapon.name',
+    description: 'Remplace votre arme',
+    descriptionKey: 'game.items.replaces_weapon.desc',
     type: 'replaceRandomWeapon',
     usedVar: 'weapons',
     amount: PLAYER_WEAPONS,
@@ -302,10 +353,12 @@ const items = [
     png: itemPill,
   }),
 
-  // [19] Arme supplementaire - ajoute
+  // [24] Arme supplementaire - legendary
   new Item({
     name: 'Arme supplementaire',
-    description: 'Ajoute une arme au hasard a votre arsenal.',
+    nameKey: 'game.items.extra_weapon.name',
+    description: 'Ajoute une arme au hasard',
+    descriptionKey: 'game.items.extra_weapon.desc',
     type: 'addRandomWeapon',
     usedVar: 'weapons',
     amount: PLAYER_WEAPONS,
@@ -313,10 +366,12 @@ const items = [
     png: itemDual,
   }),
 
-  // [19] Arme supplementaire - ajoute
+  // [25] Arme supplementaire - divine
   new Item({
     name: 'Arme supplementaire',
-    description: 'Ajoute une arme au hasard a votre arsenal.',
+    nameKey: 'game.items.extra_weapon.name',
+    description: 'Ajoute une arme au hasard',
+    descriptionKey: 'game.items.extra_weapon.desc',
     type: 'addRandomWeapon',
     usedVar: 'weapons',
     amount: PLAYER_WEAPONS,
@@ -324,10 +379,12 @@ const items = [
     png: itemDual,
   }),
 
-  // [20] Talisman - ameliore la chance
+  // [26] Talisman
   new Item({
     name: 'Talisman',
-    description: 'Ameliore vos chances de trouver des items rares (max 10).',
+    nameKey: 'game.items.talisman.name',
+    description: '+10% chance de trouver des items rares',
+    descriptionKey: 'game.items.talisman.desc',
     type: 'add',
     usedVar: 'talismanCount',
     amount: 1,
@@ -335,10 +392,12 @@ const items = [
     png: itemShamrock,
   }),
 
-  // [21] Gros calibre (arme 20)
+  // [27] Gros calibre
   new Item({
     name: 'Gros calibre',
-    description: 'Remplace votre arme par un gros calibre.',
+    nameKey: 'game.items.large_caliber.name',
+    description: 'Remplace votre arme',
+    descriptionKey: 'game.items.replaces_weapon.desc',
     type: 'replace',
     usedVar: 'weapons',
     amount: 20,
@@ -346,52 +405,64 @@ const items = [
     png: itemL,
   }),
 
-  // [22] Désintégrateur (arme 21)
+  // [28] Champ de repulsion
   new Item({
     name: 'Champ de répulsion',
-    description: 'Inflige des dégats modérés aux ennemis autour de vous.',
+    nameKey: 'game.items.repulsion_field.name',
+    description: 'Remplace votre arme',
+    descriptionKey: 'game.items.replaces_weapon.desc',
     type: 'replace',
     usedVar: 'weapons',
     amount: 21,
     rarity: 'legendary',
     png: itemAura,
-    
   }),
-  // [22] Désintégrateur (arme 21)
+
+  // [29] Desintegrator
   new Item({
     name: 'Désintégrateur',
-    description: 'Remplace votre arme par le désintégrateur.',
+    nameKey: 'game.items.disintegrator.name',
+    description: 'Remplace votre arme',
+    descriptionKey: 'game.items.replaces_weapon.desc',
     type: 'replace',
     usedVar: 'weapons',
     amount: 22,
     rarity: 'divine',
     png: itemDesintegrator,
   }),
-    // [23] Rebond simple - remplace l'arme
-    new Item({
-      name: 'Lance-grenade rebondissantes',
-      description: 'Remplace votre arme par un tir rebondissant.',
-      type: 'replace',
-      usedVar: 'weapons',
-      amount: 23,
-      rarity: 'rare',
-      png: itemBowl,
-    }),
-    // [24] Guidage simple - remplace l'arme
-    new Item({
-      name: 'Fusil à têtes chercheuses',
-      description: 'Remplace votre arme par un tir téléguidé.',
-      type: 'replace',
-      usedVar: 'weapons',
-      amount: 24,
-      rarity: 'epic',
-      png: itemSnipe,
-    }),
 
-  // [23] Rebond - ajoute 1 rebond à une arme au hasard
+  // [30] Lance-grenade rebondissantes
+  new Item({
+    name: 'Lance-grenade rebondissantes',
+    nameKey: 'game.items.bounce_launcher.name',
+    description: 'Remplace votre arme',
+    descriptionKey: 'game.items.replaces_weapon.desc',
+    type: 'replace',
+    usedVar: 'weapons',
+    amount: 23,
+    rarity: 'rare',
+    png: itemBowl,
+  }),
+
+  // [31] Fusil a tetes chercheuses
+  new Item({
+    name: 'Fusil à têtes chercheuses',
+    nameKey: 'game.items.homing_rifle.name',
+    description: 'Remplace votre arme',
+    descriptionKey: 'game.items.replaces_weapon.desc',
+    type: 'replace',
+    usedVar: 'weapons',
+    amount: 24,
+    rarity: 'epic',
+    png: itemSnipe,
+  }),
+
+  // [32] Module de ricochet
   new Item({
     name: 'Module de ricochet',
-    description: 'Les balles d\'une arme au hasard rebondissent +1 fois.',
+    nameKey: 'game.items.ricochet_module.name',
+    description: '+1 ricochet',
+    descriptionKey: 'game.items.ricochet_module.desc',
     type: 'weaponStat',
     usedVar: 'bounce',
     amount: 1,
@@ -399,10 +470,12 @@ const items = [
     png: itemRebounce,
   }),
 
-  // [24] Heading - ajoute le guidage à une arme au hasard
+  // [33] Module de guidage
   new Item({
     name: 'Module de guidage',
-    description: 'Une arme au hasard tire des balles téléguidées.',
+    nameKey: 'game.items.guidance_module.name',
+    description: 'Tirs téléguidés',
+    descriptionKey: 'game.items.guidance_module.desc',
     type: 'weaponStat',
     usedVar: 'headed',
     amount: 1,
@@ -410,10 +483,12 @@ const items = [
     png: itemHook,
   }),
 
-    // [25] Heading - ajoute le guidage à une arme au hasard
+  // [34] Bazooka mitrailleur
   new Item({
     name: 'Bazooka mitrailleur',
-    description: 'Lourd canon militaire sous zaza.',
+    nameKey: 'game.items.bazooka.name',
+    description: 'Remplace votre arme',
+    descriptionKey: 'game.items.replaces_weapon.desc',
     type: 'replace',
     usedVar: 'weapons',
     amount: 25,
@@ -423,3 +498,4 @@ const items = [
 ]
 
 export default items
+

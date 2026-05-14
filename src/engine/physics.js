@@ -6,6 +6,7 @@ import explosionEnemyGif from '../assets/fx/explosion_enemy.gif'
 import explosionPlayerGif from '../assets/fx/explosion_player.gif'
 import { KEYBOARD_MOVEMENT } from '../config.js'
 import { queueObstacleRespawn } from './spawners.js'
+import { getLocalizedName, getLocalizedDescription } from '../utils/i18nLocalize.js'
 
 export { explosionEnemyGif, explosionPlayerGif }
 
@@ -244,7 +245,7 @@ export function handleCollisions(g) {
       if (p.shieldForce > p.maxShield) p.shieldForce = p.maxShield
       if (p.talismanCount > p.maxTalisman) p.talismanCount = p.maxTalisman
       if (it.def.name === 'Fuel') g.turboTime = p.turboBars * p.turboBarDuration
-      g.itemPickedUp = it.def.name
+      g.itemPickedUp = `${getLocalizedName(it.def)} (${getLocalizedDescription(it.def)})`
       g.itemPickedUpTimer = 2
       return false
     }

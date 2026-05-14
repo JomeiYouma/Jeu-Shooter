@@ -1,0 +1,303 @@
+{
+  "world": {
+    "world1_name": "Éliminez vos adversaires",
+    "world1_subtitle": "La traque commence"
+  },
+  "jeu_hud": {
+    "level": "Niv.",
+    "keyboard_hint": "Déplacer : Z/Q/S/D ou flèches | Tirer : Espace | Turbo : Shift | Pause : P",
+    "mouse_hint": "Déplacer : Souris | Tirer : Clic gauche | Turbo : Shift | Pause : P",
+    "fullscreen_hint": "Cliquez dans le jeu pour activer le plein écran",
+    "fullscreen_aria": "Cliquez pour passer en plein écran",
+    "loading": "Chargement des assets...",
+    "pause": "PAUSE",
+    "pause_resume": "Appuiez sur P pour reprendre",
+    "controls_title": "Commandes",
+    "controls_move_keyboard": "Déplacer :",
+    "controls_move_keyboard_val": "Z/Q/S/D ou flèches",
+    "controls_move_mouse_val": "Déplacement souris",
+    "controls_shoot": "Tirer :",
+    "controls_shoot_keyboard_val": "Espace",
+    "controls_shoot_mouse_val": "Maintenir clic gauche",
+    "controls_turbo": "Turbo :",
+    "controls_turbo_val": "Shift",
+    "controls_pause": "Pause :",
+    "controls_pause_val": "Touche P",
+    "controls_play": "Jouer",
+    "click_to_start": "Cliquez pour commencer",
+    "click_to_restart": "Cliquez pour recommencer",
+    "levels_count": "niveaux",
+    "next_in": "Suite dans {{secs}}s...",
+    "victory": "VICTOIRE !",
+    "promo_code": "Code Promo : AlterGift",
+    "promo_desc": "Présente ce code pour obtenir un cadeau gratuit lors de ta visite !",
+    "game_over": "GAME OVER",
+    "transition_level": "Niveau {{n}}",
+    "transition_boss": "Niveau {{n}} BOSS",
+    "transition_bonus": "Niveau {{n}} BONUS",
+    "transition_final": "Dernier niveau terminé !"
+  },
+  "game": {
+    "items": {
+      "replaces_weapon": {
+        "desc": "Remplace votre arme"
+      },
+      "repair_kit": {
+        "name": "Kit de réparation",
+        "desc": "Restaure 3 PV"
+      },
+      "engine": {
+        "name": "Moteur forgé",
+        "desc": "Vitesse max +30"
+      },
+      "turbo_booster": {
+        "name": "Booster turbo",
+        "desc": "Temps de turbo +0.2s"
+      },
+      "nitro": {
+        "name": "Nitro",
+        "desc": "Restaure tout le turbo"
+      },
+      "armor_plate": {
+        "name": "Plaque de blindage",
+        "desc": "+1 bouclier (max 4)"
+      },
+      "reinforced_armor": {
+        "name": "Blindage renforcé",
+        "desc": "+3 PV max"
+      },
+      "double_cannon": {
+        "name": "Double Canon",
+        "desc": "Remplace votre arme"
+      },
+      "fire_cone": {
+        "name": "Cône de feu",
+        "desc": "Remplace votre arme"
+      },
+      "laser": {
+        "name": "Laser",
+        "desc": "Remplace votre arme"
+      },
+      "heavy_cannon": {
+        "name": "Gros canon",
+        "desc": "Remplace votre arme"
+      },
+      "machine_gun": {
+        "name": "Mitrailleuse",
+        "desc": "Remplace votre arme"
+      },
+      "fire_rate": {
+        "name": "Cadence améliorée",
+        "desc": "Temps de recharge -50ms"
+      },
+      "extra_burst": {
+        "name": "Salve supplémentaire",
+        "desc": "+1 tir par salve"
+      },
+      "heavy_ammo": {
+        "name": "Munitions lourdes",
+        "desc": "+1 dégât par balle"
+      },
+      "wide_bullets": {
+        "name": "Balles larges",
+        "desc": "+2 taille des balles"
+      },
+      "microchip": {
+        "name": "Microchip avancé",
+        "desc": "+0.5 accélération"
+      },
+      "retro_thruster": {
+        "name": "Rétro-propulseur",
+        "desc": "Vitesse de recul +30"
+      },
+      "side_fins": {
+        "name": "Ailerons latéraux",
+        "desc": "Vitesse latérale +30"
+      },
+      "star_cannon": {
+        "name": "Star-canon",
+        "desc": "Remplace votre arme"
+      },
+      "tri_cannon": {
+        "name": "Tri-canon",
+        "desc": "Remplace votre arme"
+      },
+      "super_double_cannon": {
+        "name": "Super double canon",
+        "desc": "Remplace votre arme"
+      },
+      "phase_waller": {
+        "name": "Phase Waller",
+        "desc": "Remplace votre arme"
+      },
+      "metal_spikes": {
+        "name": "Pointes métalliques",
+        "desc": "Dégâts de contact +2"
+      },
+      "random_weapon": {
+        "name": "Arme aléatoire",
+        "desc": "Remplace votre arme"
+      },
+      "extra_weapon": {
+        "name": "Arme supplémentaire",
+        "desc": "Ajoute une arme au hasard"
+      },
+      "talisman": {
+        "name": "Talisman",
+        "desc": "+10% chance d'items rares"
+      },
+      "large_caliber": {
+        "name": "Gros calibre",
+        "desc": "Remplace votre arme"
+      },
+      "repulsion_field": {
+        "name": "Champ de répulsion",
+        "desc": "Remplace votre arme"
+      },
+      "disintegrator": {
+        "name": "Désintégrateur",
+        "desc": "Remplace votre arme"
+      },
+      "bounce_launcher": {
+        "name": "Lance-grenades rebondissantes",
+        "desc": "Remplace votre arme"
+      },
+      "homing_rifle": {
+        "name": "Fusil à têtes chercheuses",
+        "desc": "Remplace votre arme"
+      },
+      "ricochet_module": {
+        "name": "Module de ricochet",
+        "desc": "+1 ricochet"
+      },
+      "guidance_module": {
+        "name": "Module de guidage",
+        "desc": "Tirs téléguidés"
+      },
+      "bazooka": {
+        "name": "Bazooka mitrailleur",
+        "desc": "Remplace votre arme"
+      }
+    },
+    "weapons": {
+      "basic_laser": {
+        "name": "Laser basique",
+        "desc": "Tir simple en ligne droite."
+      },
+      "double_cannon": {
+        "name": "Double canon",
+        "desc": "Tire deux balles en parallèle."
+      },
+      "fire_cone": {
+        "name": "Cône de feu",
+        "desc": "Tir en éventail (3 directions)."
+      },
+      "enemy_basic": {
+        "name": "Tir ennemi basique",
+        "desc": "Tir simple vers le bas."
+      },
+      "enemy_double": {
+        "name": "Double tir ennemi",
+        "desc": "Deux balles parallèles vers le bas."
+      },
+      "boss_cone": {
+        "name": "Cône du boss",
+        "desc": "Tir en éventail triple, rapide."
+      },
+      "rapid_burst": {
+        "name": "Rafale rapide",
+        "desc": "Tir très rapide mais faible."
+      },
+      "heavy_cannon": {
+        "name": "Canon lourd",
+        "desc": "Tir lent mais dévastateur."
+      },
+      "fan_5dir": {
+        "name": "Éventail large",
+        "desc": "Arrose en éventail large (5 directions)."
+      },
+      "fan_4dir": {
+        "name": "Éventail large",
+        "desc": "Arrose en éventail large (4 directions)."
+      },
+      "fan_3dir": {
+        "name": "Éventail large",
+        "desc": "Arrose en éventail large (3 directions)."
+      },
+      "enemy_scout": {
+        "name": "Tir éclaireur",
+        "desc": "Tir rapide vers le bas."
+      },
+      "enemy_bomber": {
+        "name": "Tir bombardier",
+        "desc": "Trois tirs étalés."
+      },
+      "enemy_sniper": {
+        "name": "Tir de précision",
+        "desc": "Un seul tir puissant et précis."
+      },
+      "enemy_turret": {
+        "name": "Tourelle rotative",
+        "desc": "Salve tournante en spirale."
+      },
+      "laser": {
+        "name": "Laser",
+        "desc": "Laser faible mais continu."
+      },
+      "big_cannon": {
+        "name": "Gros canon",
+        "desc": "Cadence faible et gros dégâts."
+      },
+      "machine_gun": {
+        "name": "Mitrailleuse",
+        "desc": "Cadence élevée et dégâts modérés."
+      },
+      "double_cannon_bis": {
+        "name": "Double canon bis",
+        "desc": "Tire deux balles en parallèle."
+      },
+      "proton_pulser": {
+        "name": "Pulseur de protons",
+        "desc": "Tire des murs de projectiles."
+      },
+      "large_caliber": {
+        "name": "Gros calibre",
+        "desc": "Meilleure version du laser de base."
+      },
+      "repulsion_field": {
+        "name": "Champ de répulsion",
+        "desc": "Inflige des dégâts aux ennemis autour de vous."
+      },
+      "disintegrator": {
+        "name": "Désintégrateur",
+        "desc": "Apporte le chaos sur le champ de bataille."
+      },
+      "bounce_shot": {
+        "name": "Rebond simple",
+        "desc": "Tir simple, rebondit 2 fois sur les ennemis."
+      },
+      "homing_shot": {
+        "name": "Guidage simple",
+        "desc": "Tir simple, balles téléguidées."
+      },
+      "bazooka": {
+        "name": "Bazooka mitrailleur",
+        "desc": "Tir lent et massif."
+      }
+    },
+    "enemies": {
+      "punkmoto": {
+        "name": "Punk Moto"
+      },
+      "armedcar": {
+        "name": "Véhicule armé"
+      },
+      "tank": {
+        "name": "Tank"
+      },
+      "helicopter": {
+        "name": "Hélicoptère"
+      }
+    }
+  }
+}

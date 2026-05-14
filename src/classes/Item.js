@@ -22,7 +22,9 @@ export default class Item {
 
   constructor({
     name = '',
+    nameKey = '',
     description = '',
+    descriptionKey = '',
     type = 'add',
     usedVar = '',
     amount = 0,
@@ -30,7 +32,9 @@ export default class Item {
     png = null,
   } = {}) {
     this.name = name
+    this.nameKey = nameKey
     this.description = description
+    this.descriptionKey = descriptionKey
     this.type = type
     this.usedVar = usedVar
     this.amount = amount

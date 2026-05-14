@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import './ShooterGame.css'
 import { STATE, clamp } from './engine/constants.js'
 import { buildGameState, resetGame, startLevel, update } from './engine/gameState.js'
@@ -10,6 +11,7 @@ import { world1 } from './data/index.js'
 //  ShooterGame component
 // ---------------------------------------------------------------
 function ShooterGame({ width = 900, height = 600 }) {
+  const { t } = useTranslation()
   const containerRef = useRef(null)
   const canvasRef = useRef(null)
   const gameRef = useRef(null)
@@ -136,9 +138,9 @@ function ShooterGame({ width = 900, height = 600 }) {
         ctx.fillStyle = '#fff'
         ctx.font = 'bold 48px system-ui, sans-serif'
         ctx.textAlign = 'center'
-        ctx.fillText('PAUSE', width / 2, height / 2)
+        ctx.fillText(t('jeu_hud.pause'), width / 2, height / 2)
         ctx.font = '400 20px system-ui, sans-serif'
-        ctx.fillText('Appuie sur P pour reprendre', width / 2, height / 2 + 40)
+        ctx.fillText(t('jeu_hud.pause_resume'), width / 2, height / 2 + 40)
         ctx.restore()
       }
       syncUI()
@@ -190,7 +192,7 @@ function ShooterGame({ width = 900, height = 600 }) {
   // -- JSX ----------------------------------------------------
   const isPlaying = uiState.phase === STATE.PLAYING || uiState.phase === STATE.LEVEL_TRANSITION
   const levelLabel = uiState.levelType === 'boss' ? 'BOSS'
-    : uiState.levelType === 'bonus' ? 'BONUS' : 'Niv. ' + uiState.levelNo
+    : uiState.levelType === 'bonus' ? 'BONUS' : t('jeu_hud.level') + ' ' + uiState.levelNo
 
   return (
     <div
@@ -200,7 +202,7 @@ function ShooterGame({ width = 900, height = 600 }) {
       role="button"
       tabIndex={0}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleContainerClick() }}
-      aria-label="Cliquer pour passer en plein ecran"
+      aria-label={t('jeu_hud.fullscreen_aria')}
     >
       {/* -- HUD ---------------------------------------- */}
       <div className="hud">
@@ -213,8 +215,8 @@ function ShooterGame({ width = 900, height = 600 }) {
           {isPlaying && (
             <span className="hud-controls-hint">
               {window.KEYBOARD_MOVEMENT === 1
-                ? 'Déplacement: Z/Q/S/D ou flèches | Tir: Espace | Turbo: Shift | Pause: P'
-                : 'Déplacement: Souris | Tir: Clic gauche | Turbo: Shift | Pause: P'}
+                ? t('jeu_hud.keyboard_hint')
+                : t('jeu_hud.mouse_hint')}
             </span>
           )}
         </div>
@@ -225,25 +227,25 @@ function ShooterGame({ width = 900, height = 600 }) {
       {uiState.isControlsPopupOpen && (
         <div className="controls-popup-overlay">
           <div className="controls-popup" onClick={(e) => e.stopPropagation()}>
-            <h2>Commandes</h2>
+            <h2>{t('jeu_hud.controls_title')}</h2>
             <p>
               {window.KEYBOARD_MOVEMENT === 1 ? (
                 <>
-                  <strong>Déplacement :</strong> Z/Q/S/D ou flèches directionnelles<br/>
-                  <strong>Tirer :</strong> Espace<br/>
-                  <strong>Turbo :</strong> Shift<br/>
-                  <strong>Pause :</strong> Touche P
+                  <strong>{t('jeu_hud.controls_move_keyboard')}</strong> {t('jeu_hud.controls_move_keyboard_val')}<br/>
+                  <strong>{t('jeu_hud.controls_shoot')}</strong> {t('jeu_hud.controls_shoot_keyboard_val')}<br/>
+                  <strong>{t('jeu_hud.controls_turbo')}</strong> {t('jeu_hud.controls_turbo_val')}<br/>
+                  <strong>{t('jeu_hud.controls_pause')}</strong> {t('jeu_hud.controls_pause_val')}
                 </>
               ) : (
                 <>
-                  <strong>Déplacement :</strong> Mouvement de la souris<br/>
-                  <strong>Tirer :</strong> Maintenir le Clic Gauche<br/>
-                  <strong>Turbo :</strong> Shift<br/>
-                  <strong>Pause :</strong> Touche P
+                  <strong>{t('jeu_hud.controls_move_keyboard')}</strong> {t('jeu_hud.controls_move_mouse_val')}<br/>
+                  <strong>{t('jeu_hud.controls_shoot')}</strong> {t('jeu_hud.controls_shoot_mouse_val')}<br/>
+                  <strong>{t('jeu_hud.controls_turbo')}</strong> {t('jeu_hud.controls_turbo_val')}<br/>
+                  <strong>{t('jeu_hud.controls_pause')}</strong> {t('jeu_hud.controls_pause_val')}
                 </>
               )}
             </p>
-            <button autoFocus onClick={handleStartFromPopup}>Jouer</button>
+            <button autoFocus onClick={handleStartFromPopup}>{t('jeu_hud.controls_play')}</button>
           </div>
         </div>
       )}
@@ -251,11 +253,11 @@ function ShooterGame({ width = 900, height = 600 }) {
       {isLoading && (
         <div className="loading-overlay">
           <div className="spinner"></div>
-          <h2>Chargement des assets...</h2>
+          <h2>{t('jeu_hud.loading')}</h2>
         </div>
       )}
 
-      <div className="fullscreen-hint">Clique dans le jeu pour le plein ecran</div>
+      <div className="fullscreen-hint">{t('jeu_hud.fullscreen_hint')}</div>
     </div>
   )
 }

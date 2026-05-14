@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ARMES - Liste des armes du jeu
  */
 import Weapon from '../classes/Weapon.js'
@@ -31,7 +31,9 @@ const weapons = [
   // [0] Laser basique - arme de depart
   new Weapon({
     name: 'Laser basique',
+    nameKey: 'game.weapons.basic_laser',
     description: 'Tir simple en ligne droite.',
+    descriptionKey: 'game.weapons.basic_laser.desc',
     damage: 1,
     bulletShootRotation: [0],
     bulletsSize: 3.5,
@@ -47,7 +49,9 @@ const weapons = [
   // [1] Double canon
   new Weapon({
     name: 'Double canon',
+    nameKey: 'game.weapons.double_cannon',
     description: 'Tire deux balles en parallele.',
+    descriptionKey: 'game.weapons.double_cannon.desc',
     damage: 1,
     bulletShootRotation: [-8, 8],
     bulletsSize: 4,
@@ -63,7 +67,9 @@ const weapons = [
   // [2] Cone de feu
   new Weapon({
     name: 'Cone de feu',
+    nameKey: 'game.weapons.fire_cone',
     description: 'Tire en eventail (3 directions).',
+    descriptionKey: 'game.weapons.fire_cone.desc',
     damage: 2,
     bulletShootRotation: [-25, 0, 25],
     bulletsSize: 6,
@@ -76,12 +82,14 @@ const weapons = [
     bulletGif: bulletV,
   }),
 
-  // ── Armes ennemies ─────────────────────────────────────────
+  // â”€â”€ Armes ennemies â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   // [3] Tir ennemi basique (Soldat)
   new Weapon({
     name: 'Tir ennemi basique',
+    nameKey: 'game.weapons.enemy_basic',
     description: 'Tir simple vers le bas.',
+    descriptionKey: 'game.weapons.enemy_basic.desc',
     damage: 1,
     bulletShootRotation: [0],
     bulletsSize: 4,
@@ -97,7 +105,9 @@ const weapons = [
   // [4] Double tir ennemi (Tank)
   new Weapon({
     name: 'Double tir ennemi',
+    nameKey: 'game.weapons.enemy_double',
     description: 'Deux balles paralleles vers le bas.',
+    descriptionKey: 'game.weapons.enemy_double.desc',
     damage: 2,
     bulletShootRotation: [-6, 6],
     bulletsSize: 5,
@@ -113,7 +123,9 @@ const weapons = [
   // [5] Cone ennemi (Boss)
   new Weapon({
     name: 'Cone du boss',
+    nameKey: 'game.weapons.boss_cone',
     description: 'Tir en eventail triple, rapide.',
+    descriptionKey: 'game.weapons.boss_cone.desc',
     damage: 2,
     bulletShootRotation: [-20, 0, 20],
     bulletsSize: 6,
@@ -129,7 +141,9 @@ const weapons = [
   // [6] Rafale rapide - cadence élevée, faible dégât
   new Weapon({
     name: 'Rafale rapide',
+    nameKey: 'game.weapons.rapid_burst',
     description: 'Tir très rapide mais faible.',
+    descriptionKey: 'game.weapons.rapid_burst.desc',
     damage: 1,
     bulletShootRotation: [0],
     bulletsSize: 3,
@@ -145,7 +159,9 @@ const weapons = [
   // [7] Canon lourd - lent mais puissant
   new Weapon({
     name: 'Canon lourd',
+    nameKey: 'game.weapons.heavy_cannon',
     description: 'Tir lent mais devastateur.',
+    descriptionKey: 'game.weapons.heavy_cannon.desc',
     damage: 4,
     bulletShootRotation: [0],
     bulletsSize: 8,
@@ -161,7 +177,9 @@ const weapons = [
   // [8] Éventail large - 5 directions
   new Weapon({
     name: 'Eventail large',
+    nameKey: 'game.weapons.fan_5dir',
     description: 'Arrose en eventail large (5 dir).',
+    descriptionKey: 'game.weapons.fan_5dir.desc',
     damage: 1,
     bulletShootRotation: [-40, -20, 0, 20, 40],
     bulletsSize: 4,
@@ -174,12 +192,14 @@ const weapons = [
     bulletGif: bulletH,
   }),
 
-  // ── Armes ennemies supplémentaires ─────────────────────────
+  // â”€â”€ Armes ennemies supplémentaires â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   // [9] Éclaireur rapide ennemi
   new Weapon({
     name: 'Tir eclaireur',
+    nameKey: 'game.weapons.enemy_scout',
     description: 'Tir rapide vers le bas.',
+    descriptionKey: 'game.weapons.enemy_scout.desc',
     damage: 1,
     bulletShootRotation: [0],
     bulletsSize: 3,
@@ -195,7 +215,9 @@ const weapons = [
   // [10] Bombardier ennemi - tir en cône vers le bas
   new Weapon({
     name: 'Tir bombardier',
+    nameKey: 'game.weapons.enemy_bomber',
     description: 'Trois tirs étalés.',
+    descriptionKey: 'game.weapons.enemy_bomber.desc',
     damage: 1,
     bulletShootRotation: [-15, 0, 15],
     bulletsSize: 4,
@@ -211,7 +233,9 @@ const weapons = [
   // [11] Tireur d'élite ennemi - un gros tir précis
   new Weapon({
     name: 'Tir de precision',
+    nameKey: 'game.weapons.enemy_sniper',
     description: 'Un seul tir puissant et précis.',
+    descriptionKey: 'game.weapons.enemy_sniper.desc',
     damage: 3,
     bulletShootRotation: [0],
     bulletsSize: 6,
@@ -227,7 +251,9 @@ const weapons = [
   // [12] Tourelle rotative ennemi - salve tournante
   new Weapon({
     name: 'Tourelle rotative',
+    nameKey: 'game.weapons.enemy_turret',
     description: 'Salve tournante en spirale.',
+    descriptionKey: 'game.weapons.enemy_turret.desc',
     damage: 1,
     bulletShootRotation: [-10, 10],
     bulletsSize: 4,
@@ -242,7 +268,9 @@ const weapons = [
   // [13] Laser
   new Weapon({
     name: 'Laser',
+    nameKey: 'game.weapons.laser',
     description: 'Laser faible mais continu.',
+    descriptionKey: 'game.weapons.laser.desc',
     damage: 0.025,
     bulletShootRotation: [0],
     bulletsSize: 6,
@@ -256,7 +284,9 @@ const weapons = [
   }),// [14] Gros canon
   new Weapon({
     name: 'Gros canon',
+    nameKey: 'game.weapons.big_cannon',
     description: 'Cadence faible et gros dégats',
+    descriptionKey: 'game.weapons.big_cannon.desc',
     damage: 5,
     bulletShootRotation: [0],
     bulletsSize: 20,
@@ -270,7 +300,9 @@ const weapons = [
   }),// [15] Machine
   new Weapon({
     name: 'Machine',
+    nameKey: 'game.weapons.machine_gun',
     description: 'Cadence élevée et dégâts modérés',
+    descriptionKey: 'game.weapons.machine_gun.desc',
     damage: 0.45,
     bulletShootRotation: [0],
     bulletsSize: 3,
@@ -285,7 +317,9 @@ const weapons = [
   // [16] Éventail large - 5 directions
   new Weapon({
     name: 'Eventail large',
+    nameKey: 'game.weapons.fan_4dir',
     description: 'Arrose en eventail large (4 dir).',
+    descriptionKey: 'game.weapons.fan_4dir.desc',
     damage: 1,
     bulletShootRotation: [-90, -45, 45, 90],
     bulletsSize: 3,
@@ -300,7 +334,9 @@ const weapons = [
     // [17] Éventail large - 5 directions
   new Weapon({
     name: 'Eventail large',
+    nameKey: 'game.weapons.fan_3dir',
     description: 'Arrose en eventail large (3 dir).',
+    descriptionKey: 'game.weapons.fan_3dir.desc',
     damage: 2,
     bulletShootRotation: [-92, 0, 92],
     bulletsSize: 4,
@@ -315,7 +351,9 @@ const weapons = [
   // [18] Double canon
   new Weapon({
     name: 'Double canon bis',
+    nameKey: 'game.weapons.double_cannon_bis',
     description: 'Tire deux balles en parallele.',
+    descriptionKey: 'game.weapons.double_cannon_bis.desc',
     damage: 0.7,
     bulletShootRotation: [-10, 10],
     bulletsSize: 4,
@@ -330,7 +368,9 @@ const weapons = [
   // [19] Phase Waller
   new Weapon({
     name: 'Pulseur de protons',
+    nameKey: 'game.weapons.proton_pulser',
     description: 'Tire des murs.',
+    descriptionKey: 'game.weapons.proton_pulser.desc',
     damage: 1.5,
     bulletShootRotation: [0],
     bulletsSize: 10,
@@ -345,7 +385,9 @@ const weapons = [
   // [20] Better basic laser
   new Weapon({
     name: 'Gros calibre',
+    nameKey: 'game.weapons.large_caliber',
     description: 'Meilleure version de la première arme.',
+    descriptionKey: 'game.weapons.large_caliber.desc',
    damage: 2,
     bulletShootRotation: [0],
     bulletsSize: 5,
@@ -360,7 +402,9 @@ const weapons = [
    // [21] Champ de répulsion
   new Weapon({
     name: 'Champ de répulsion',
+    nameKey: 'game.weapons.repulsion_field',
     description: 'Inflige des dégats modérés aux ennemis autour de vous.',
+    descriptionKey: 'game.weapons.repulsion_field.desc',
    damage: 0.35,
     bulletShootRotation: [0],
     bulletsSize: 5,
@@ -375,7 +419,9 @@ const weapons = [
   // [22] Desintegrator
   new Weapon({
     name: 'Désintégrateur',
+    nameKey: 'game.weapons.disintegrator',
     description: 'Apporte le chaos sur le champs de bataille.',
+    descriptionKey: 'game.weapons.disintegrator.desc',
    damage: 0.2,
     bulletShootRotation: [-15,15],
     bulletsSize: 15,
@@ -390,7 +436,9 @@ const weapons = [
     // [23] Basique rebond
     new Weapon({
       name: 'Rebond simple',
+      nameKey: 'game.weapons.bounce_shot',
       description: 'Tir simple, rebondit 2 fois sur les ennemis.',
+      descriptionKey: 'game.weapons.bounce_shot.desc',
       damage: 0.5,
       bulletShootRotation: [-25, 25],
       bulletsSize: 6,
@@ -406,7 +454,9 @@ const weapons = [
     // [24] Basique heading
     new Weapon({
       name: 'Guidage simple',
+      nameKey: 'game.weapons.homing_shot',
       description: 'Tir simple, balles téléguidées.',
+      descriptionKey: 'game.weapons.homing_shot.desc',
       damage: 1,
       bulletShootRotation: [0],
       bulletsSize: 4,
@@ -422,7 +472,9 @@ const weapons = [
     // [25] Basique heading
     new Weapon({
       name: 'Bazooka mitrailleeur',
+      nameKey: 'game.weapons.bazooka',
       description: 'Tir simple, balles téléguidées.',
+      descriptionKey: 'game.weapons.bazooka.desc',
       damage: 2.7,
       bulletShootRotation: [0],
       bulletsSize: 40,
@@ -437,3 +489,4 @@ const weapons = [
 ]
 
 export default weapons
+

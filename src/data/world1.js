@@ -9,7 +9,8 @@ import Level from '../classes/Level.js'
 import World from '../classes/World.js'
 
 const world1 = new World({
-  name: 'Monde 1 - Fuite vers la base',
+  name: 'Monde 1 — Fuite vers la base',
+  nameKey: 'world.world1_name',
   levels: [
     // ── Niveau 1 : Échauffement ──────────────────────────────
     new Level({
@@ -22,7 +23,7 @@ const world1 = new World({
         { timeOfEntry: 5, positionOfEntry: 'random', type: 0 },
         { timeOfEntry: 6.5, positionOfEntry: 'random', type: 0 },
       ],
-      amountOfItems: 5,
+      amountOfItems: 6,
       amountOfObstacles: 2,
       rarity: 'common',
     }),

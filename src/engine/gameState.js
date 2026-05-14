@@ -6,6 +6,7 @@ import { spawnEnemies, spawnItems, spawnObstacles, queueObstacleRespawn } from '
 import { movePlayer, moveEnemies, handleCollisions } from './physics.js'
 import explosionPlayerGif from '../assets/fx/explosion_player.gif'
 import { KEYBOARD_MOVEMENT } from '../config.js'
+import i18next from '../i18n.js'
 
 // -- Build initial game state ------------------------------------
 export function buildGameState(width, height) {
@@ -123,9 +124,16 @@ function checkLevelEnd(g) {
 
     const nextLevel = g.world.getLevel(g.currentLevelIndex + 1)
     if (nextLevel) {
-      g.transitionText = `Niveau ${nextLevel.levelNo}${nextLevel.isBoss ? ' BOSS' : nextLevel.isBonus ? ' BONUS' : ''}`
+      const n = nextLevel.levelNo
+      if (nextLevel.isBoss) {
+        g.transitionText = i18next.t('jeu_hud.transition_boss', { n })
+      } else if (nextLevel.isBonus) {
+        g.transitionText = i18next.t('jeu_hud.transition_bonus', { n })
+      } else {
+        g.transitionText = i18next.t('jeu_hud.transition_level', { n })
+      }
     } else {
-      g.transitionText = 'Niveau final termine !'
+      g.transitionText = i18next.t('jeu_hud.transition_final')
     }
   }
 }

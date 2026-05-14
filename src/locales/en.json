@@ -1,0 +1,303 @@
+{
+  "world": {
+    "world1_name": "Eliminate your opponents",
+    "world1_subtitle": "The hunt begins"
+  },
+  "jeu_hud": {
+    "level": "Lvl.",
+    "keyboard_hint": "Move: Z/Q/S/D or arrows | Shoot: Space | Turbo: Shift | Pause: P",
+    "mouse_hint": "Move: Mouse | Shoot: Left Click | Turbo: Shift | Pause: P",
+    "fullscreen_hint": "Click in the game for fullscreen",
+    "fullscreen_aria": "Click to enter fullscreen",
+    "loading": "Loading assets...",
+    "pause": "PAUSE",
+    "pause_resume": "Press P to resume",
+    "controls_title": "Controls",
+    "controls_move_keyboard": "Move:",
+    "controls_move_keyboard_val": "Z/Q/S/D or arrow keys",
+    "controls_move_mouse_val": "Mouse movement",
+    "controls_shoot": "Shoot:",
+    "controls_shoot_keyboard_val": "Space",
+    "controls_shoot_mouse_val": "Hold Left Click",
+    "controls_turbo": "Turbo:",
+    "controls_turbo_val": "Shift",
+    "controls_pause": "Pause:",
+    "controls_pause_val": "P key",
+    "controls_play": "Play",
+    "click_to_start": "Click to start",
+    "click_to_restart": "Click to restart",
+    "levels_count": "levels",
+    "next_in": "Next in {{secs}}s...",
+    "victory": "VICTORY!",
+    "promo_code": "Promo Code: AlterGift",
+    "promo_desc": "Show this code to get a free gift during your visit!",
+    "game_over": "GAME OVER",
+    "transition_level": "Level {{n}}",
+    "transition_boss": "Level {{n}} BOSS",
+    "transition_bonus": "Level {{n}} BONUS",
+    "transition_final": "Final level complete!"
+  },
+  "game": {
+    "items": {
+      "replaces_weapon": {
+        "desc": "Replaces your weapon"
+      },
+      "repair_kit": {
+        "name": "Repair Kit",
+        "desc": "Restores 3 HP"
+      },
+      "engine": {
+        "name": "Forged Engine",
+        "desc": "Max speed +30"
+      },
+      "turbo_booster": {
+        "name": "Turbo Booster",
+        "desc": "Turbo duration +0.2s"
+      },
+      "nitro": {
+        "name": "Nitro",
+        "desc": "Fully refills turbo"
+      },
+      "armor_plate": {
+        "name": "Armor Plate",
+        "desc": "+1 shield (max 4)"
+      },
+      "reinforced_armor": {
+        "name": "Reinforced Armor",
+        "desc": "+3 max HP"
+      },
+      "double_cannon": {
+        "name": "Double Cannon",
+        "desc": "Replaces your weapon"
+      },
+      "fire_cone": {
+        "name": "Fire Cone",
+        "desc": "Replaces your weapon"
+      },
+      "laser": {
+        "name": "Laser",
+        "desc": "Replaces your weapon"
+      },
+      "heavy_cannon": {
+        "name": "Heavy Cannon",
+        "desc": "Replaces your weapon"
+      },
+      "machine_gun": {
+        "name": "Machine Gun",
+        "desc": "Replaces your weapon"
+      },
+      "fire_rate": {
+        "name": "Improved Fire Rate",
+        "desc": "Reload time -50ms"
+      },
+      "extra_burst": {
+        "name": "Extra Burst",
+        "desc": "+1 shot per burst"
+      },
+      "heavy_ammo": {
+        "name": "Heavy Ammo",
+        "desc": "+1 damage per bullet"
+      },
+      "wide_bullets": {
+        "name": "Wide Bullets",
+        "desc": "+2 bullet size"
+      },
+      "microchip": {
+        "name": "Advanced Microchip",
+        "desc": "+0.5 acceleration"
+      },
+      "retro_thruster": {
+        "name": "Retro Thruster",
+        "desc": "Reverse speed +30"
+      },
+      "side_fins": {
+        "name": "Side Fins",
+        "desc": "Side speed +30"
+      },
+      "star_cannon": {
+        "name": "Star Cannon",
+        "desc": "Replaces your weapon"
+      },
+      "tri_cannon": {
+        "name": "Tri-Cannon",
+        "desc": "Replaces your weapon"
+      },
+      "super_double_cannon": {
+        "name": "Super Double Cannon",
+        "desc": "Replaces your weapon"
+      },
+      "phase_waller": {
+        "name": "Phase Waller",
+        "desc": "Replaces your weapon"
+      },
+      "metal_spikes": {
+        "name": "Metal Spikes",
+        "desc": "Contact damage +2"
+      },
+      "random_weapon": {
+        "name": "Random Weapon",
+        "desc": "Replaces your weapon"
+      },
+      "extra_weapon": {
+        "name": "Extra Weapon",
+        "desc": "Adds a random weapon"
+      },
+      "talisman": {
+        "name": "Talisman",
+        "desc": "+10% rare item chance"
+      },
+      "large_caliber": {
+        "name": "Large Caliber",
+        "desc": "Replaces your weapon"
+      },
+      "repulsion_field": {
+        "name": "Repulsion Field",
+        "desc": "Replaces your weapon"
+      },
+      "disintegrator": {
+        "name": "Disintegrator",
+        "desc": "Replaces your weapon"
+      },
+      "bounce_launcher": {
+        "name": "Bouncing Grenade Launcher",
+        "desc": "Replaces your weapon"
+      },
+      "homing_rifle": {
+        "name": "Homing Rifle",
+        "desc": "Replaces your weapon"
+      },
+      "ricochet_module": {
+        "name": "Ricochet Module",
+        "desc": "+1 ricochet"
+      },
+      "guidance_module": {
+        "name": "Guidance Module",
+        "desc": "Guided shots"
+      },
+      "bazooka": {
+        "name": "Machine Bazooka",
+        "desc": "Replaces your weapon"
+      }
+    },
+    "weapons": {
+      "basic_laser": {
+        "name": "Basic Laser",
+        "desc": "Simple straight shot."
+      },
+      "double_cannon": {
+        "name": "Double Cannon",
+        "desc": "Fires two parallel bullets."
+      },
+      "fire_cone": {
+        "name": "Fire Cone",
+        "desc": "Fan shot (3 directions)."
+      },
+      "enemy_basic": {
+        "name": "Basic Enemy Shot",
+        "desc": "Simple downward shot."
+      },
+      "enemy_double": {
+        "name": "Enemy Double Shot",
+        "desc": "Two parallel bullets downward."
+      },
+      "boss_cone": {
+        "name": "Boss Cone",
+        "desc": "Fast triple fan shot."
+      },
+      "rapid_burst": {
+        "name": "Rapid Burst",
+        "desc": "Very fast but weak fire."
+      },
+      "heavy_cannon": {
+        "name": "Heavy Cannon",
+        "desc": "Slow but devastating shot."
+      },
+      "fan_5dir": {
+        "name": "Wide Fan",
+        "desc": "Sprays in a wide fan (5 directions)."
+      },
+      "fan_4dir": {
+        "name": "Wide Fan",
+        "desc": "Sprays in a wide fan (4 directions)."
+      },
+      "fan_3dir": {
+        "name": "Wide Fan",
+        "desc": "Sprays in a wide fan (3 directions)."
+      },
+      "enemy_scout": {
+        "name": "Scout Shot",
+        "desc": "Fast downward shot."
+      },
+      "enemy_bomber": {
+        "name": "Bomber Shot",
+        "desc": "Three spread shots."
+      },
+      "enemy_sniper": {
+        "name": "Precision Shot",
+        "desc": "Single powerful precise shot."
+      },
+      "enemy_turret": {
+        "name": "Rotating Turret",
+        "desc": "Rotating spiral burst."
+      },
+      "laser": {
+        "name": "Laser",
+        "desc": "Weak but continuous laser."
+      },
+      "big_cannon": {
+        "name": "Big Cannon",
+        "desc": "Low fire rate, massive damage."
+      },
+      "machine_gun": {
+        "name": "Machine Gun",
+        "desc": "High fire rate, moderate damage."
+      },
+      "double_cannon_bis": {
+        "name": "Double Cannon Mk.II",
+        "desc": "Fires two parallel bullets."
+      },
+      "proton_pulser": {
+        "name": "Proton Pulser",
+        "desc": "Fires walls of projectiles."
+      },
+      "large_caliber": {
+        "name": "Large Caliber",
+        "desc": "Upgraded version of the basic laser."
+      },
+      "repulsion_field": {
+        "name": "Repulsion Field",
+        "desc": "Deals damage to nearby enemies."
+      },
+      "disintegrator": {
+        "name": "Disintegrator",
+        "desc": "Brings chaos to the battlefield."
+      },
+      "bounce_shot": {
+        "name": "Bounce Shot",
+        "desc": "Simple shot, bounces twice off enemies."
+      },
+      "homing_shot": {
+        "name": "Homing Shot",
+        "desc": "Simple shot, guided bullets."
+      },
+      "bazooka": {
+        "name": "Machine Bazooka",
+        "desc": "Slow and massive fire."
+      }
+    },
+    "enemies": {
+      "punkmoto": {
+        "name": "Punk Bike"
+      },
+      "armedcar": {
+        "name": "Armed Vehicle"
+      },
+      "tank": {
+        "name": "Tank"
+      },
+      "helicopter": {
+        "name": "Helicopter"
+      }
+    }
+  }
+}
