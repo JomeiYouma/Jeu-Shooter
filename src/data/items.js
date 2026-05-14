@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ITEMS - Objets ramassables (add = ajoute, replace = remplace)
  */
 import Item from '../classes/Item.js'
@@ -56,7 +56,7 @@ const items = [
 
   // [1] Turbo Engine - vitesse
   new Item({
-    name: 'Moteur forgé',
+    name: 'Moteur forge',
     nameKey: 'game.items.engine.name',
     description: 'Vitesse max +30',
     descriptionKey: 'game.items.engine.desc',
@@ -80,7 +80,7 @@ const items = [
     png: itemEngineImg,
   }),
 
-  // [3] Fuel - Refill Turbo
+  // [3] Nitro - Refill Turbo (detecte dans physics.js via usedVar === '_dummy_fuel')
   new Item({
     name: 'Nitro',
     nameKey: 'game.items.nitro.name',
@@ -93,7 +93,7 @@ const items = [
     png: itemFuelImg,
   }),
 
-  // [4] Blindage renforce - bouclier
+  // [4] Plaque de blindage - bouclier
   new Item({
     name: 'Plaque de blindage',
     nameKey: 'game.items.armor_plate.name',
@@ -186,7 +186,7 @@ const items = [
 
   // [11] Cadence amelioree
   new Item({
-    name: 'Cadence améliorée',
+    name: 'Cadence amelioree',
     nameKey: 'game.items.fire_rate.name',
     description: 'Temps de recharge -50ms',
     descriptionKey: 'game.items.fire_rate.desc',
@@ -238,9 +238,9 @@ const items = [
 
   // [15] Microchip avance
   new Item({
-    name: 'Microchip avancé',
+    name: 'Microchip avance',
     nameKey: 'game.items.microchip.name',
-    description: '+0.5 accélération',
+    description: '+0.5 acceleration',
     descriptionKey: 'game.items.microchip.desc',
     type: 'add',
     usedVar: 'acceleration',
@@ -266,7 +266,7 @@ const items = [
   new Item({
     name: 'Ailerons lateraux',
     nameKey: 'game.items.side_fins.name',
-    description: 'Vitesse latérale +30',
+    description: 'Vitesse laterale +30',
     descriptionKey: 'game.items.side_fins.desc',
     type: 'add',
     usedVar: 'maxSideSpeed',
@@ -329,7 +329,7 @@ const items = [
 
   // [22] Pointes metalliques
   new Item({
-    name: 'Pointes métalliques',
+    name: 'Pointes metalliques',
     nameKey: 'game.items.metal_spikes.name',
     description: 'Degats de contact +2',
     descriptionKey: 'game.items.metal_spikes.desc',
@@ -354,6 +354,8 @@ const items = [
   }),
 
   // [24] Arme supplementaire - legendary
+  // NOTE : volontairement dupliquee avec [25] mais avec une rarete differente
+  //        (legendary vs divine) — donc taux de drop different selon la table de loot.
   new Item({
     name: 'Arme supplementaire',
     nameKey: 'game.items.extra_weapon.name',
@@ -367,6 +369,7 @@ const items = [
   }),
 
   // [25] Arme supplementaire - divine
+  // NOTE : doublon volontaire de [24] avec rarete superieure — voir commentaire ci-dessus.
   new Item({
     name: 'Arme supplementaire',
     nameKey: 'game.items.extra_weapon.name',
@@ -407,7 +410,7 @@ const items = [
 
   // [28] Champ de repulsion
   new Item({
-    name: 'Champ de répulsion',
+    name: 'Champ de repulsion',
     nameKey: 'game.items.repulsion_field.name',
     description: 'Remplace votre arme',
     descriptionKey: 'game.items.replaces_weapon.desc',
@@ -420,7 +423,7 @@ const items = [
 
   // [29] Desintegrator
   new Item({
-    name: 'Désintégrateur',
+    name: 'Desintegrateur',
     nameKey: 'game.items.disintegrator.name',
     description: 'Remplace votre arme',
     descriptionKey: 'game.items.replaces_weapon.desc',
@@ -431,9 +434,9 @@ const items = [
     png: itemDesintegrator,
   }),
 
-  // [30] Lance-grenade rebondissantes
+  // [30] Lance-grenades rebondissantes
   new Item({
-    name: 'Lance-grenade rebondissantes',
+    name: 'Lance-grenades rebondissantes',
     nameKey: 'game.items.bounce_launcher.name',
     description: 'Remplace votre arme',
     descriptionKey: 'game.items.replaces_weapon.desc',
@@ -446,7 +449,7 @@ const items = [
 
   // [31] Fusil a tetes chercheuses
   new Item({
-    name: 'Fusil à têtes chercheuses',
+    name: 'Fusil a tetes chercheuses',
     nameKey: 'game.items.homing_rifle.name',
     description: 'Remplace votre arme',
     descriptionKey: 'game.items.replaces_weapon.desc',
@@ -474,7 +477,7 @@ const items = [
   new Item({
     name: 'Module de guidage',
     nameKey: 'game.items.guidance_module.name',
-    description: 'Tirs téléguidés',
+    description: 'Tirs teleguides',
     descriptionKey: 'game.items.guidance_module.desc',
     type: 'weaponStat',
     usedVar: 'headed',
@@ -498,4 +501,3 @@ const items = [
 ]
 
 export default items
-

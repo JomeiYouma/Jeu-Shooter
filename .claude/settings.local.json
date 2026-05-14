@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git diff *)",
+      "Bash(git commit -m ' *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\rapha\\\\Documents\\\\08_Projets\\\\Jeu-Shooter\" -Recurse -Filter \"*.json\" -o)",
+      "Bash(Select-Object FullName)",
+      "PowerShell($content = [System.IO.File]::ReadAllBytes\\(\"C:\\\\Users\\\\rapha\\\\Documents\\\\08_Projets\\\\Jeu-Shooter\\\\src\\\\data\\\\items.js\"\\) | Select-Object -First 10; [System.BitConverter]::ToString\\($content\\))",
+      "PowerShell($content = [System.IO.File]::ReadAllBytes\\(\"C:\\\\Users\\\\rapha\\\\Documents\\\\08_Projets\\\\Jeu-Shooter\\\\src\\\\data\\\\weapons.js\"\\) | Select-Object -First 10; [System.BitConverter]::ToString\\($content\\))",
+      "Bash(grep -oE \"descriptionKey: '[^']+\" /c/Users/rapha/Documents\\\\08_Projets/Jeu-Shooter/src/data/weapons.js | sed \"s/descriptionKey: '//\" | sort -u)",
+      "Read(//c/Users/rapha/Documents08_Projets/Jeu-Shooter/src/data/**)",
+      "Bash(python3 -m json.tool)",
+      "Bash(cat)",
+      "Bash(node /tmp/extract_i18n_keys.js)",
+      "PowerShell($f1 = [System.IO.File]::ReadAllBytes\\('src\\\\data\\\\items.js'\\)[0..2]; $f2 = [System.IO.File]::ReadAllBytes\\('src\\\\data\\\\weapons.js'\\)[0..2]; \"items.js bytes: $\\($f1 -join ','\\)\"; \"weapons.js bytes: $\\($f2 -join ','\\)\")",
+      "Bash(npx eslint *)",
+      "Bash(git stash *)"
+    ]
+  }
+}

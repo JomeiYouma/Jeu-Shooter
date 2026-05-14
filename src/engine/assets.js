@@ -18,28 +18,19 @@ const _imgCache = {}
 const _loadingPromises = []
 
 export function loadImg(src) {
-  if (!src) {
-    console.log('[loadImg] src null/undefined')
-    return null
-  }
+  if (!src) return null
   if (!_imgCache[src]) {
-    console.log('[loadImg] Création nouvelle image:', src)
     const img = new Image()
     const p = new Promise(resolve => {
-      img.onload = () => {
-        console.log('[loadImg] Image chargée:', src)
-        resolve()
-      }
+      img.onload = () => resolve()
       img.onerror = () => {
-        console.log('[loadImg] Erreur chargement image:', src)
+        console.warn('[loadImg] failed to load', src)
         resolve()
       }
     })
     _loadingPromises.push(p)
     img.src = src
     _imgCache[src] = img
-  } else {
-    console.log('[loadImg] Image déjà en cache:', src)
   }
   return _imgCache[src]
 }

@@ -244,7 +244,7 @@ export function handleCollisions(g) {
       if (p.healthPoints > p.maxHealth) p.healthPoints = p.maxHealth
       if (p.shieldForce > p.maxShield) p.shieldForce = p.maxShield
       if (p.talismanCount > p.maxTalisman) p.talismanCount = p.maxTalisman
-      if (it.def.name === 'Fuel') g.turboTime = p.turboBars * p.turboBarDuration
+      if (it.def.usedVar === '_dummy_fuel') g.turboTime = p.turboBars * p.turboBarDuration
       g.itemPickedUp = `${getLocalizedName(it.def)} (${getLocalizedDescription(it.def)})`
       g.itemPickedUpTimer = 2
       return false
